@@ -1,0 +1,107 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="AE2BDEDA-2B23-7EAB-E9A8-9B462D3159C4" name="diete">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:25:43 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_diete" id="3E04FA4B-B5C6-8172-01BB-CE1401798152">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:25:47 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="calories" id="CAA1D497-7C26-1502-656C-202D75F2A336">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:25:58 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="proteines" id="20A59DA8-DF62-D157-2970-A373193727CB">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:26:13 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="glucides" id="F6575FFD-DEDD-8D34-3344-5C87B4868D59">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:26:24 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="lipides" id="814273CC-F74D-4660-1587-805EB5443996">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:26:34 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_client" id="5E776FD0-63A8-AE50-E17A-A4A597C9A2A3">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:51:28 UTC</createdTime>
+<generatorID>1D14E231-956B-CE22-9A09-62CBE89D1738</generatorID>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<referedAttribute>8FB072C7-1017-F961-15A9-23EB64E06349</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="F3AD8314-CD52-29AD-48D2-3BC22222DE5E" name="diete PK">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:25:55 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>3E04FA4B-B5C6-8172-01BB-CE1401798152</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

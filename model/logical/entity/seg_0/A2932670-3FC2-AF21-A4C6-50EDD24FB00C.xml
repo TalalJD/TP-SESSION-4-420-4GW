@@ -1,0 +1,70 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="A2932670-3FC2-AF21-A4C6-50EDD24FB00C" name="programme_entrainement">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:31:05 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_programme" id="4D541D07-8160-D346-B4FA-C318A31655DE">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:31:16 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="exercices" id="D27C3E36-788A-AED7-D466-C962A84280FE">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:31:29 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_client" id="9DEF5FC8-791B-6BB6-2E9D-CB2A1BA0934B">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:31:49 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="33BFF5EF-C663-9E83-9088-7EAD8CD24DB9" name="programme_entrainement PK">
+<createdBy>Houssem</createdBy>
+<createdTime>2024-02-04 23:31:28 UTC</createdTime>
+<ownerDesignName>model</ownerDesignName>
+<engineerTo>
+<item key="3D86E6B9-B112-FC34-C189-F1C5696E9453" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>4D541D07-8160-D346-B4FA-C318A31655DE</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

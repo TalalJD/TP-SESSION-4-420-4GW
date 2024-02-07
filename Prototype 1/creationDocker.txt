@@ -1,0 +1,1 @@
+docker run -d -p 3307:3306 --name energymize-server -e MYSQL_ROOT_PASSWORD=oracle -e MYSQL_DATABASE=scott -e MYSQL_USER=scott -e MYSQL_PASSWORD=oracle mysql/mysql-server:latest

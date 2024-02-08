@@ -1,0 +1,71 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="F59F8B94-F831-F2F9-9E99-476B3D9EA26B" name="workout">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 02:58:58 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_workout" id="8F410C46-6DE1-C1D9-9197-3AE8DD6DDE89">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 02:59:08 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nom_workout" id="A7092342-743A-4CAC-3CE2-E8282BE6F16F">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 02:59:20 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>200</dataTypeSize>
+<ownDataTypeParameters>200,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="desc_workout" id="9D4F9B51-CF24-0DE3-379D-E74592DB7D20">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 02:59:32 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="DC8AE37A-9602-924C-D36C-2B04A6EC1F1F" name="workout PK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 02:59:19 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>8F410C46-6DE1-C1D9-9197-3AE8DD6DDE89</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

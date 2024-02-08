@@ -1,0 +1,109 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="D92AB13D-3251-3354-CF21-86644135886B" name="client">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:50:59 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_client" id="D7B40D03-0AC1-F2C4-3BC4-C0F05E0850A0">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:51:24 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nom_client" id="49915E2F-DC1E-527A-4E7F-D3D65CC4FF21">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:51:34 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="prenom_client" id="89317B69-D9FC-BA69-6614-187BD1333EF0">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:51:46 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>150</dataTypeSize>
+<ownDataTypeParameters>150,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="courriel_client" id="09D6C273-1B8E-6628-D814-AD0C383A1FB4">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:51:57 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>250</dataTypeSize>
+<ownDataTypeParameters>250,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="mdp_client" id="FDEA657C-F56D-619C-95B7-E2F17AF5E5D6">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:52:11 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="gen_restants" id="094E043D-8B86-2A79-8C2C-D2C891E3EA37">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:52:54 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="3F0D01B5-AB69-30A3-CD06-03E8D7F407C0" name="client PK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:51:32 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>D7B40D03-0AC1-F2C4-3BC4-C0F05E0850A0</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

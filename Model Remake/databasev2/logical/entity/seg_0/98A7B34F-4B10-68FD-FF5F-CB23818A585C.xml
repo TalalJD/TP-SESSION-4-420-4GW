@@ -1,0 +1,58 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="98A7B34F-4B10-68FD-FF5F-CB23818A585C" name="poste">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:33:04 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_poste" id="2ADBFE0E-8704-40E9-FB00-485489588F67">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:47:10 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nom_poste" id="2C11624E-4F4F-FC4D-4AAE-013ECFC78C84">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:47:37 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="4CE40553-EEBB-CFFE-B039-39EAA64CC22D" name="poste PK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 01:47:30 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>2ADBFE0E-8704-40E9-FB00-485489588F67</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="D3A3C8B6-D0AD-2AEE-A855-81463E7D7A2D" containerWithKeyObject="DD7849D5-DDD1-1B79-3C97-A5219B1CCFC3" localFKIndex="1CE4688B-1DD4-F983-084E-5432BA36E397" name="client_poste_FK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>E9E15C6B-2FA1-5E49-A067-867CFD9F9E17</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<referredTableLongName>poste</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>42D5E3F0-B497-37F2-48CD-CAE52AB9FDFC</referredTableID>
+<keyObject>F14F434E-FF84-6A48-2BE7-31F494C18029</keyObject>
+<referredKeyID>F14F434E-FF84-6A48-2BE7-31F494C18029</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>id_poste</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

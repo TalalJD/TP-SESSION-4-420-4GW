@@ -1,0 +1,114 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="7FA70D49-26D2-993F-41B9-7B401F7D94C6" name="set">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>50F9BCEA-8013-919A-001E-101FD95D1B54</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_set" id="548055CC-AF6D-4FA8-0156-93DA456D674D">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>63A7CE78-75D7-7E37-A4F9-4251AA5B7F59</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="reps" id="2FD17C34-1A5D-061B-6678-381912D71D6F">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>B3403E5A-AC94-E84C-DBB2-9F39EC955C76</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="rpe" id="177B1841-7EE2-F999-43F2-4BB84BDCB911">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>A1D972D9-9724-3005-B245-D6FC922A548C</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="exo_exec_id_exo_exec" id="B16313C0-FA84-480E-6977-8EA5966CC6E8">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>669A478F-3D4D-0644-E4C5-4A63ADB10B86</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="70AE5DE3-4C70-92FE-2B4D-4A1B80E8E29C" referredColumn="55D32174-1D8B-7562-BE2C-0E98A53D1D35"/>
+</associations>
+</Column>
+<Column name="exo_id_exo" id="36028EB8-8DF2-4235-8F45-F424B928EFC2">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>550DBE6D-FD76-B9BE-4235-D5AF75C045C5</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="7B26B82B-4629-580D-6ADA-5E0F1522014D" referredColumn="77877F76-E879-4332-88C4-F0463B149CBE"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A06D516B-3F84-DC41-FA58-8C222D76E0B9" name="set_PK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>22F4F95F-43FD-651A-3819-829010A6F315</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="548055CC-AF6D-4FA8-0156-93DA456D674D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="7335F77B-E19A-53DD-6021-621E587D1FDC" name="set_exo_exec_FK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>98627E61-8B95-1DAF-3FD4-24F61DDA760B</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B16313C0-FA84-480E-6977-8EA5966CC6E8"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="33F21CBF-B11A-5A94-C468-8C4B4031C0E5" name="set_exo_FK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>63B37F9A-E039-54BD-C103-2B899AFB5135</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="36028EB8-8DF2-4235-8F45-F424B928EFC2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

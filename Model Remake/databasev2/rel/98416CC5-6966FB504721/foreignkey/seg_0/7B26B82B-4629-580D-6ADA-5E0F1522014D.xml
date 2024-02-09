@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="7B26B82B-4629-580D-6ADA-5E0F1522014D" containerWithKeyObject="7FA70D49-26D2-993F-41B9-7B401F7D94C6" localFKIndex="33F21CBF-B11A-5A94-C468-8C4B4031C0E5" name="set_exo_FK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>63B37F9A-E039-54BD-C103-2B899AFB5135</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<referredTableLongName>exo</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>11A213DC-DCB1-2BCD-50F9-F9532D4E58AA</referredTableID>
+<keyObject>B552F809-A5A2-4B0A-9500-DFCC267B1BEF</keyObject>
+<referredKeyID>B552F809-A5A2-4B0A-9500-DFCC267B1BEF</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>id_exo</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

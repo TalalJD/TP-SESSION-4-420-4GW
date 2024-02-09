@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="progExo_prog" directorySegmentName="seg_0" id="D3416EF9-483B-2F30-CC01-76D38B557B68">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:40:08 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<sourcePk>C0AED644-B1B7-590D-4D51-81F4599E820C</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>E9DFBDB0-BA73-F41F-371B-BC29D4F9B59D</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>CC6C7C5D-50E0-3B32-A8E1-7919AA16C1EA</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

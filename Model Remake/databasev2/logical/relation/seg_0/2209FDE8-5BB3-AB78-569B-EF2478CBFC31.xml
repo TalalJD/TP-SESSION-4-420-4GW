@@ -1,0 +1,21 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="coach_client" directorySegmentName="seg_0" id="2209FDE8-5BB3-AB78-569B-EF2478CBFC31">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 03:14:22 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<sourcePk>E2FF4A6D-1BE9-D3FD-952D-B41D2992957B</sourcePk>
+<identifying>false</identifying>
+<nameOnSource>appartenir</nameOnSource>
+<nameOnTarget>avoir</nameOnTarget>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>D98B9D78-5BCE-54DF-CBF1-A74B4467FE55</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>D92AB13D-3251-3354-CF21-86644135886B</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

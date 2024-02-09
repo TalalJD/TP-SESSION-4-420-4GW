@@ -1,0 +1,90 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="9CDA37D8-D965-0B05-0696-D256C92AAA07" name="workout">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>F59F8B94-F831-F2F9-9E99-476B3D9EA26B</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_workout" id="6DC2197C-038A-8AF8-846E-A116FE954D67">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>8F410C46-6DE1-C1D9-9197-3AE8DD6DDE89</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="nom_workout" id="27967D5C-62F5-F819-CB2B-F396EF931D9D">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>A7092342-743A-4CAC-3CE2-E8282BE6F16F</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>200</dataTypeSize>
+<ownDataTypeParameters>200,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="desc_workout" id="5FA0CAE5-CE95-A179-8735-34BC26A8D852">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>9D4F9B51-CF24-0DE3-379D-E74592DB7D20</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1500</dataTypeSize>
+<ownDataTypeParameters>1500,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="client_id_client" id="CF91E6BB-2B87-3A27-0041-B32F37D36517">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>DE239364-839F-A08B-8CC9-596B31CA918B</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="47B3403E-1066-7172-E92B-BBC6A7C32580" referredColumn="A536DEDB-8EDA-4828-98CE-E33BE10A0607"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="7C2E53F0-4370-7B47-EDEC-F97DE4DE3FCC" name="workout_PK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>DC8AE37A-9602-924C-D36C-2B04A6EC1F1F</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6DC2197C-038A-8AF8-846E-A116FE954D67"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="42C0EB63-A531-FD7D-F2B1-23DFE22ACA19" name="workout_client_FK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>FA006307-88AE-EDFE-4D35-48C143931DB6</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CF91E6BB-2B87-3A27-0041-B32F37D36517"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

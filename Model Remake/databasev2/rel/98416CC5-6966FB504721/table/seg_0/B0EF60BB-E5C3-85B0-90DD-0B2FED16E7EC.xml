@@ -1,0 +1,116 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="B0EF60BB-E5C3-85B0-90DD-0B2FED16E7EC" name="programme">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>E9DFBDB0-BA73-F41F-371B-BC29D4F9B59D</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_programme" id="33BB86E8-7D06-3294-03F2-13E90767C607">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>53D573FE-3611-60C7-7979-E7EC0CBC1E60</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="nom_programme" id="18BF4147-54A1-9BAE-5376-C6BD562F321E">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>FDAC7EF4-8596-A67F-F600-3F00F8E45470</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>250</dataTypeSize>
+<ownDataTypeParameters>250,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="client_id_client" id="0EEAE6DC-40D5-5874-A6A3-B755C90D2A12">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>4301CC03-2D51-2219-DF20-A5CD175EF40C</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="CFC12F42-84FA-B6AB-AAF6-258B4C9CC2A6" referredColumn="A536DEDB-8EDA-4828-98CE-E33BE10A0607"/>
+</associations>
+</Column>
+<Column name="prefaits_progs_id" id="BD3EBA68-EDD6-9763-ECD0-42C9D19E0BEE">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>B10B3562-BDD4-6E09-BD66-B2BE167B6668</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="21713B16-1309-714C-F385-53F97129CB0E" referredColumn="A44F4730-D115-2718-58B7-387B2A65CDD3"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="F33E95E8-A313-6F88-81E1-FD82F5888362" name="programme_PK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>C0AED644-B1B7-590D-4D51-81F4599E820C</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="33BB86E8-7D06-3294-03F2-13E90767C607"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D2D9651F-DC3A-E0F1-2BD6-F229B9E82CF9" name="programme__IDX">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<relationGeneratorID>1DCFA913-A15D-9732-735A-7F813F1F2B8E</relationGeneratorID>
+<indexColumnUsage>
+<colUsage columnID="0EEAE6DC-40D5-5874-A6A3-B755C90D2A12"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CA90D4C1-6DB7-F360-F474-4B09BE39D34C" name="programme_prefaits_progs_FK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>AC1DF48B-3F03-1E8E-733E-25F12738EE71</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BD3EBA68-EDD6-9763-ECD0-42C9D19E0BEE"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B31A4B51-BBCE-8B5F-BF0D-7A8E4E4FC983" name="programme_client_FK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>1DCFA913-A15D-9732-735A-7F813F1F2B8E</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0EEAE6DC-40D5-5874-A6A3-B755C90D2A12"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="diet_client" directorySegmentName="seg_0" id="23A05A7E-6B56-9889-F40D-7D7285FF8A13">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:40:56 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<sourcePk>4FF43B4D-4A13-C25E-BBF0-61B7E4500F45</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>447CF815-E7C2-00E2-AA1B-0BE03F51663C</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>D92AB13D-3251-3354-CF21-86644135886B</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

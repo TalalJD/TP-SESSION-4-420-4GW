@@ -40,6 +40,36 @@
 <dataTypeSize>250</dataTypeSize>
 <ownDataTypeParameters>250,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="id_client" id="4301CC03-2D51-2219-DF20-A5CD175EF40C">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 03:16:28 UTC</createdTime>
+<generatorID>1DCFA913-A15D-9732-735A-7F813F1F2B8E</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>D7B40D03-0AC1-F2C4-3BC4-C0F05E0850A0</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id" id="B10B3562-BDD4-6E09-BD66-B2BE167B6668">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:41:34 UTC</createdTime>
+<generatorID>AC1DF48B-3F03-1E8E-733E-25F12738EE71</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>058048A4-AFD2-9462-F166-5D95D1833A39</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="C0AED644-B1B7-590D-4D51-81F4599E820C" name="programme PK">

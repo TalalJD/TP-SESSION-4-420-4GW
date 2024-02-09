@@ -91,6 +91,97 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="id_sport" id="F1E1E8B0-E691-D622-B06E-F6377E327627">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 03:13:00 UTC</createdTime>
+<generatorID>BD510F19-B0CA-4911-FDFB-CCC8767D87FA</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>B7428273-FAA3-D277-49BB-8AD7C6AF01E5</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nom_sport" id="DF2F5083-65DB-4CB8-FA44-A000631C2843">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 03:13:00 UTC</createdTime>
+<generatorID>BD510F19-B0CA-4911-FDFB-CCC8767D87FA</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>13184FBD-8378-C1AD-08F1-27E2F1F63DA7</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_coach" id="38EE8736-2460-A548-017E-1A57D9CDDB64">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 03:14:22 UTC</createdTime>
+<generatorID>2209FDE8-5BB3-AB78-569B-EF2478CBFC31</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>156551A3-2B87-B5A5-72B0-B61951A9BD09</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_poste" id="30A076F9-B68D-5F18-0ACF-FC1E35741818">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 03:14:57 UTC</createdTime>
+<generatorID>E9E15C6B-2FA1-5E49-A067-867CFD9F9E17</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>2ADBFE0E-8704-40E9-FB00-485489588F67</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_programme" id="CFB6AD4E-ED34-663D-C14D-D106E45E8B56">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 03:16:44 UTC</createdTime>
+<generatorID>1DCFA913-A15D-9732-735A-7F813F1F2B8E</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>53D573FE-3611-60C7-7979-E7EC0CBC1E60</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_diet" id="78A2383B-D00E-1EC1-9FD2-B73D770A6481">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:40:56 UTC</createdTime>
+<generatorID>23A05A7E-6B56-9889-F40D-7D7285FF8A13</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>8437C279-8881-2A9C-DFAD-A595758C4AF9</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="3F0D01B5-AB69-30A3-CD06-03E8D7F407C0" name="client PK">

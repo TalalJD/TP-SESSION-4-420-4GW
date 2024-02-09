@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="F59F8B94-F831-F2F9-9E99-476B3D9EA26B" name="workout">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="AC7E967C-52F8-F559-C0D0-8C107422089F" name="prefaits_progs">
 <createdBy>iisey</createdBy>
-<createdTime>2024-02-08 02:58:58 UTC</createdTime>
+<createdTime>2024-02-08 23:34:03 UTC</createdTime>
 <ownerDesignName>databasev2</ownerDesignName>
 <engineerTo>
 <item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
@@ -15,9 +15,9 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="id_workout" id="8F410C46-6DE1-C1D9-9197-3AE8DD6DDE89">
+<Attribute name="id" id="058048A4-AFD2-9462-F166-5D95D1833A39">
 <createdBy>iisey</createdBy>
-<createdTime>2024-02-08 02:59:08 UTC</createdTime>
+<createdTime>2024-02-08 23:34:19 UTC</createdTime>
 <ownerDesignName>databasev2</ownerDesignName>
 <engineerTo>
 <item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
@@ -27,58 +27,42 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="nom_workout" id="A7092342-743A-4CAC-3CE2-E8282BE6F16F">
+<Attribute name="titre_prefait" id="C0F45414-405E-E28C-35BF-FC6B99F90EFB">
 <createdBy>iisey</createdBy>
-<createdTime>2024-02-08 02:59:20 UTC</createdTime>
+<createdTime>2024-02-08 23:34:39 UTC</createdTime>
 <ownerDesignName>databasev2</ownerDesignName>
 <engineerTo>
 <item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
 </engineerTo>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>200</dataTypeSize>
-<ownDataTypeParameters>200,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="desc_workout" id="9D4F9B51-CF24-0DE3-379D-E74592DB7D20">
-<createdBy>iisey</createdBy>
-<createdTime>2024-02-08 02:59:32 UTC</createdTime>
-<ownerDesignName>databasev2</ownerDesignName>
-<engineerTo>
-<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="id_client" id="DE239364-839F-A08B-8CC9-596B31CA918B">
+<Attribute name="desc_prefait" id="EBCB9F46-2345-8285-3C81-7C5446890B2B">
 <createdBy>iisey</createdBy>
-<createdTime>2024-02-08 03:15:23 UTC</createdTime>
-<generatorID>FA006307-88AE-EDFE-4D35-48C143931DB6</generatorID>
+<createdTime>2024-02-08 23:34:47 UTC</createdTime>
 <ownerDesignName>databasev2</ownerDesignName>
 <engineerTo>
 <item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
 </engineerTo>
-<referedAttribute>D7B40D03-0AC1-F2C4-3BC4-C0F05E0850A0</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
+<logicalDatatype>LOGDT024</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="DC8AE37A-9602-924C-D36C-2B04A6EC1F1F" name="workout PK">
+<identifier id="D0C26CA9-D2C5-28B8-2288-B2D61337586F" name="prefaits_progs PK">
 <createdBy>iisey</createdBy>
-<createdTime>2024-02-08 02:59:19 UTC</createdTime>
+<createdTime>2024-02-08 23:34:24 UTC</createdTime>
 <ownerDesignName>databasev2</ownerDesignName>
 <engineerTo>
 <item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>
-<attributeRef>8F410C46-6DE1-C1D9-9197-3AE8DD6DDE89</attributeRef>
+<attributeRef>058048A4-AFD2-9462-F166-5D95D1833A39</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>

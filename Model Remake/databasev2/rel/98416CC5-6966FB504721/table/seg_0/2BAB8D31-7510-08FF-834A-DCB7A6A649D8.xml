@@ -1,0 +1,65 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="2BAB8D31-7510-08FF-834A-DCB7A6A649D8" name="exo_exec">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>F43EAD46-C9CC-BAD1-7A7B-1CB010BE2454</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_exo_exec" id="55D32174-1D8B-7562-BE2C-0E98A53D1D35">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>824321EC-90F5-BACA-9A04-6EE638B1A1FC</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="workout_id_workout" id="121998F3-28D0-D7F5-8DAF-5E755EBC6D2E">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>E0EE36D7-4995-A3A8-492E-85D8670551CC</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="15FC6E1F-6F48-964B-71F6-D2C8D05352A0" referredColumn="6DC2197C-038A-8AF8-846E-A116FE954D67"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="E5347DB9-AB55-43ED-FFA6-AA109D3530D5" name="exo_exec_PK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>7FCC8B10-C4C6-4904-4409-32F70018244C</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="55D32174-1D8B-7562-BE2C-0E98A53D1D35"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="06D9A3F6-CE7C-FD9F-295D-E82CAF1CBB9A" name="exo_exec_workout_FK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>0F891572-F032-794E-5033-2BA05D4998CD</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="121998F3-28D0-D7F5-8DAF-5E755EBC6D2E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

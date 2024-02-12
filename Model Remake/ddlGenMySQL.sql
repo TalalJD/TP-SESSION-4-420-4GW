@@ -77,13 +77,13 @@ CREATE TABLE programme (
 
 CREATE UNIQUE INDEX programme__idx ON programme (client_id_client ASC);
 
-CREATE TABLE `set` (
-    id_set               INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE serie (
+    id_serie               INT NOT NULL AUTO_INCREMENT,
     reps                 INT NOT NULL,
     rpe                  INT,
     exo_exec_id_exo_exec INT NOT NULL,
     exo_id_exo           INT NOT NULL,
-    PRIMARY KEY (id_set)
+    PRIMARY KEY (id_serie)
 );
 
 CREATE TABLE sport (
@@ -112,6 +112,6 @@ ALTER TABLE program_exos ADD CONSTRAINT program_exos_prefaits_progs_fk FOREIGN K
 ALTER TABLE program_exos ADD CONSTRAINT program_exos_programme_fk FOREIGN KEY (programme_id_programme) REFERENCES programme (id_programme);
 ALTER TABLE programme ADD CONSTRAINT programme_client_fk FOREIGN KEY (client_id_client) REFERENCES client (id_client);
 ALTER TABLE programme ADD CONSTRAINT programme_prefaits_progs_fk FOREIGN KEY (prefaits_progs_id) REFERENCES prefaits_progs (id);
-ALTER TABLE `set` ADD CONSTRAINT set_exo_exec_fk FOREIGN KEY (exo_exec_id_exo_exec) REFERENCES exo_exec (id_exo_exec);
-ALTER TABLE `set` ADD CONSTRAINT set_exo_fk FOREIGN KEY (exo_id_exo) REFERENCES exo (id_exo);
+ALTER TABLE serie ADD CONSTRAINT serie_exo_exec_fk FOREIGN KEY (exo_exec_id_exo_exec) REFERENCES exo_exec (id_exo_exec);
+ALTER TABLE serie ADD CONSTRAINT serie_exo_fk FOREIGN KEY (exo_id_exo) REFERENCES exo (id_exo);
 ALTER TABLE workout ADD CONSTRAINT workout_client_fk FOREIGN KEY (client_id_client) REFERENCES client (id_client);

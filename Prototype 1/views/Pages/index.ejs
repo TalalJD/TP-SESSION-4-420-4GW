@@ -1,32 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym Website</title>
-    <link rel="stylesheet" href="/styles.css">
-</head>
-<body>
-    <header>
-        <nav>
-            <button>Se connecter</button>
-            <button>S'inscrire</button>
-            <img src="/whiteTransp 3.png" alt="Fitness logo">
-            <button>Nous contacter</button>
-            <button>Abonnements</button>
-        </nav>
-    </header>
-    
-    <main>
-        <p>une citation de motivation agréable et accueillante.</p>
-        <div class="icons">
-            <button><img src="treadmill.png" alt="Treadmill"></button>
-            <button><img src="weights.png" alt="Weights"></button>
-            <button><img src="soccer.png" alt="Soccer"></button>
-            <button><img src="basketball.png" alt="Basketball"></button>
-            <button><img src="football.png" alt="Football"></button>
-        </div>
-        <button>Prochaine étape</button>
-    </main>
-</body>
-</html>
+<%- include ("../partials/header.ejs") %>
+    <p>une citation de motivation agréable et accueillante.</p>
+    <div class="icons">
+        <button><img src="treadmill.png" alt="Treadmill"></button>
+        <button><img src="weights.png" alt="Weights"></button>
+        <button><img src="soccer.png" alt="Soccer"></button>
+        <button><img src="basketball.png" alt="Basketball"></button>
+        <button><img src="football.png" alt="Football"></button>
+    </div>
+    <button>Prochaine étape</button>
+<%- include ("../partials/footer.ejs") %>

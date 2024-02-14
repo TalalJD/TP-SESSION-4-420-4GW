@@ -17,6 +17,11 @@
     font-size: 1.35rem;
     font-family: sans-serif;
     font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+}
+.indexButton1:hover{
+    background-color: #A19252;
 }
 .indexHeaderSection{
     display: flex;
@@ -38,7 +43,43 @@ body {
     font-size: 1.35rem;
     font-family: sans-serif;
     font-weight: bold;
+    border-radius: 50px;
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+}
+.btnYellowMedium:hover{
+    background-color: #A19252;
 }
 .indexPresentation{
-    
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:3rem;
+    padding-bottom: 6rem;
+}
+.indexSportImgContainer{
+    width: 14rem;
+    height: 14rem; 
+    border-radius: 30px; 
+    overflow: hidden; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #D5C069; 
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+}
+.indexSportImgContainer:hover{
+    background-color: #A19252;
+}
+.indexSportImgContainer img{
+    max-width: 80%;
+    max-height: 80%;
+    padding:10%;
+    object-fit: cover;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
 }

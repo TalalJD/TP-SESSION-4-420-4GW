@@ -25,6 +25,8 @@ const server = app.listen(4000, function() {
 console.log("serveur fonctionne sur 4000... ! ");
 });
 app.use(express.static('public'));
+
+
 app.get("/", function (req, res) {
     // No database query, just render the page
     res.render("Pages/index", {
@@ -42,3 +44,13 @@ app.get("/Inscription", function (req, res) {
     items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
   });
   });
+
+  app.get("/Connexion", function (req, res) {
+    // No database query, just render the page
+    res.render("Pages/connexion", {
+      siteTitle: "Simple Application",
+      pageTitle: "Event List",
+      items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    });
+
+});

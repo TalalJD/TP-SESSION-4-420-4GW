@@ -1,4 +1,5 @@
 
+
 .indexHeader{
     display:flex;
     justify-content: space-between;
@@ -88,3 +89,118 @@ body {
     display: flex;
     justify-content: center;
 }
+
+
+.gradient-custom-2 {
+    /* fallback for old browsers */
+    background: #fccb90;
+    
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #D5C069, #D5C069, #D5C069, #D5C069);
+    
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, #D5C069, #D5C069, #D5C069, #D5C069);
+    }
+    
+    @media (min-width: 768px) {
+    .gradient-form {
+    height: 100vh !important;
+    }
+    }
+    @media (min-width: 769px) {
+    .gradient-custom-2 {
+    border-top-right-radius: .3rem;
+    border-bottom-right-radius: .3rem;
+    }
+    }
+
+    .indexHeader{
+        display:flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 15px;
+        padding-top: 25px;
+        /*width: 100%;*/
+        height: auto;
+    }
+    .indexButton1{
+        height: 4rem;
+        width: 16rem;
+        background-color: #D5C069;
+        border:3px solid white;
+        color: white;
+        font-size: 1.35rem;
+        font-family: sans-serif;
+        font-weight: bold;
+        transition: background-color 0.3s, color 0.3s;
+        cursor: pointer;
+        display: flex;
+        justify-content: center; /* Horizontally centers content */
+        align-items: center; /* Vertically centers content */
+        line-height: 4rem;
+        text-decoration: none;
+    }
+    .indexButton1:hover{
+        background-color: #A19252;
+    }
+    .indexHeaderSection{
+        display: flex;
+    }
+    body {
+        margin: 0; /* Removes the default margin */
+        padding: 0; /* Removes the default padding */
+        min-height: 100%; /* Ensures the body covers at least the full height of the viewport */
+        background: linear-gradient(to bottom, #333333, #1a1a1a); /* Gradient from dark grey to darker grey */
+        background-repeat: no-repeat; /* Prevents the background from repeating */
+        background-attachment: fixed; /* Makes the background fixed during scroll */
+        color: #fff; /* Sets the default text color to white */
+    }
+    .btnYellowMedium{
+        height: 4rem;
+        width: 18rem;
+        background-color: #D5C069;
+        color: white;
+        font-size: 1.35rem;
+        font-family: sans-serif;
+        font-weight: bold;
+        border-radius: 50px;
+        transition: background-color 0.3s, color 0.3s;
+        cursor: pointer;
+    }
+    .btnYellowMedium:hover{
+        background-color: #A19252;
+    }
+    .indexPresentation{
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap:3rem;
+        padding-bottom: 6rem;
+    }
+    .indexSportImgContainer{
+        width: 14rem;
+        height: 14rem;
+        border-radius: 30px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #D5C069;
+        transition: background-color 0.3s, color 0.3s;
+        cursor: pointer;
+    }
+    .indexSportImgContainer:hover{
+        background-color: #A19252;
+    }
+    .indexSportImgContainer img{
+        max-width: 80%;
+        max-height: 80%;
+        padding:10%;
+        object-fit: cover;
+    }
+    .button-container {
+        display: flex;
+        justify-content: center;
+    }
+

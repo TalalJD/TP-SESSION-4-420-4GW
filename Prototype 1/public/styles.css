@@ -19,6 +19,11 @@
     font-weight: bold;
     transition: background-color 0.3s, color 0.3s;
     cursor: pointer;
+    display: flex;
+    justify-content: center; /* Horizontally centers content */
+    align-items: center; /* Vertically centers content */
+    line-height: 4rem;
+    text-decoration: none;
 }
 .indexButton1:hover{
     background-color: #A19252;

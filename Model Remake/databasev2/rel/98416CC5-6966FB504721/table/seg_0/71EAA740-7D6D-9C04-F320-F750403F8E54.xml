@@ -1,0 +1,86 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="71EAA740-7D6D-9C04-F320-F750403F8E54" name="diete">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>447CF815-E7C2-00E2-AA1B-0BE03F51663C</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_diet" id="76A7B8D7-1685-8081-B688-64C1D53BEB22">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>8437C279-8881-2A9C-DFAD-A595758C4AF9</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="calories" id="56FD6E77-5EA8-E3EF-9AED-88E6FD9993C2">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>7C0B6B34-8E0F-847F-C9B1-0B1E9891EF7C</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="proteines" id="014DFAFD-928B-83E4-88C5-A8168E43BAF2">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>426E0C4C-979E-7DB8-2744-ED8A0FC8FCF7</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="glucides" id="9F99AAF9-5BE6-B671-6276-EB7ABFAABABC">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>62AC5792-970D-9EDD-68BD-8C11233EF655</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="lipides" id="31DA0A12-613D-B710-12E3-3BBFB34D49D9">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>65C66C1C-F153-4989-0D2B-2AAC34283B91</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT036</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="FD9A74E9-3CDD-61BF-AFBC-E37EDD7E344F" name="diete_PK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>4FF43B4D-4A13-C25E-BBF0-61B7E4500F45</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="76A7B8D7-1685-8081-B688-64C1D53BEB22"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

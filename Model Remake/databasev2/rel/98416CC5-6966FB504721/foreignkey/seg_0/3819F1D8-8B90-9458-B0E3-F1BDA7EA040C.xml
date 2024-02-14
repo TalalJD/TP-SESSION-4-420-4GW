@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="3819F1D8-8B90-9458-B0E3-F1BDA7EA040C" containerWithKeyObject="A679BA6F-525E-B484-2057-325CC50EB2C5" localFKIndex="47964A2C-ECB8-C24C-9D6F-2818C422EA05" name="program_exos_programme_FK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>D3416EF9-483B-2F30-CC01-76D38B557B68</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<referredTableLongName>programme</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>B0EF60BB-E5C3-85B0-90DD-0B2FED16E7EC</referredTableID>
+<keyObject>F33E95E8-A313-6F88-81E1-FD82F5888362</keyObject>
+<referredKeyID>F33E95E8-A313-6F88-81E1-FD82F5888362</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>id_programme</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

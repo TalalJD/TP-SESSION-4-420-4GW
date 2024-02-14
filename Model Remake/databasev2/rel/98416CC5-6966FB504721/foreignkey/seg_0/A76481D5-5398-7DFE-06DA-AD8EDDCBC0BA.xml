@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="A76481D5-5398-7DFE-06DA-AD8EDDCBC0BA" containerWithKeyObject="A679BA6F-525E-B484-2057-325CC50EB2C5" localFKIndex="CCA2DCB4-8AD5-1419-DD71-1CEDEC5BD308" name="program_exos_prefaits_progs_FK">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 23:42:59 UTC</createdTime>
+<generatorID>AE0138CC-7DD4-1934-632E-C6A6B80024FA</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<referredTableLongName>prefaits_progs</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>56BBE878-4D11-E66A-B1D7-5BCAA08B6CD6</referredTableID>
+<keyObject>D0F56107-3A7C-16D3-487A-CB0AE9EB3C52</keyObject>
+<referredKeyID>D0F56107-3A7C-16D3-487A-CB0AE9EB3C52</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

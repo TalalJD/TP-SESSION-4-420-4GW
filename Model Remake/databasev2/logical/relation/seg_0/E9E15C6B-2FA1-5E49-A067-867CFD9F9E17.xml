@@ -1,0 +1,21 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="poste_client" directorySegmentName="seg_0" id="E9E15C6B-2FA1-5E49-A067-867CFD9F9E17">
+<createdBy>iisey</createdBy>
+<createdTime>2024-02-08 03:14:57 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<sourcePk>4CE40553-EEBB-CFFE-B039-39EAA64CC22D</sourcePk>
+<identifying>false</identifying>
+<nameOnSource>appartenir</nameOnSource>
+<nameOnTarget>avoir</nameOnTarget>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>98A7B34F-4B10-68FD-FF5F-CB23818A585C</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>D92AB13D-3251-3354-CF21-86644135886B</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

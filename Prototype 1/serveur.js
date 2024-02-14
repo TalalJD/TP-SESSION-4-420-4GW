@@ -32,12 +32,13 @@ app.get("/", function (req, res) {
       pageTitle: "Event List",
       items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
     });
+
+});
+app.get("/Inscription", function (req, res) {
+  // No database query, just render the page
+  res.render("Pages/inscription", {
+    siteTitle: "Simple Application",
+    pageTitle: "Event List",
+    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
   });
-  app.get("/Inscription", function (req, res) {
-    // No database query, just render the page
-    res.render("Pages/inscription", {
-      siteTitle: "Simple Application",
-      pageTitle: "Event List",
-      items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
-    });
   });

@@ -1,0 +1,14 @@
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #000000;
+     
+   
+    }
+
+    .background-image {
+        background-image: url('imgs/whiteTransp.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center; 
+        /* Add other styling properties as needed */
+    }

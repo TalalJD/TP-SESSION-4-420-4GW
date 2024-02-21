@@ -2,7 +2,6 @@
 Importation des modules requis
 */
 
-
 import express from "express";
 import session from "express-session";
 import path from "path";
@@ -22,41 +21,35 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
-const server = app.listen(4000, function() {
-console.log("serveur fonctionne sur 4000... ! ");
+const server = app.listen(4000, function () {
+  console.log("serveur fonctionne sur 4000... ! ");
 });
-app.use(express.static('public'));
-
-
+app.use(express.static("public"));
 
 app.get("/", function (req, res) {
-    // No database query, just render the page
-    res.render("Pages/index", {
-      siteTitle: "Simple Application",
-      pageTitle: "Event List",
-      items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
-    });
-
+  // No database query, just render the page
+  res.render("Pages/index", {
+    siteTitle: "Simple Application",
+    pageTitle: "Event List",
+    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+  });
 });
 app.get("/Inscription", function (req, res) {
   // No database query, just render the page
   res.render("Pages/inscription", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
-    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
   });
+});
+
+app.get("/Connexion", function (req, res) {
+  // No database query, just render the page
+  res.render("Pages/connexion", {
+    siteTitle: "Simple Application",
+    pageTitle: "Event List",
+    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
   });
-
-  app.get("/Connexion", function (req, res) {
-    // No database query, just render the page
-    res.render("Pages/connexion", {
-      siteTitle: "Simple Application",
-      pageTitle: "Event List",
-      items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
-    });
-
-    
-
 });
 
 app.get("/Abonnement", function (req, res) {
@@ -64,11 +57,8 @@ app.get("/Abonnement", function (req, res) {
   res.render("Pages/abonnement", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
-    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
   });
-
-  
-
 });
 
 const con = mysql.createConnection({
@@ -76,11 +66,30 @@ const con = mysql.createConnection({
   user: "scott",
   password: "oracle",
   database: "energymizeBD",
-  port:3307
-  });
-  con.connect(function(err) {
+  port: 3307
+});
+con.connect(function (err) {
   if (err) throw err;
   console.log("connected!");
-  });
+});
 
-  app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.post("/inscription/submit", function (req, res) {
+  const requete =
+    "INSERT INTO client (nom_client, prenom_client, courriel_client, mdp_client, gen_restants) VALUES (?, ?, ?, ?, ?)";
+  const parametres = [
+    req.body.nom_client,
+    req.body.prenom_client,
+    req.body.courriel_client,
+    req.body.mdp_client,
+    3,
+  ];
+  con.query(requete, parametres, function (err, result) {
+    if (err) throw err;
+    res.redirect("/");
+  });
+});
+
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 

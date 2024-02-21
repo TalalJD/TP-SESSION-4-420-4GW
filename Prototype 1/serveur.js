@@ -53,4 +53,18 @@ app.get("/Inscription", function (req, res) {
       items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
     });
 
+    
+
+});
+
+app.get("/Abonnement", function (req, res) {
+  // No database query, just render the page
+  res.render("Pages/abonnement", {
+    siteTitle: "Simple Application",
+    pageTitle: "Event List",
+    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+  });
+
+  
+
 });

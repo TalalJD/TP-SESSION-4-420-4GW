@@ -10,6 +10,7 @@ import { fileURLToPath } from "url";
 import mysql from "mysql";
 import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
+import bodyParser from "body-parser";
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,6 +26,7 @@ const server = app.listen(4000, function() {
 console.log("serveur fonctionne sur 4000... ! ");
 });
 app.use(express.static('public'));
+
 
 
 app.get("/", function (req, res) {
@@ -73,10 +75,12 @@ const con = mysql.createConnection({
   host: "localhost",
   user: "scott",
   password: "oracle",
-  database: "ernergymizeBD"
+  database: "energymizeBD" ,
+  port:3307 
   });
   con.connect(function(err) {
   if (err) throw err;
   console.log("connected!");
   });
-  
+
+  app.use(bodyParser.urlencoded({extended:true}))

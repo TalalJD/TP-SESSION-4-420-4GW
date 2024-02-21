@@ -115,3 +115,7 @@ ALTER TABLE programme ADD CONSTRAINT programme_prefaits_progs_fk FOREIGN KEY (pr
 ALTER TABLE serie ADD CONSTRAINT serie_exo_exec_fk FOREIGN KEY (exo_exec_id_exo_exec) REFERENCES exo_exec (id_exo_exec);
 ALTER TABLE serie ADD CONSTRAINT serie_exo_fk FOREIGN KEY (exo_id_exo) REFERENCES exo (id_exo);
 ALTER TABLE workout ADD CONSTRAINT workout_client_fk FOREIGN KEY (client_id_client) REFERENCES client (id_client);
+ALTER USER 'scott'@'%' IDENTIFIED WITH mysql_native_password BY 'oracle';
+FLUSH PRIVILEGES;
+GRANT ALL PRIVILEGES ON energymizeBD.* TO 'scott'@'%';
+FLUSH PRIVILEGES;

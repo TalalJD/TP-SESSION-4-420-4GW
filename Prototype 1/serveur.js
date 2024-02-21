@@ -68,3 +68,16 @@ app.get("/Abonnement", function (req, res) {
   
 
 });
+
+const con = mysql.createConnection({
+  host: "localhost",
+  user: "scott",
+  password: "oracle",
+  database: "energymizeBD",
+  port:3307
+  });
+  con.connect(function(err) {
+  if (err) throw err;
+  console.log("connected!");
+  });
+  

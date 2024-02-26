@@ -117,5 +117,5 @@ ALTER TABLE serie ADD CONSTRAINT serie_exo_fk FOREIGN KEY (exo_id_exo) REFERENCE
 ALTER TABLE workout ADD CONSTRAINT workout_client_fk FOREIGN KEY (client_id_client) REFERENCES client (id_client);
 ALTER USER 'scott'@'%' IDENTIFIED WITH mysql_native_password BY 'oracle';
 FLUSH PRIVILEGES;
-GRANT ALL PRIVILEGES ON energymizeBD.* TO 'scott'@'%';
+GRANT ALL PRIVILEGES ON energymizeBd.* TO 'scott'@'%';
 FLUSH PRIVILEGES;

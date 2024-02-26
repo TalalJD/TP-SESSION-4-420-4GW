@@ -121,5 +121,5 @@ ADD COLUMN sport_id_sport INT;
 ALTER TABLE poste
 ADD CONSTRAINT poste_sport_fk FOREIGN KEY (sport_id_sport) REFERENCES sport (id_sport);
 FLUSH PRIVILEGES;
-GRANT ALL PRIVILEGES ON energymizeBD.* TO 'scott'@'%';
+GRANT ALL PRIVILEGES ON energymizeBd.* TO 'scott'@'%';
 FLUSH PRIVILEGES;

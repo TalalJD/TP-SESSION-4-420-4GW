@@ -16,23 +16,23 @@
                           style="width: 185px;" alt="logo">
                       </div>
       
-                      <form>
+                      <form action="/event/cnx" method="post">
                         <h4>Connectez-vous sur votre compte</h4>
                         <br><br>
       
                         <div class="form-outline mb-4">
-                          <input type="email" id="form2Example11" class="form-control"
+                          <input type="email" id="form2Example11" name="username" class="form-control"
                             placeholder="Numéro de téléphone ou adresse e-mail" />
                           <label class="form-label" for="form2Example11">Nom d'utilisateur</label>
                         </div>
       
                         <div class="form-outline mb-4">
-                          <input type="password" id="form2Example22" class="form-control" />
+                          <input type="password" id="form2Example22" name="password" class="form-control" />
                           <label class="form-label" for="form2Example22">Mot de passe</label>
                         </div>
       
                         <div class="text-center pt-1 mb-5 pb-1">
-                          <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="button">Se connecter</button><br>
+                          <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Se connecter</button><br>
                           <a class="text-muted" href="#!">Mot de passe oublié?</a>
                         </div>
       
@@ -43,6 +43,10 @@
       
                       </form>
       
+<script>        document.getElementById('loginForm').addEventListener('submit', function(event) {             event.preventDefault();             
+var username = document.getElementById('username').value;             var password = document.getElementById('password').value;                         
+// Send username and password to server // You will use AJAX or Fetch API for this
+ }); </script>
                     </div>
                   </div>
                   <div class="col-lg-6 d-flex align-items-center gradient-custom-2">

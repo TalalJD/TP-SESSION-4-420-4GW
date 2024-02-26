@@ -76,20 +76,32 @@ con.connect(function (err) {
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/inscription/submit", function (req, res) {
-  const requete =
-    "INSERT INTO client (nom_client, prenom_client, courriel_client, mdp_client, gen_restants) VALUES (?, ?, ?, ?, ?)";
-  const parametres = [
-    req.body.nom_client,
-    req.body.prenom_client,
-    req.body.courriel_client,
-    req.body.mdp_client,
-    3,
-  ];
-  con.query(requete, parametres, function (err, result) {
-    if (err) throw err;
-    res.redirect("/");
+  // verifie si toutes les cases sont remplies avant de continuer
+  if (!req.body.nom_client || !req.body.prenom_client || !req.body.courriel_client || !req.body.mdp_client) {
+    return res.status(400).send("Veuillez remplire toutes les cases");
+  }
+
+  // Verifie si l'email existe deja dans la BD
+  const emailCheckQuery = "SELECT * FROM client WHERE courriel_client = ?";
+  con.query(emailCheckQuery, [req.body.courriel_client], function (emailCheckErr, emailCheckResult) {
+    if (emailCheckErr) throw emailCheckErr;
+
+    if (emailCheckResult.length > 0) {
+      // l'email existe deja dans la bd
+      return res.status(400).send("Ce courriel est deja inscrit veuillez ressayer");
+    }
+
+  
+    const insertionQuery = "INSERT INTO client (nom_client, prenom_client, courriel_client, mdp_client, gen_restants) VALUES (?, ?, ?, ?, ?)";
+    const parameters = [req.body.nom_client, req.body.prenom_client, req.body.courriel_client, req.body.mdp_client, 3];
+
+    con.query(insertionQuery, parameters, function (err, result) {
+      if (err) throw err;
+      res.redirect("/");
+    });
   });
 });
+
 app.get("/indexSport", function(req,res){
   const id_sport=req.query.id_sport;
   const image=req.query.image;
@@ -111,5 +123,52 @@ app.get("/indexSport", function(req,res){
     });
   });
 });
+
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  app.post('/event/cnx', (req, res) => {
+         const username = req.body.username;
+         const password = req.body.password;     
+         connection.query('SELECT * FROM client WHERE courriel_client = ? AND mdp_client = ?', [username, password], (error, results, fields) => {
+          if (error) {             
+            res.status(500).send('Internal Server Error');             
+            return;         
+          }         
+          if (results.length > 0) {
+              res.send('Login successful');
+                     
+          } else {
+            res.status(401).send('Invalid username or password');         
+          }     
+        }); });
+

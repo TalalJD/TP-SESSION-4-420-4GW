@@ -116,6 +116,10 @@ ALTER TABLE serie ADD CONSTRAINT serie_exo_exec_fk FOREIGN KEY (exo_exec_id_exo_
 ALTER TABLE serie ADD CONSTRAINT serie_exo_fk FOREIGN KEY (exo_id_exo) REFERENCES exo (id_exo);
 ALTER TABLE workout ADD CONSTRAINT workout_client_fk FOREIGN KEY (client_id_client) REFERENCES client (id_client);
 ALTER USER 'scott'@'%' IDENTIFIED WITH mysql_native_password BY 'oracle';
+ALTER TABLE poste
+ADD COLUMN sport_id_sport INT;
+ALTER TABLE poste
+ADD CONSTRAINT poste_sport_fk FOREIGN KEY (sport_id_sport) REFERENCES sport (id_sport);
 FLUSH PRIVILEGES;
 GRANT ALL PRIVILEGES ON energymizeBD.* TO 'scott'@'%';
 FLUSH PRIVILEGES;

@@ -93,3 +93,24 @@ app.post("/inscription/submit", function (req, res) {
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
+
+
+
+
+
+  app.post('/event/cnx', (req, res) => {
+         const username = req.body.username;
+         const password = req.body.password;     
+         connection.query('SELECT * FROM client WHERE courriel_client = ? AND mdp_client = ?', [username, password], (error, results, fields) => {
+          if (error) {             
+            res.status(500).send('Internal Server Error');             
+            return;         
+          }         
+          if (results.length > 0) {
+              res.send('Login successful');
+                     
+          } else {
+            res.status(401).send('Invalid username or password');         
+          }     
+        }); });
+

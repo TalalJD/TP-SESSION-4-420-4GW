@@ -1,2 +1,25 @@
 <%- include ("../partials/header.ejs") %>
+<div class="indexPresentation">
+    <div class="indexSportImgContainer">
+        <img src="/imgs/<%=image%>">
+    </div>
+</div>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Sport</th>
+                <th>Poste</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% items.forEach(function(item) { %>
+            <tr>
+                <td><%=name%></td>
+                <td><%= item.nom_poste %></td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
 <%- include ("../partials/footer.ejs") %>

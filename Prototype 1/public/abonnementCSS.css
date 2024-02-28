@@ -45,7 +45,29 @@ body {
   color: #666; /* Couleur du texte assombrie */
 }
 
-#but {
+#but1 {
+  background: #000000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+  margin-top: auto; /* Déplacer le bouton vers le bas */
+}
+#but2 {
+  background: #000000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+  margin-top: auto; /* Déplacer le bouton vers le bas */
+}
+#but3 {
   background: #000000;
   color: white;
   border: none;
@@ -73,10 +95,15 @@ body {
 
 body {
   margin: 0;
-  padding: 0;
-  min-height: 100%;
-  background: linear-gradient(to bottom, #333333, #1a1a1a);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  color: #fff;
+  font-family: Arial, sans-serif;
+  background: #261E1E; /* Arrière-plan précédent */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 0; /* Ajout de la propriété padding */
+  min-height: 100%; /* Ajout de la propriété min-height */
+  background: linear-gradient(to bottom, #333333, #1a1a1a); /* Nouvelle arrière-plan */
+  background-repeat: no-repeat; /* Répétition de l'arrière-plan */
+  background-attachment: fixed; /* Fixation de l'arrière-plan */
+  color: #fff; /* Couleur du texte */
 }

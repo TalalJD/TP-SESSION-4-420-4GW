@@ -135,3 +135,7 @@ ADD COLUMN abonnement_id_abonnement INT;
 ALTER TABLE client
 ADD CONSTRAINT client_abonnement_fk FOREIGN KEY (abonnement_id_abonnement) REFERENCES abonnement (id_abonnement);
 -- Fin ajout table abonnement
+INSERT INTO abonnement (nom_abonnement, nb_generations) VALUES 
+('GRATUIT', 3),
+('BASIC', 10),
+('PREMIUM', -1);

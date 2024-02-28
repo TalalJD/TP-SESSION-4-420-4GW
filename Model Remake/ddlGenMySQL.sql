@@ -123,3 +123,15 @@ ADD CONSTRAINT poste_sport_fk FOREIGN KEY (sport_id_sport) REFERENCES sport (id_
 FLUSH PRIVILEGES;
 GRANT ALL PRIVILEGES ON energymizeBd.* TO 'scott'@'%';
 FLUSH PRIVILEGES;
+-- Ajout table abonnement
+CREATE TABLE abonnement (
+    id_abonnement     INT NOT NULL AUTO_INCREMENT,
+    nom_abonnement    VARCHAR(100) NOT NULL,
+    nb_generations    INT NOT NULL,
+    PRIMARY KEY (id_abonnement)
+);
+ALTER TABLE client
+ADD COLUMN abonnement_id_abonnement INT;
+ALTER TABLE client
+ADD CONSTRAINT client_abonnement_fk FOREIGN KEY (abonnement_id_abonnement) REFERENCES abonnement (id_abonnement);
+-- Fin ajout table abonnement

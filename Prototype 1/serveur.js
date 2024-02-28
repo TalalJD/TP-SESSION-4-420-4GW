@@ -220,3 +220,31 @@ app.get('/logout', function (req, res) {
     }
   });
 });
+
+app.post('/abonnement/choisir', function(req, res) {
+  const idAbonnement = req.body.id_abonnement; 
+  const userId = req.session.user.id_client; 
+  let generationsRestantes = 0;
+  switch (idAbonnement) {
+    case '1': 
+      generationsRestantes = 3;
+      break;
+    case '2': 
+      generationsRestantes = 10;
+      break;
+    case '3': 
+      generationsRestantes = -1; 
+      break;
+    default:
+      generationsRestantes = 0;
+  }
+  const updateQuery = 'UPDATE client SET abonnement_id_abonnement = ?, gen_restants = ? WHERE id_client = ?';
+  con.query(updateQuery, [idAbonnement, generationsRestantes, userId], function(err, result) {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Erreur lors de la mise à jour de l\'abonnement');
+    } else {
+      res.redirect('/'); 
+    }
+  });
+});

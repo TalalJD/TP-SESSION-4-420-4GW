@@ -261,7 +261,19 @@ app.post('/abonnement/choisir', function(req, res) {
       console.error(err);
       res.status(500).send('Erreur lors de la mise à jour de l\'abonnement');
     } else {
-      res.redirect('/'); 
+      // Effectuer une nouvelle requête pour récupérer les données mises à jour de l'utilisateur
+      const userQuery = 'SELECT * FROM client WHERE id_client = ?';
+      con.query(userQuery, [userId], function(userErr, userResult) {
+        if (userErr) {
+          console.error(userErr);
+          res.status(500).send('Erreur lors de la récupération des données de l\'utilisateur');
+        } else {
+          // Mettre à jour les données de session de l'utilisateur
+          req.session.user = userResult[0];
+          // Rediriger vers la page d'accueil ou la page d'abonnement mise à jour
+          res.redirect('/');
+        }
+      });
     }
   });
 });

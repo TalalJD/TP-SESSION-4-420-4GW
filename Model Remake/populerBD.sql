@@ -9,9 +9,9 @@ INSERT INTO sport (nom_sport) VALUES
 
 -- Postes
 INSERT INTO poste (nom_poste, sport_id_sport) VALUES
-('Gardien de but', 1), -- Hockey
-('Défenseur', 1), -- Hockey
+('Defenseur', 1), -- Hockey
 ('Attaquant', 1), -- Hockey
+('Gardien de but', 1), -- Hockey
 
 ('Quarterback', 5), -- Football Américain
 ('Receveur', 5), -- Football Américain
@@ -19,7 +19,7 @@ INSERT INTO poste (nom_poste, sport_id_sport) VALUES
 ('Ligne défensive', 5), -- Football Américain
 
 ('Gardien de but', 3), -- Football
-('Défenseur', 3), -- Football
+('Defenseur', 3), -- Football
 ('Milieu de terrain', 3), -- Football
 ('Attaquant', 3), -- Football
 

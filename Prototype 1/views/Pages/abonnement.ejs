@@ -39,5 +39,21 @@
  
 </body>
 </html>
-
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Récupérer tous les boutons de confirmation
+        var buttons = document.querySelectorAll("#but");
+        
+        // Ajouter un gestionnaire d'événements à chaque bouton
+        buttons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                // Récupérer le titre de la carte parente
+                var title = this.parentNode.querySelector("h2").textContent;
+                // Afficher un message avec le titre de la carte
+                alert("Abonnement " + title + " fait !");
+            });
+        });
+    });
+    </script>
+    
 <%- include ("../partials/footer.ejs") %>

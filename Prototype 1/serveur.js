@@ -277,3 +277,35 @@ app.post('/abonnement/choisir', function(req, res) {
     }
   });
 });
+app.get('/profile', function(req, res) {
+  let user = null;
+  if (req.session.isLoggedIn) {
+    user = req.session.user;
+    // Correct the query syntax and use placeholder for parameterized query
+    const abonnQuery = "SELECT * FROM abonnement WHERE id_abonnement = ?";
+
+    // Execute the query with user's abonnement_id_abonnement
+    con.query(abonnQuery, [user.abonnement_id_abonnement], function(err, abonnementDetails) {
+      if (err) {
+        // Handle error
+        console.error('Database query error:', err);
+        return res.status(500).send("Internal Server Error");
+      }
+
+      // Assuming abonnementDetails returns an array, and you're interested in the first row
+      let abonnement = abonnementDetails[0];
+
+      // Now, pass the fetched abonnement along with user to the template
+      res.render("Pages/profile", {
+        siteTitle: "Simple Application",
+        pageTitle: "Event List",
+        items: [], // Assuming you have other items to pass
+        user: user,
+        abonnement: abonnement // Pass the abonnement details to the template
+      });
+    });
+  } else {
+    // If not logged in, redirect or handle accordingly
+    res.redirect('/login');
+  }
+});

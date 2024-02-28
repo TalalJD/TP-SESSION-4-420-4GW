@@ -16,6 +16,11 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+app.use(session({
+  secret: 'your_secret_key', // This secret key will be used to sign the session ID cookie.resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false, maxAge: 86400000 } // For HTTPS use secure: true, maxAge sets the cookie to expire after 1 day
+}));
 /*
 Connexion au serveur
 */
@@ -23,6 +28,9 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
+
+
+
 const server = app.listen(4000, function () {
   console.log("serveur fonctionne sur 4000... ! ");
 });
@@ -30,13 +38,19 @@ app.use(express.static("public"));
 
 
 app.get("/", function (req, res) {
-  // No database query, just render the page
+  // Check if the user is logged in
+  let user = null; // Default to null if not logged in
+  if (req.session.isLoggedIn) {
+    user = req.session.user; // Set to the logged-in user's session data if they are logged in
+  }
+ 
+  // Render the page with the necessary data
   res.render("Pages/index", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
-    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    user: user // Pass the user object for conditional display in the template
   });
-
 });
 app.get("/Inscription", function (req, res) {
   // No database query, just render the page
@@ -165,53 +179,44 @@ app.post('/connexion/submit', (req, res) => {
   const user_email_address = req.body.adresse_mail;
   const mdp = req.body.mdp;
   if (user_email_address && mdp) {
-    requete = 
-        "SELECT * FROM client WHERE courriel_client = ?";
-        
-    con.query(requete, [user_email_address] ,function (error, data) {
+    const requete = "SELECT * FROM client WHERE courriel_client = ?";
+    con.query(requete, [user_email_address], function (error, data) {
       if (data.length > 0) {
-        for (var count = 0; count < data.length; count++) {
-          if (data[count].mdp_client == mdp) {
-            res.redirect("/");
-          }
-          else {
-            res.send('Incorrect Password');
-          }
+        if (data[0].mdp_client == mdp) { // Assuming email is unique and only one record should match  
+                  req.session.isLoggedIn = true; // Set a flag in the session to indicate logged in status        
+                    req.session.user = data[0]; // Save user info in session        
+                    res.redirect("/");
+        } else {
+          res.send('Incorrect Password');
         }
-      }
-      else {
+      } else {
         res.send('Incorrect Email Address');
       }
-      res.end();
     });
-  }
-
-  else {
+  } else {
     res.send('Please Enter Email Address and Password Details');
-    res.end();
   }
 });
 
 
 
-app.get('/logout', function (request, response, next) {
 
-
-
-  request.session.destroy();
-
-
-
-  response.redirect("/");
-
-
-
-
-
+app.get('/some-protected-route', function (req, res) {
+  if (req.session.isLoggedIn) {
+    // Proceed with the protected route logic  
+  } else {
+    // Redirect to login page or send an error message    
+    res.redirect('/login');
+  }
 });
 
-
-
-
-
-
+app.get('/logout', function (req, res) {
+  req.session.destroy(function(err) {
+    if (err) {
+      console.log(err);
+      res.send("Error logging out");
+    } else {
+      res.redirect('/login'); // Assuming you have a login page at this route
+    }
+  });
+});

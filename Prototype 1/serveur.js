@@ -161,41 +161,34 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 
 
-
-
-
-
-
-
 app.post('/connexion/submit', (req, res) => {
-  var user_email_address = request.body.adresse_mail;
-  var mdp = request.body.mdp;
-  if (adresse_mail && mdp) {
-    query = `
-        SELECT * FROM client 
-        WHERE courriel_client = "${user_email_address}"
-        `;
-    database.query(query, function (error, data) {
+  const user_email_address = req.body.adresse_mail;
+  const mdp = req.body.mdp;
+  if (user_email_address && mdp) {
+    requete = 
+        "SELECT * FROM client WHERE courriel_client = ?";
+        
+    con.query(requete, [user_email_address] ,function (error, data) {
       if (data.length > 0) {
         for (var count = 0; count < data.length; count++) {
           if (data[count].mdp_client == mdp) {
-            response.redirect("/");
+            res.redirect("/");
           }
           else {
-            response.send('Incorrect Password');
+            res.send('Incorrect Password');
           }
         }
       }
       else {
-        response.send('Incorrect Email Address');
+        res.send('Incorrect Email Address');
       }
-      response.end();
+      res.end();
     });
   }
 
   else {
-    response.send('Please Enter Email Address and Password Details');
-    response.end();
+    res.send('Please Enter Email Address and Password Details');
+    res.end();
   }
 });
 

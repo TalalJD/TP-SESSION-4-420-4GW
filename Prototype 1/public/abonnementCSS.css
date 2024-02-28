@@ -45,6 +45,43 @@ body {
   color: #666; /* Couleur du texte assombrie */
 }
 
+#loginButton1{
+  background: #000000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+  margin-top: auto; /* Déplacer le bouton vers le bas */
+}
+
+#loginButton2{
+  background: #000000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+  margin-top: auto; /* Déplacer le bouton vers le bas */
+}
+
+#loginButton3{
+  background: #000000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+  margin-top: auto; /* Déplacer le bouton vers le bas */
+}
+
+
 #but1 {
   background: #000000;
   color: white;

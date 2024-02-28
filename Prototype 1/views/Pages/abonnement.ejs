@@ -21,7 +21,7 @@
                     <button id="but1" type="submit" <% if (user.abonnement_id_abonnement == 1) { %>disabled<% } %>>Confirmer</button>
                 </form>
             <% } else { %>
-                <button id="but1" type="button" disabled>Connectez-vous pour souscrire</button>
+                <button id="loginButton1" type="button">Connectez-vous pour souscrire</button>
             <% } %>
         </div>
         <div class="card">
@@ -36,7 +36,7 @@
                     <button id="but2" type="submit" <% if (user.abonnement_id_abonnement == 2) { %>disabled<% } %>>Confirmer</button>
                 </form>
             <% } else { %>
-                <button id="but2" type="button" disabled>Connectez-vous pour souscrire</button>
+                <button id="loginButton2" type="button">Connectez-vous pour souscrire</button>
             <% } %>
         </div>
         <div class="card">
@@ -52,7 +52,7 @@
                     <button id="but3" type="submit" <% if (user.abonnement_id_abonnement == 3) { %>disabled<% } %>>Confirmer</button>
                 </form>
             <% } else { %>
-                <button id="but3" type="button" disabled>Connectez-vous pour souscrire</button>
+                <button id="loginButton3" type="button">Connectez-vous pour souscrire</button>
             <% } %>
         </div>
     </div>
@@ -60,16 +60,14 @@
 </html>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Récupérer tous les boutons de confirmation
-        var buttons = document.querySelectorAll("#but1, #but2, #but3");
+        // Récupérer les boutons de connexion
+        var loginButtons = document.querySelectorAll("#loginButton1, #loginButton2, #loginButton3");
         
         // Ajouter un gestionnaire d'événements à chaque bouton
-        buttons.forEach(function(button) {
+        loginButtons.forEach(function(button) {
             button.addEventListener("click", function() {
-                // Récupérer le titre de la carte parente
-                var title = this.parentNode.querySelector("h2").textContent;
-                // Afficher un message avec le titre de la carte
-                alert("Abonnement " + title + " fait !");
+                // Rediriger l'utilisateur vers la page de connexion
+                window.location.href = "/connexion";
             });
         });
     });

@@ -31,3 +31,8 @@ INSERT INTO poste (nom_poste, sport_id_sport) VALUES
 
 ('Hypertrophie', 2), -- Musculation
 ('Force', 2); -- Musculation
+
+-- Abonnements
+INSERT INTO abonnement (nom_abonnement, nb_generations) VALUES ('Gratuit', 3);
+INSERT INTO abonnement (nom_abonnement, nb_generations) VALUES ('Basic', 10);
+INSERT INTO abonnement (nom_abonnement, nb_generations) VALUES ('Premium', 99999);

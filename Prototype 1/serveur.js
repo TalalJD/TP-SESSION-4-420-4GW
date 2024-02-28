@@ -233,7 +233,7 @@ app.get('/logout', function (req, res) {
       console.log(err);
       res.send("Error logging out");
     } else {
-      res.redirect('/login'); // Assuming you have a login page at this route
+      res.redirect('/connexion'); // Assuming you have a login page at this route
     }
   });
 });

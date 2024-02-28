@@ -237,7 +237,6 @@ app.get('/logout', function (req, res) {
     }
   });
 });
-
 app.post('/abonnement/choisir', function(req, res) {
   const idAbonnement = req.body.id_abonnement; 
   const userId = req.session.user.id_client; 

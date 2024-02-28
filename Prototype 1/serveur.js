@@ -144,7 +144,7 @@ app.post("/inscription/submit", function (req, res) {
 
     con.query(insertionQuery, parameters, function (err, result) {
       if (err) throw err;
-      res.redirect("/");
+      res.redirect("/Connexion");
     });
   });
 });

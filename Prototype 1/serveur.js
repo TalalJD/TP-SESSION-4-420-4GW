@@ -53,17 +53,25 @@ app.get("/", function (req, res) {
   });
 });
 app.get("/Inscription", function (req, res) {
+  let user = null;
+  if (req.session.isLoggedIn) {
+    user = req.session.user;
+  }
   // No database query, just render the page
   res.render("Pages/inscription", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
-    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    items: [], 
+    user: user
   });
 });
 
 
 app.get("/Connexion", function (req, res) {
-
+  let user = null;
+  if (req.session.isLoggedIn) {
+    user = req.session.user;
+  }
   // No database query, just render the page
 
   res.render("Pages/connexion", {
@@ -72,8 +80,8 @@ app.get("/Connexion", function (req, res) {
 
     pageTitle: "Event List",
 
-    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
-
+    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    user:user
   });
 
 });
@@ -83,6 +91,10 @@ app.get("/Connexion", function (req, res) {
 app.get("/Abonnement", function (req, res) {
 
   // No database query, just render the page
+  let user = null;
+  if (req.session.isLoggedIn) {
+    user = req.session.user;
+  }
 
   res.render("Pages/abonnement", {
 
@@ -90,8 +102,8 @@ app.get("/Abonnement", function (req, res) {
 
     pageTitle: "Event List",
 
-    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
-
+    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    user:user
   });
 
 });
@@ -150,6 +162,10 @@ app.post("/inscription/submit", function (req, res) {
 });
 
 app.get("/indexSport", function(req,res){
+  let user = null;
+  if (req.session.isLoggedIn) {
+    user = req.session.user;
+  }
   const id_sport=req.query.id_sport;
   const image=req.query.image;
   const name=req.query.name;
@@ -166,7 +182,8 @@ app.get("/indexSport", function(req,res){
       pageTitle: "Event List",
       items: result,
       image: image,
-      name: name
+      name: name,
+      user:user
     });
   });
 });

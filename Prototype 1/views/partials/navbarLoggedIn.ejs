@@ -1,8 +1,8 @@
 
 <div class="indexHeader">
     <div class="indexHeaderSection">
-        <a href="/Connexion" class="indexButton1" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">Se connecter</a>
-        <a href="/Inscription"class="indexButton1" style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">S'inscrire</a>
+        <a href="/Connexion" class="indexButton1" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">Mon Profile</a>
+        <a href="/logout"class="indexButton1" style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">Deconnexion</a>
     </div>
 
     <a href="/">
@@ -16,4 +16,9 @@
 </div>
 
 <main>
+    <% if (user) { %>
+        <div style="color: white; text-align: center;">
+            <h1><%= user.prenom_client %> <%= user.nom_client %></h1>
+        </div>
+        <% } %>
     

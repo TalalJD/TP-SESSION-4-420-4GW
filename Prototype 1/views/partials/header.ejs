@@ -3,4 +3,8 @@
 <%- include ('../partials/head') %>
 
 <body>
-	<%- include ('../partials/navbar') %>
+	<% if (user) { %>
+		<%- include ('../partials/navbarLoggedIn') %>
+    <% }else { %>
+		<%- include ('../partials/navbar') %>
+	<%}%>

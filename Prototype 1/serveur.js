@@ -2,6 +2,7 @@
 Importation des modules requis
 */
 
+
 import express from "express";
 import session from "express-session";
 import path from "path";
@@ -10,6 +11,7 @@ import mysql from "mysql";
 import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
 import bodyParser from "body-parser";
+
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,51 +28,82 @@ const server = app.listen(4000, function () {
 });
 app.use(express.static("public"));
 
+
 app.get("/", function (req, res) {
   // No database query, just render the page
   res.render("Pages/index", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
-    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
   });
+
 });
 app.get("/Inscription", function (req, res) {
   // No database query, just render the page
   res.render("Pages/inscription", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
-    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
   });
 });
+
 
 app.get("/Connexion", function (req, res) {
+
   // No database query, just render the page
+
   res.render("Pages/connexion", {
+
     siteTitle: "Simple Application",
+
     pageTitle: "Event List",
-    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+
+    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+
   });
+
 });
+
+
 
 app.get("/Abonnement", function (req, res) {
+
   // No database query, just render the page
+
   res.render("Pages/abonnement", {
+
     siteTitle: "Simple Application",
+
     pageTitle: "Event List",
-    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+
+    items: [] // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+
   });
+
 });
 
+
+
 const con = mysql.createConnection({
+
   host: "localhost",
+
   user: "scott",
+
   password: "oracle",
+
   database: "energymizeBD",
+
   port: 3307
+
 });
+
 con.connect(function (err) {
+
   if (err) throw err;
+
   console.log("connected!");
+
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -134,41 +167,58 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
+app.post('/connexion/submit', (req, res) => {
+  var user_email_address = request.body.adresse_mail;
+  var mdp = request.body.mdp;
+  if (adresse_mail && mdp) {
+    query = `
+        SELECT * FROM client 
+        WHERE courriel_client = "${user_email_address}"
+        `;
+    database.query(query, function (error, data) {
+      if (data.length > 0) {
+        for (var count = 0; count < data.length; count++) {
+          if (data[count].mdp_client == mdp) {
+            response.redirect("/");
+          }
+          else {
+            response.send('Incorrect Password');
+          }
+        }
+      }
+      else {
+        response.send('Incorrect Email Address');
+      }
+      response.end();
+    });
+  }
+
+  else {
+    response.send('Please Enter Email Address and Password Details');
+    response.end();
+  }
+});
+
+
+
+app.get('/logout', function (request, response, next) {
+
+
+
+  request.session.destroy();
+
+
+
+  response.redirect("/");
 
 
 
 
 
+});
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-  app.post('/event/cnx', (req, res) => {
-         const username = req.body.username;
-         const password = req.body.password;     
-         connection.query('SELECT * FROM client WHERE courriel_client = ? AND mdp_client = ?', [username, password], (error, results, fields) => {
-          if (error) {             
-            res.status(500).send('Internal Server Error');             
-            return;         
-          }         
-          if (results.length > 0) {
-              res.send('Login successful');
-                     
-          } else {
-            res.status(401).send('Invalid username or password');         
-          }     
-        }); });
 

@@ -1,72 +1,82 @@
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #261E1E;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-   
-  .card-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-  }
-   
-  .card {
-    background: linear-gradient(to right, #D5C069, #D5C069);
-    border-radius: 1rem;
-    color: rgb(0, 0, 0);
-    padding: 20px;
-    width: 350px; /* Largeur augmentée */
-    height: 550px;
-    text-align: center;
-    margin: 70px;
-  }
-   
-  .card h2 {
-    margin: 20px 0;
-  }
-   
-  #but {
-    background: #000000;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s ease;
-    margin-top: auto; /* Déplacer le bouton vers le bas */
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #261E1E;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-   
-  
-  .indexHeader{
-    display:flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 15px;
-    padding-top: 25px;
-    /*width: 100%;*/
-    height: auto;
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 }
 
-.indexHeaderSection{
-    display: flex;
+.card {
+  background: linear-gradient(to right, #D5C069, #D5C069);
+  border-radius: 1rem;
+  color: rgb(0, 0, 0);
+  padding: 20px;
+  width: 350px;
+  height: 550px;
+  text-align: center;
+  margin: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajout de l'ombre */
+  transition: box-shadow 0.3s ease; /* Transition pour l'ombre */
 }
-body {
-    margin: 0; /* Removes the default margin */
-    padding: 0; /* Removes the default padding */
-    min-height: 100%; /* Ensures the body covers at least the full height of the viewport */
-    background: linear-gradient(to bottom, #333333, #1a1a1a); /* Gradient from dark grey to darker grey */
-    background-repeat: no-repeat; /* Prevents the background from repeating */
-    background-attachment: fixed; /* Makes the background fixed during scroll */
-    color: #fff; /* Sets the default text color to white */
+
+.card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée au survol */
+}
+
+.card h2 {
+  margin: 20px 0;
+  color: #333; /* Couleur du texte assombrie */
 }
 
 .additional-info p {
-    font-size: 18px; /* Augmente la taille de la police */
-    font-family: "Arial", sans-serif; /* Change la police */
+  font-size: 18px;
+  font-family: "Arial", sans-serif;
+  color: #666; /* Couleur du texte assombrie */
+}
+
+#but {
+  background: #000000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+  margin-top: auto; /* Déplacer le bouton vers le bas */
+}
+
+.indexHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 15px;
+  padding-top: 25px;
+  /*width: 100%;*/
+  height: auto;
+}
+
+.indexHeaderSection {
+  display: flex;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: linear-gradient(to bottom, #333333, #1a1a1a);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #fff;
 }

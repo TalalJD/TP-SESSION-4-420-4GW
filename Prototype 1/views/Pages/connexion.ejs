@@ -2,88 +2,64 @@
 
 <!-- Template : https://mdbootstrap.com/docs/standard/extended/login/#login-basic-example-->
 
-<section class="h-100 gradient-form">
-    <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
+    <section class="h-100 gradient-form" >
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-xl-10">
-                <div class="card rounded-3 text-black">
-                    <div class="row g-0">
-                        <div class="col-lg-6">
-                            <div class="card-body p-md-5 mx-md-4">
-
-                                <div class="text-center">
-                                    <img src="/imgs/loginpng.jpg" style="width: 185px;" alt="logo">
-                                </div>
-
-                                <form id="loginForm" action="/connexion/submit" method="post">
-                                    <h4>Connectez-vous sur votre compte</h4>
-                                    <br><br>
-
-                                    <div class="form-outline mb-4">
-                                        <input type="email" id="adresse_mail" name="adresse_mail" class="form-control"
-                                            placeholder="adresse e-mail" />
-                                        <label class="form-label" for="adresse_mail">Adresse e-mail</label>
-                                    </div>
-
-                                    <div class="form-outline mb-4">
-                                        <input type="password" id="mdp" name="mdp" class="form-control" placeholder="Mot de passe" />
-                                        <label class="form-label" for="mdp">Mot de passe</label>
-                                    </div>
-
-                                    <div class="text-center pt-1 mb-5 pb-1">
-                                        <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
-                                            type="submit">Se connecter</button><br>
-                                        <a class="text-muted" href="#!">Mot de passe oublié?</a>
-                                    </div>
-
-                                    <div class="align-items-center justify-content-center pb-4">
-                                        <p class="mb-0 me-2">Vous n'avez pas un compte?</p>
-                                        <a href="/Inscription"
-                                            class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3 top-50 start-50">S'inscrire!</a>
-                                    </div>
-
-                                </form>
-
-                            </div>
+              <div class="card rounded-3 text-black">
+                <div class="row g-0">
+                  <div class="col-lg-6">
+                    <div class="card-body p-md-5 mx-md-4">
+      
+                      <div class="text-center">
+                        <img src="/imgs/loginpng.jpg"
+                          style="width: 185px;" alt="logo">
+                      </div>
+      
+                      <form action="/connexion/submit" method="post">
+                        <h4>Connectez-vous sur votre compte</h4>
+                        <br><br>
+      
+                        <div class="form-outline mb-4">
+                          <input type="email" id="adresse_mail" name="adresse_mail" class="form-control"
+                            placeholder="Numéro de téléphone ou adresse e-mail" />
+                          <label class="form-label" for="form2Example11">Nom d'utilisateur</label>
                         </div>
-                        <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
-                            <div class="text-white px-3 py-4 p-md-5 mx-md-4">
-                                <h4 class="mb-4">Dépassez les limites avec Energymize</h4>
-                                <p class="medium mb-0">Votre univers d'entraînement et de nutrition sur mesure.
-                                    Découvrez des programmes spécialisés pour le gym, le hockey, le football
-                                    américain, le soccer et le basketball. Avec nos trackers d'entraînement et de
-                                    nutrition, atteignez vos objectifs de performance comme jamais auparavant.</p>
-                            </div>
+      
+                        <div class="form-outline mb-4">
+                          <input type="password" id="mdp" name="mdp" class="form-control"/>
+                          <label class="form-label" for="form2Example22">Mot de passe</label>
                         </div>
+      
+                        <div class="text-center pt-1 mb-5 pb-1">
+                          <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Se connecter</button><br>
+                          <a class="text-muted" href="#!">Mot de passe oublié?</a>
+                        </div>
+      
+                        <div class="align-items-center justify-content-center pb-4">
+                          <p class="mb-0 me-2">Vous n'avez pas un compte?</p>
+                          <button href="/Inscription" type="button" class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3 top-50 start-50">S'inscrire!</button>
+                        </div>
+      
+                      </form>
+      
+<script>        document.getElementById('loginForm').addEventListener('submit', function(event) {             event.preventDefault();             
+var username = document.getElementById('username').value;             var password = document.getElementById('password').value;                         
+// Send username and password to server // You will use AJAX or Fetch API for this
+ }); </script>
                     </div>
+                  </div>
+                  <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+                    <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                      <h4 class="mb-4">Dépassez les limites avec Energymize</h4>
+                      <p class="medium mb-0">Votre univers d'entraînement et de nutrition sur mesure. Découvrez des programmes spécialisés pour le gym, 
+                        le hockey, le football américain, le soccer et le basketball. Avec nos trackers d'entraînement et de nutrition, atteignez vos objectifs 
+                        de performance comme jamais auparavant.</p>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-</section>
-
-<%- include ("../partials/footer.ejs") %>
-
-<script>
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        var email = document.getElementById('adresse_mail').value;
-        var password = document.getElementById('mdp').value;
-
-        if (!email) {
-            alert('Veuillez entrer votre adresse e-mail.');
-            return;
-        }
-
-        if (!password) {
-            alert('Veuillez entrer votre mot de passe.');
-            return;
-        }
-
-        if (email !== 'votre@email.com' || password !== 'votreMotDePasse') {
-            alert('Les informations d\'identification fournies sont incorrectes.');
-            return;
-        }
-    });
-</script>
+      </section>

@@ -199,9 +199,9 @@ app.post('/connexion/submit', (req, res) => {
     const requete = "SELECT * FROM client WHERE courriel_client = ?";
     con.query(requete, [user_email_address], function (error, data) {
       if (data.length > 0) {
-        if (data[0].mdp_client == mdp) { // Assuming email is unique and only one record should match  
-                  req.session.isLoggedIn = true; // Set a flag in the session to indicate logged in status        
-                    req.session.user = data[0]; // Save user info in session        
+        if (data[0].mdp_client == mdp) { 
+                  req.session.isLoggedIn = true;        
+                    req.session.user = data[0];      
                     res.redirect("/");
         } else {
           res.send('Incorrect Password');

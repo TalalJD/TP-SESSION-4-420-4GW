@@ -17,9 +17,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(session({
-  secret: 'your_secret_key', // This secret key will be used to sign the session ID cookie.resave: false,
+  secret: 'your_secret_key', 
   saveUninitialized: true,
-  cookie: { secure: false, maxAge: 86400000 } // For HTTPS use secure: true, maxAge sets the cookie to expire after 1 day
+  cookie: { secure: false, maxAge: 86400000 } 
 }));
 /*
 Connexion au serveur
@@ -38,18 +38,17 @@ app.use(express.static("public"));
 
 
 app.get("/", function (req, res) {
-  // Check if the user is logged in
-  let user = null; // Default to null if not logged in
+  
+  let user = null; 
   if (req.session.isLoggedIn) {
-    user = req.session.user; // Set to the logged-in user's session data if they are logged in
+    user = req.session.user; 
   }
  
-  // Render the page with the necessary data
   res.render("Pages/index", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
-    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
-    user: user // Pass the user object for conditional display in the template
+    items: [], 
+    user: user 
   });
 });
 app.get("/Inscription", function (req, res) {
@@ -228,10 +227,10 @@ app.post('/connexion/submit', (req, res) => {
 
 app.get('/some-protected-route', function (req, res) {
   if (req.session.isLoggedIn) {
-    // Proceed with the protected route logic
+   
     res.redirect('/');  
   } else {
-    // Redirect to login page or send an error message    
+     
     res.redirect('/login');
   }
 });
@@ -289,31 +288,30 @@ app.get('/profile', function(req, res) {
   let user = null;
   if (req.session.isLoggedIn) {
     user = req.session.user;
-    // Correct the query syntax and use placeholder for parameterized query
+  
     const abonnQuery = "SELECT * FROM abonnement WHERE id_abonnement = ?";
 
-    // Execute the query with user's abonnement_id_abonnement
+    
     con.query(abonnQuery, [user.abonnement_id_abonnement], function(err, abonnementDetails) {
       if (err) {
-        // Handle error
+       
         console.error('Database query error:', err);
         return res.status(500).send("Internal Server Error");
       }
 
-      // Assuming abonnementDetails returns an array, and you're interested in the first row
+      
       let abonnement = abonnementDetails[0];
 
-      // Now, pass the fetched abonnement along with user to the template
       res.render("Pages/profile", {
         siteTitle: "Simple Application",
         pageTitle: "Event List",
-        items: [], // Assuming you have other items to pass
+        items: [], 
         user: user,
-        abonnement: abonnement // Pass the abonnement details to the template
+        abonnement: abonnement 
       });
     });
   } else {
-    // If not logged in, redirect or handle accordingly
+    
     res.redirect('/login');
   }
 });

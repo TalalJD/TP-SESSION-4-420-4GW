@@ -8,6 +8,8 @@
 </engineerTo>
 <sourcePk>4FF43B4D-4A13-C25E-BBF0-61B7E4500F45</sourcePk>
 <identifying>false</identifying>
+<nameOnSource>apartenir</nameOnSource>
+<nameOnTarget>posseder</nameOnTarget>
 <optionalSource>true</optionalSource>
 <optionalTarget>true</optionalTarget>
 <sourceCardinality>1</sourceCardinality>

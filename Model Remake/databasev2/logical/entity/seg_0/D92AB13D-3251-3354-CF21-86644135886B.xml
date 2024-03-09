@@ -91,37 +91,6 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="id_sport" id="F1E1E8B0-E691-D622-B06E-F6377E327627">
-<createdBy>iisey</createdBy>
-<createdTime>2024-02-08 03:13:00 UTC</createdTime>
-<generatorID>BD510F19-B0CA-4911-FDFB-CCC8767D87FA</generatorID>
-<ownerDesignName>databasev2</ownerDesignName>
-<engineerTo>
-<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>B7428273-FAA3-D277-49BB-8AD7C6AF01E5</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="nom_sport" id="DF2F5083-65DB-4CB8-FA44-A000631C2843">
-<createdBy>iisey</createdBy>
-<createdTime>2024-02-08 03:13:00 UTC</createdTime>
-<generatorID>BD510F19-B0CA-4911-FDFB-CCC8767D87FA</generatorID>
-<ownerDesignName>databasev2</ownerDesignName>
-<engineerTo>
-<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>13184FBD-8378-C1AD-08F1-27E2F1F63DA7</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>50</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="id_coach" id="38EE8736-2460-A548-017E-1A57D9CDDB64">
 <createdBy>iisey</createdBy>
 <createdTime>2024-02-08 03:14:22 UTC</createdTime>
@@ -137,36 +106,6 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="id_poste" id="30A076F9-B68D-5F18-0ACF-FC1E35741818">
-<createdBy>iisey</createdBy>
-<createdTime>2024-02-08 03:14:57 UTC</createdTime>
-<generatorID>E9E15C6B-2FA1-5E49-A067-867CFD9F9E17</generatorID>
-<ownerDesignName>databasev2</ownerDesignName>
-<engineerTo>
-<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>2ADBFE0E-8704-40E9-FB00-485489588F67</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="id_programme" id="CFB6AD4E-ED34-663D-C14D-D106E45E8B56">
-<createdBy>iisey</createdBy>
-<createdTime>2024-02-08 03:16:44 UTC</createdTime>
-<generatorID>1DCFA913-A15D-9732-735A-7F813F1F2B8E</generatorID>
-<ownerDesignName>databasev2</ownerDesignName>
-<engineerTo>
-<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>53D573FE-3611-60C7-7979-E7EC0CBC1E60</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="id_diet" id="78A2383B-D00E-1EC1-9FD2-B73D770A6481">
 <createdBy>iisey</createdBy>
 <createdTime>2024-02-08 23:40:56 UTC</createdTime>
@@ -177,6 +116,34 @@
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <referedAttribute>8437C279-8881-2A9C-DFAD-A595758C4AF9</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_poste" id="AB4D57A6-EA95-72C7-729D-0850A2C0E0B2">
+<createdBy>danto</createdBy>
+<createdTime>2024-03-09 02:19:30 UTC</createdTime>
+<generatorID>E9E15C6B-2FA1-5E49-A067-867CFD9F9E17</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<referedAttribute>2ADBFE0E-8704-40E9-FB00-485489588F67</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_abonnement" id="4E4077C6-B2FB-239A-1886-849E42EF775D">
+<createdBy>danto</createdBy>
+<createdTime>2024-03-09 02:30:47 UTC</createdTime>
+<generatorID>DA6C0E71-3FB4-FA7B-8215-5E7B7FD6DDFD</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<referedAttribute>49C61CEE-7F00-3042-4288-17260FD17CD9</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT019</logicalDatatype>

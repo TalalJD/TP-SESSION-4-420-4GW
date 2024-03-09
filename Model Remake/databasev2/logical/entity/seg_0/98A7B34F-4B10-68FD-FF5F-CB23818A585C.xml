@@ -40,6 +40,35 @@
 <dataTypeSize>50</dataTypeSize>
 <ownDataTypeParameters>50,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="id_sport" id="3AE04C65-E2BA-C0FB-D02A-15AAB64FEE82">
+<createdBy>danto</createdBy>
+<createdTime>2024-03-09 02:18:27 UTC</createdTime>
+<generatorID>F02F0C07-3915-C188-0C57-03A0BBAFD12E</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<referedAttribute>B7428273-FAA3-D277-49BB-8AD7C6AF01E5</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nom_sport" id="F901B9C5-9A0B-F438-5351-6EE6216E4316">
+<createdBy>danto</createdBy>
+<createdTime>2024-03-09 02:18:27 UTC</createdTime>
+<generatorID>F02F0C07-3915-C188-0C57-03A0BBAFD12E</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<referedAttribute>13184FBD-8378-C1AD-08F1-27E2F1F63DA7</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="4CE40553-EEBB-CFFE-B039-39EAA64CC22D" name="poste PK">

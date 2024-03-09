@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="AC7E967C-52F8-F559-C0D0-8C107422089F" name="prefaits_progs">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="AC7E967C-52F8-F559-C0D0-8C107422089F" name="progres_entrainement">
 <createdBy>iisey</createdBy>
 <createdTime>2024-02-08 23:34:03 UTC</createdTime>
 <ownerDesignName>databasev2</ownerDesignName>
@@ -27,7 +27,7 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="titre_prefait" id="C0F45414-405E-E28C-35BF-FC6B99F90EFB">
+<Attribute name="nom exo" id="C0F45414-405E-E28C-35BF-FC6B99F90EFB">
 <createdBy>iisey</createdBy>
 <createdTime>2024-02-08 23:34:39 UTC</createdTime>
 <ownerDesignName>databasev2</ownerDesignName>
@@ -39,7 +39,7 @@
 <logicalDatatype>LOGDT024</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="desc_prefait" id="EBCB9F46-2345-8285-3C81-7C5446890B2B">
+<Attribute name="description progres" id="EBCB9F46-2345-8285-3C81-7C5446890B2B">
 <createdBy>iisey</createdBy>
 <createdTime>2024-02-08 23:34:47 UTC</createdTime>
 <ownerDesignName>databasev2</ownerDesignName>
@@ -49,6 +49,61 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="temps" id="288E1B71-A197-F2B5-07F7-7689094C0CA4">
+<createdBy>danto</createdBy>
+<createdTime>2024-03-09 02:27:03 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="poids" id="FB4BA873-9E34-FA33-134A-02F676A832B3">
+<createdBy>danto</createdBy>
+<createdTime>2024-03-09 02:27:14 UTC</createdTime>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_client" id="89AF9F8B-A4B1-1364-B028-F5550C8AF28A">
+<createdBy>danto</createdBy>
+<createdTime>2024-03-09 02:28:07 UTC</createdTime>
+<generatorID>FEA72D3E-E555-5AC4-2EE6-48FF26347A9F</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<referedAttribute>D7B40D03-0AC1-F2C4-3BC4-C0F05E0850A0</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_programme_entrainement" id="9B61822E-4772-BE89-A0CD-A72DED2D33B7">
+<createdBy>danto</createdBy>
+<createdTime>2024-03-09 02:29:10 UTC</createdTime>
+<generatorID>AC1DF48B-3F03-1E8E-733E-25F12738EE71</generatorID>
+<ownerDesignName>databasev2</ownerDesignName>
+<engineerTo>
+<item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>53D573FE-3611-60C7-7979-E7EC0CBC1E60</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>

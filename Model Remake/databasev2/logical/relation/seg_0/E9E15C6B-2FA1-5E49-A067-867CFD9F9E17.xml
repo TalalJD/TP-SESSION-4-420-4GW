@@ -7,11 +7,12 @@
 <item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
 </engineerTo>
 <sourcePk>4CE40553-EEBB-CFFE-B039-39EAA64CC22D</sourcePk>
+<targetPk>3F0D01B5-AB69-30A3-CD06-03E8D7F407C0</targetPk>
 <identifying>false</identifying>
 <nameOnSource>appartenir</nameOnSource>
 <nameOnTarget>avoir</nameOnTarget>
 <optionalSource>true</optionalSource>
-<optionalTarget>true</optionalTarget>
+<optionalTarget>false</optionalTarget>
 <sourceCardinality>1</sourceCardinality>
 <sourceEntity>98A7B34F-4B10-68FD-FF5F-CB23818A585C</sourceEntity>
 <targetCardinalityString>*</targetCardinalityString>

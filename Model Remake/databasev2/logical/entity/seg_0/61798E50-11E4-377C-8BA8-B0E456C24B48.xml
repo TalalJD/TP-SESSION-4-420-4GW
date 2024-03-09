@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="61798E50-11E4-377C-8BA8-B0E456C24B48" name="exo">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="61798E50-11E4-377C-8BA8-B0E456C24B48" name="exercices">
 <createdBy>iisey</createdBy>
 <createdTime>2024-02-08 02:53:13 UTC</createdTime>
 <ownerDesignName>databasev2</ownerDesignName>
@@ -15,7 +15,7 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="id_exo" id="5914CCC8-D264-3562-5D83-58B106D15B5D">
+<Attribute name="id_exercice" id="5914CCC8-D264-3562-5D83-58B106D15B5D">
 <createdBy>iisey</createdBy>
 <createdTime>2024-02-08 02:53:25 UTC</createdTime>
 <ownerDesignName>databasev2</ownerDesignName>

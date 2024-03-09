@@ -1,22 +1,21 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="prog_prefait" directorySegmentName="seg_0" id="AC1DF48B-3F03-1E8E-733E-25F12738EE71">
-<createdBy>iisey</createdBy>
-<createdTime>2024-02-08 23:41:34 UTC</createdTime>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Relation_18" directorySegmentName="seg_0" id="FEA72D3E-E555-5AC4-2EE6-48FF26347A9F">
+<createdBy>danto</createdBy>
+<createdTime>2024-03-09 02:27:59 UTC</createdTime>
 <ownerDesignName>databasev2</ownerDesignName>
 <engineerTo>
 <item key="98416CC5-22A8-BE4D-E55B-6966FB504721" value="true"/>
 </engineerTo>
-<sourcePk>D0C26CA9-D2C5-28B8-2288-B2D61337586F</sourcePk>
-<targetPk>C0AED644-B1B7-590D-4D51-81F4599E820C</targetPk>
+<targetPk>3F0D01B5-AB69-30A3-CD06-03E8D7F407C0</targetPk>
 <identifying>false</identifying>
 <nameOnSource>apartenir</nameOnSource>
-<nameOnTarget>apartenir</nameOnTarget>
-<optionalSource>true</optionalSource>
+<nameOnTarget>posseder</nameOnTarget>
+<optionalSource>false</optionalSource>
 <optionalTarget>true</optionalTarget>
 <sourceCardinality>*</sourceCardinality>
 <sourceEntity>AC7E967C-52F8-F559-C0D0-8C107422089F</sourceEntity>
 <targetCardinalityString>1</targetCardinalityString>
-<targetEntity>E9DFBDB0-BA73-F41F-371B-BC29D4F9B59D</targetEntity>
+<targetEntity>D92AB13D-3251-3354-CF21-86644135886B</targetEntity>
 <transferable>true</transferable>
 <deleteRule>NO ACTION</deleteRule>
 </Relation>

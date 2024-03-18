@@ -11,15 +11,20 @@ import mysql from "mysql";
 import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
 import bodyParser from "body-parser";
+import { config } from 'dotenv';
+import { MongoClient } from 'mongodb';
+config();
 
+//const uri = process.env.DB_URI;
+const uri = "mongodb+srv://admin:admin@energymizebd.dprvzi7.mongodb.net/?retryWrites=true&w=majority&appName=EnergymizeBD";
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+mongoClient = await connectToMongo();
 app.use(session({
-  secret: 'your_secret_key', 
+  secret: 'your_secret_key', // This secret key will be used to sign the session ID cookie.resave: false,
   saveUninitialized: true,
-  cookie: { secure: false, maxAge: 86400000 } 
+  cookie: { secure: false, maxAge: 86400000 } // For HTTPS use secure: true, maxAge sets the cookie to expire after 1 day
 }));
 /*
 Connexion au serveur
@@ -38,17 +43,18 @@ app.use(express.static("public"));
 
 
 app.get("/", function (req, res) {
-  
-  let user = null; 
+  // Check if the user is logged in
+  let user = null; // Default to null if not logged in
   if (req.session.isLoggedIn) {
-    user = req.session.user; 
+    user = req.session.user; // Set to the logged-in user's session data if they are logged in
   }
  
+  // Render the page with the necessary data
   res.render("Pages/index", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
-    items: [], 
-    user: user 
+    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    user: user // Pass the user object for conditional display in the template
   });
 });
 app.get("/Inscription", function (req, res) {
@@ -56,6 +62,7 @@ app.get("/Inscription", function (req, res) {
   if (req.session.isLoggedIn) {
     user = req.session.user;
   }
+  // No database query, just render the page
   res.render("Pages/inscription", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
@@ -70,6 +77,7 @@ app.get("/Connexion", function (req, res) {
   if (req.session.isLoggedIn) {
     user = req.session.user;
   }
+  // No database query, just render the page
 
   res.render("Pages/connexion", {
 
@@ -77,7 +85,7 @@ app.get("/Connexion", function (req, res) {
 
     pageTitle: "Event List",
 
-    items: [], 
+    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
     user:user
   });
 
@@ -87,6 +95,7 @@ app.get("/Connexion", function (req, res) {
 
 app.get("/Abonnement", function (req, res) {
 
+  // No database query, just render the page
   let user = null;
   if (req.session.isLoggedIn) {
     user = req.session.user;
@@ -98,57 +107,47 @@ app.get("/Abonnement", function (req, res) {
 
     pageTitle: "Event List",
 
-    items: [], 
+    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
     user:user
   });
 
 });
 
-
-
-const con = mysql.createConnection({
-
-  host: "localhost",
-
-  user: "scott",
-
-  password: "oracle",
-
-  database: "energymizeBD",
-
-  port: 3307
-
-});
-
-con.connect(function (err) {
-
-  if (err) throw err;
-
-  console.log("connected!");
-
-});
+export async function connectToMongo(){
+  let mongoClient;
+    try {
+        mongoClient = new MongoClient(uri);
+        console.log("Connection à MongoDB... ("+uri+")");
+        await mongoClient.connect();
+        console.log("Connecté à MongoDB!");
+        return mongoClient;
+    } catch (error) {
+        console.error("Erreur de connexion à MongoDB!", error);4869
+        process.exit();
+    }
+}
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/inscription/submit", function (req, res) {
   // verifie si toutes les cases sont remplies avant de continuer
-  if (!req.body.nom || !req.body.prenom || !req.body.adresse_mail || !req.body.mdp) {
-     res.send("Veuillez remplire toutes les cases");
+  if (!req.body.nom_client || !req.body.prenom_client || !req.body.courriel_client || !req.body.mdp_client) {
+    return res.status(400).send("Veuillez remplire toutes les cases");
   }
 
   // Verifie si l'email existe deja dans la BD
   const emailCheckQuery = "SELECT * FROM client WHERE courriel_client = ?";
-  con.query(emailCheckQuery, [req.body.adresse_mail], function (emailCheckErr, emailCheckResult) {
+  con.query(emailCheckQuery, [req.body.courriel_client], function (emailCheckErr, emailCheckResult) {
     if (emailCheckErr) throw emailCheckErr;
 
     if (emailCheckResult.length > 0) {
       // l'email existe deja dans la bd
-       res.send("Ce courriel est deja inscrit veuillez ressayer");
+      return res.status(400).send("Ce courriel est deja inscrit veuillez ressayer");
     }
 
   
     const insertionQuery = "INSERT INTO client (nom_client, prenom_client, courriel_client, mdp_client, gen_restants) VALUES (?, ?, ?, ?, ?)";
-    const parameters = [req.body.nom, req.body.prenom, req.body.adresse_mail, req.body.mdp, 3];
+    const parameters = [req.body.nom_client, req.body.prenom_client, req.body.courriel_client, req.body.mdp_client, 3];
 
     con.query(insertionQuery, parameters, function (err, result) {
       if (err) throw err;
@@ -187,50 +186,38 @@ app.get("/indexSport", function(req,res){
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
 
-// La route POST pour la soumission du formulaire de connexion
+
 app.post('/connexion/submit', (req, res) => {
-  // Extraire l'adresse mail et le mdp du body
   const user_email_address = req.body.adresse_mail;
   const mdp = req.body.mdp;
-  // Verifier si ces derniers ne sont pas vides
   if (user_email_address && mdp) {
-    // La requête sql pour vérifier si l'adresse mail existe dans la base de données
     const requete = "SELECT * FROM client WHERE courriel_client = ?";
-    // Exécuter la requête
     con.query(requete, [user_email_address], function (error, data) {
-      // Vérifier s'il existe un client avec cette adresse mail
       if (data.length > 0) {
-        // Verifier si le mot de passe est correct
-        if (data[0].mdp_client == mdp) { 
-                  // si le mdp existe, on ouvre une session pour l'utilisateur
-                  req.session.isLoggedIn = true;        
-                    req.session.user = data[0];    
-                    // Indiquer la connexion comme réussie
-                    res.json({ success: true, message: 'Connexion réussie' });  
-                    //res.end();
+        if (data[0].mdp_client == mdp) { // Assuming email is unique and only one record should match  
+                  req.session.isLoggedIn = true; // Set a flag in the session to indicate logged in status        
+                    req.session.user = data[0]; // Save user info in session        
+                    res.redirect("/");
         } else {
-          // Si le mdp est invalide on affiche un message d'erreur
-          res.json({ success: false, message: 'Mot de passe incorrect' });
+          res.send('Incorrect Password');
         }
       } else {
-        // Si l'adresse mail est incorrecte on affiche un message d'erreur
-        res.json({ success: false, message: 'Adresse e-mail incorrecte' });
+        res.send('Incorrect Email Address');
       }
     });
   } else {
-    // S'il entre rien on indique un message d'erreur
-    res.json({ success: false, message: 'Veuillez entrer une adresse e-mail et un mot de passe' });
+    res.send('Please Enter Email Address and Password Details');
   }
 });
 
 
 
+
 app.get('/some-protected-route', function (req, res) {
   if (req.session.isLoggedIn) {
-   
-    res.redirect('/');  
+    // Proceed with the protected route logic  
   } else {
-     
+    // Redirect to login page or send an error message    
     res.redirect('/login');
   }
 });
@@ -241,7 +228,7 @@ app.get('/logout', function (req, res) {
       console.log(err);
       res.send("Error logging out");
     } else {
-      res.redirect('/connexion');
+      res.redirect('/connexion'); // Assuming you have a login page at this route
     }
   });
 });
@@ -288,30 +275,27 @@ app.get('/profile', function(req, res) {
   let user = null;
   if (req.session.isLoggedIn) {
     user = req.session.user;
-  
+    // Correct the query syntax and use placeholder for parameterized query
     const abonnQuery = "SELECT * FROM abonnement WHERE id_abonnement = ?";
 
-    
+    // Execute the query with user's abonnement_id_abonnement
     con.query(abonnQuery, [user.abonnement_id_abonnement], function(err, abonnementDetails) {
       if (err) {
-       
+        // Handle error
         console.error('Database query error:', err);
         return res.status(500).send("Internal Server Error");
       }
-
-      
       let abonnement = abonnementDetails[0];
-
       res.render("Pages/profile", {
         siteTitle: "Simple Application",
         pageTitle: "Event List",
-        items: [], 
+        items: [], // Assuming you have other items to pass
         user: user,
-        abonnement: abonnement 
+        abonnement: abonnement // Pass the abonnement details to the template
       });
     });
   } else {
-    
+    // If not logged in, redirect or handle accordingly
     res.redirect('/login');
   }
 });

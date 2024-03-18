@@ -11,20 +11,15 @@ import mysql from "mysql";
 import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
 import bodyParser from "body-parser";
-import { config } from 'dotenv';
-import { MongoClient } from 'mongodb';
 
-config();
-
-const uri = process.env.DB_URI;
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(session({
-  secret: 'your_secret_key', // This secret key will be used to sign the session ID cookie.resave: false,
+  secret: 'your_secret_key', 
   saveUninitialized: true,
-  cookie: { secure: false, maxAge: 86400000 } // For HTTPS use secure: true, maxAge sets the cookie to expire after 1 day
+  cookie: { secure: false, maxAge: 86400000 } 
 }));
 /*
 Connexion au serveur
@@ -43,18 +38,17 @@ app.use(express.static("public"));
 
 
 app.get("/", function (req, res) {
-  // Check if the user is logged in
-  let user = null; // Default to null if not logged in
+  
+  let user = null; 
   if (req.session.isLoggedIn) {
-    user = req.session.user; // Set to the logged-in user's session data if they are logged in
+    user = req.session.user; 
   }
  
-  // Render the page with the necessary data
   res.render("Pages/index", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
-    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
-    user: user // Pass the user object for conditional display in the template
+    items: [], 
+    user: user 
   });
 });
 app.get("/Inscription", function (req, res) {
@@ -62,7 +56,6 @@ app.get("/Inscription", function (req, res) {
   if (req.session.isLoggedIn) {
     user = req.session.user;
   }
-  // No database query, just render the page
   res.render("Pages/inscription", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
@@ -77,7 +70,6 @@ app.get("/Connexion", function (req, res) {
   if (req.session.isLoggedIn) {
     user = req.session.user;
   }
-  // No database query, just render the page
 
   res.render("Pages/connexion", {
 
@@ -85,7 +77,7 @@ app.get("/Connexion", function (req, res) {
 
     pageTitle: "Event List",
 
-    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    items: [], 
     user:user
   });
 
@@ -95,7 +87,6 @@ app.get("/Connexion", function (req, res) {
 
 app.get("/Abonnement", function (req, res) {
 
-  // No database query, just render the page
   let user = null;
   if (req.session.isLoggedIn) {
     user = req.session.user;
@@ -107,25 +98,35 @@ app.get("/Abonnement", function (req, res) {
 
     pageTitle: "Event List",
 
-    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    items: [], 
     user:user
   });
 
 });
 
-export async function connectToMongo(){
-  let mongoClient;
-    try {
-        mongoClient = new MongoClient(uri);
-        console.log("Connection à MongoDB...");
-        await mongoClient.connect();
-        console.log("Connecté à MongoDB!");
-        return mongoClient;
-    } catch (error) {
-        console.error("Erreur de connexion à MongoDB!", error);4869
-        process.exit();
-    }
-}
+
+
+const con = mysql.createConnection({
+
+  host: "localhost",
+
+  user: "scott",
+
+  password: "oracle",
+
+  database: "energymizeBD",
+
+  port: 3307
+
+});
+
+con.connect(function (err) {
+
+  if (err) throw err;
+
+  console.log("connected!");
+
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -186,38 +187,50 @@ app.get("/indexSport", function(req,res){
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
 
-
+// La route POST pour la soumission du formulaire de connexion
 app.post('/connexion/submit', (req, res) => {
+  // Extraire l'adresse mail et le mdp du body
   const user_email_address = req.body.adresse_mail;
   const mdp = req.body.mdp;
+  // Verifier si ces derniers ne sont pas vides
   if (user_email_address && mdp) {
+    // La requête sql pour vérifier si l'adresse mail existe dans la base de données
     const requete = "SELECT * FROM client WHERE courriel_client = ?";
+    // Exécuter la requête
     con.query(requete, [user_email_address], function (error, data) {
+      // Vérifier s'il existe un client avec cette adresse mail
       if (data.length > 0) {
-        if (data[0].mdp_client == mdp) { // Assuming email is unique and only one record should match  
-                  req.session.isLoggedIn = true; // Set a flag in the session to indicate logged in status        
-                    req.session.user = data[0]; // Save user info in session        
-                    res.redirect("/");
+        // Verifier si le mot de passe est correct
+        if (data[0].mdp_client == mdp) { 
+                  // si le mdp existe, on ouvre une session pour l'utilisateur
+                  req.session.isLoggedIn = true;        
+                    req.session.user = data[0];    
+                    // Indiquer la connexion comme réussie
+                    res.json({ success: true, message: 'Connexion réussie' });  
+                    //res.end();
         } else {
-          res.send('Incorrect Password');
+          // Si le mdp est invalide on affiche un message d'erreur
+          res.json({ success: false, message: 'Mot de passe incorrect' });
         }
       } else {
-        res.send('Incorrect Email Address');
+        // Si l'adresse mail est incorrecte on affiche un message d'erreur
+        res.json({ success: false, message: 'Adresse e-mail incorrecte' });
       }
     });
   } else {
-    res.send('Please Enter Email Address and Password Details');
+    // S'il entre rien on indique un message d'erreur
+    res.json({ success: false, message: 'Veuillez entrer une adresse e-mail et un mot de passe' });
   }
 });
 
 
 
-
 app.get('/some-protected-route', function (req, res) {
   if (req.session.isLoggedIn) {
-    // Proceed with the protected route logic  
+   
+    res.redirect('/');  
   } else {
-    // Redirect to login page or send an error message    
+     
     res.redirect('/login');
   }
 });
@@ -228,7 +241,7 @@ app.get('/logout', function (req, res) {
       console.log(err);
       res.send("Error logging out");
     } else {
-      res.redirect('/connexion'); // Assuming you have a login page at this route
+      res.redirect('/connexion');
     }
   });
 });
@@ -275,27 +288,30 @@ app.get('/profile', function(req, res) {
   let user = null;
   if (req.session.isLoggedIn) {
     user = req.session.user;
-    // Correct the query syntax and use placeholder for parameterized query
+  
     const abonnQuery = "SELECT * FROM abonnement WHERE id_abonnement = ?";
 
-    // Execute the query with user's abonnement_id_abonnement
+    
     con.query(abonnQuery, [user.abonnement_id_abonnement], function(err, abonnementDetails) {
       if (err) {
-        // Handle error
+       
         console.error('Database query error:', err);
         return res.status(500).send("Internal Server Error");
       }
+
+      
       let abonnement = abonnementDetails[0];
+
       res.render("Pages/profile", {
         siteTitle: "Simple Application",
         pageTitle: "Event List",
-        items: [], // Assuming you have other items to pass
+        items: [], 
         user: user,
-        abonnement: abonnement // Pass the abonnement details to the template
+        abonnement: abonnement 
       });
     });
   } else {
-    // If not logged in, redirect or handle accordingly
+    
     res.redirect('/login');
   }
 });

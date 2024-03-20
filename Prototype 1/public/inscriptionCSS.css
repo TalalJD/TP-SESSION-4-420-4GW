@@ -1,3 +1,12 @@
 .card {
     background: linear-gradient(to right, #D5C069, #D5C069);
   }
+
+  
+  .submit-button {
+      margin-top: -40px; /* Adjust this value as needed to move the button higher */
+  }
+
+  .error-message {
+    margin-top: 20px; /* Adjust this value as needed to move the button higher */
+}

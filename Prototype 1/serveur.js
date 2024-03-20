@@ -11,11 +11,14 @@ import mysql from "mysql";
 import { body, validationResult } from "express-validator";
 import dateFormat from "dateformat";
 import bodyParser from "body-parser";
+import { config } from 'dotenv';
+import { MongoClient } from 'mongodb';
 
+config();
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+const uri = process.env.DB_URI;
 app.use(session({
   secret: 'your_secret_key', 
   saveUninitialized: true,
@@ -29,7 +32,29 @@ app.set("view engine", "ejs");
 app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
 
+// MongoDB Trials
 
+export async function connectToMongo() {
+  let mongoClient;
+  console.log("URI :D : "+uri);
+  try {
+      mongoClient = new MongoClient(uri);
+      console.log("Connection à MongoDB...");
+      await mongoClient.connect();
+      console.log("Connecté à MongoDB!");
+      return mongoClient;
+  } catch (error) {
+      console.error("Erreur de connexion à MongoDB!", error);4869
+      process.exit();
+  }
+}
+
+// Find function
+export async function findStudentsByName(collection, findParam) {
+  return collection.find({ findParam }).toArray();
+}
+
+// End of MongoDB Trials
 
 const server = app.listen(4000, function () {
   console.log("serveur fonctionne sur 4000... ! ");
@@ -130,27 +155,42 @@ con.connect(function (err) {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post("/inscription/submit", function (req, res) {
+
+// inscription mongoDB
+
+export async function InscrireUtilisateur(nom_client, prenom_client, courriel_client, mdp_client){
+  let mongoClient;
+  try {
+    mongoClient = await connectToMongo();
+    const db = mongoClient.db("energymizeBD");
+    const collection = db.collection("clients");
+    let emailCheck = await findStudentsByName(collection, courriel_client);
+    if (emailCheck){
+      return 0;
+    }
+    const clientDocument = {
+      nom : nom_client,
+      prenom : prenom_client,
+      courriel : courriel_client,
+      mdp : mdp_client
+    };
+    await collection.insertOne(clientDocument);
+    return 1;
+  } finally {
+    await mongoClient.close();
+  }
+}
+
+app.post("/inscription/submit", async function (req, res) {
   if (!req.body.nom_client || !req.body.prenom_client || !req.body.courriel_client || !req.body.mdp_client) {
     return res.status(400).json({ error: "Veuillez remplir toutes les cases" });
   }
-
-  const emailCheckQuery = "SELECT * FROM client WHERE courriel_client = ?";
-  con.query(emailCheckQuery, [req.body.courriel_client], function (emailCheckErr, emailCheckResult) {
-    if (emailCheckErr) return res.status(500).json({ error: "Erreur de serveur" });
-
-    if (emailCheckResult.length > 0) {
-      return res.status(400).json({ error: "Ce courriel est déjà inscrit. Veuillez réessayer" });
-    }
-
-    const insertionQuery = "INSERT INTO client (nom_client, prenom_client, courriel_client, mdp_client, gen_restants) VALUES (?, ?, ?, ?, ?)";
-    const parameters = [req.body.nom_client, req.body.prenom_client, req.body.courriel_client, req.body.mdp_client, 3];
-
-    con.query(insertionQuery, parameters, function (err, result) {
-      if (err) return res.status(500).json({ error: "Erreur lors de l'insertion des données" });
-      res.json({ success: true });
-    });
-  });
+  let verifier = await InscrireUtilisateur(req.body.nom_client, req.body.prenom_client, req.body.courriel_client, req.body.mdp_client);
+  if (verifier==0){
+    return res.status(400).json({ error: "Ce courriel est déjà inscrit. Veuillez réessayer" });
+  } else if (verifier==1){
+    res.json({ success: true });
+  }
 });
 
 app.get("/indexSport", function(req,res){

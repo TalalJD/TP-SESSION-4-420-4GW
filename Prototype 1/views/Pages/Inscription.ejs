@@ -1,11 +1,12 @@
-    <%- include ("../partials/header.ejs") %>
+    <%- include ("../partials/head.ejs") %>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/inscriptionCSS.css">
-        <div class="container py-5 h-100">
+   
+        <div class="container py-2 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                     <div class="card bg-dark text-white" style="border-radius: 1rem;">
-                        <div class="card-body p-5 text-center" >
+                        <div class="card-body p-4.5 text-center" style="padding-left: 2.5rem; padding-right: 2.5rem;" >
 
                             <form class="mb-md-5 mt-md-4 pb-5" action="/inscription/submit" method="post">
 
@@ -25,7 +26,7 @@
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
-                                    <input name="courriel_client" type="courriel" id="inputFormCourriel" class="form-control form-control-lg"
+                                    <input name="courriel_client" type="email" id="inputFormCourriel" class="form-control form-control-lg"
                                         placeholder="Courriel électronique" />
 
                                 </div>
@@ -36,17 +37,19 @@
 
                                 </div>
 
-                                <p class="small mb-5 pb-lg-2">
+                                <div class="small mb-5 pb-lg-2">
                                     <a href="/connexion" class="text-white-50">Déjà inscrit?</a>
-                                </p>
+                                </div>
                                 
 
-                                <button type="submit" class="btn btn-outline-light btn-lg px-5" >S'inscrire</button>
+                                <button type="submit" class="btn btn-outline-light btn-lg px-5 submit-button" >S'inscrire</button>
 
 
                                 <div class="error-message" style="color: red;"></div>
 
+
                             </form>
+                            <a href="/" class="btn btn-outline-dark btn-lg px-2" style="position: absolute; bottom: 10px; left: 10px; color: rgb(255, 255, 255);">Retourner</a>
 
                         </div>
                     </div>
@@ -69,14 +72,15 @@
               error: function(response) {
                 const errors = response.responseJSON;
                 if(errors && errors.error) {
-                 
-                  $('.error-message').text(errors.error);
+                    // Display error message in an alert class
+                    $('.error-message').text(errors.error).addClass('alert alert-danger').show();
                 } else {
-                  
-                  console.log("Unexpected error response:", response);
+                    console.log("Unexpected error response:", response);
                 }
               }
             });
         });
     </script>
+    
+    
     <%- include ("../partials/footer.ejs") %>

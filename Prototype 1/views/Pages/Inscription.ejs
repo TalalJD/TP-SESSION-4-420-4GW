@@ -56,23 +56,23 @@
     </section>
     <script>
         $('form').submit(function(event) {
-            event.preventDefault(); // Prevent the default form submission
-            $('.error-message').text(''); // Clear existing error messages
+            event.preventDefault(); 
+            $('.error-message').text(''); 
         
             $.ajax({
               url: '/inscription/submit',
               type: 'POST',
               data: $(this).serialize(),
               success: function(data) {
-                window.location.href = "/Connexion"; // Redirect on success
+                window.location.href = "/Connexion"; 
               },
               error: function(response) {
                 const errors = response.responseJSON;
                 if(errors && errors.error) {
-                  // Directly target the error-message div at the bottom of the form
+                 
                   $('.error-message').text(errors.error);
                 } else {
-                  // If the error is not in the expected format, log it for debugging
+                  
                   console.log("Unexpected error response:", response);
                 }
               }

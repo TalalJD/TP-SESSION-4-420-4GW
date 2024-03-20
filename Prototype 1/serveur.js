@@ -131,28 +131,24 @@ con.connect(function (err) {
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/inscription/submit", function (req, res) {
-  // verifie si toutes les cases sont remplies avant de continuer
   if (!req.body.nom_client || !req.body.prenom_client || !req.body.courriel_client || !req.body.mdp_client) {
-    return res.status(400).send("Veuillez remplire toutes les cases");
+    return res.status(400).json({ error: "Veuillez remplir toutes les cases" });
   }
 
-  // Verifie si l'email existe deja dans la BD
   const emailCheckQuery = "SELECT * FROM client WHERE courriel_client = ?";
   con.query(emailCheckQuery, [req.body.courriel_client], function (emailCheckErr, emailCheckResult) {
-    if (emailCheckErr) throw emailCheckErr;
+    if (emailCheckErr) return res.status(500).json({ error: "Erreur de serveur" });
 
     if (emailCheckResult.length > 0) {
-      // l'email existe deja dans la bd
-      return res.status(400).send("Ce courriel est deja inscrit veuillez ressayer");
+      return res.status(400).json({ error: "Ce courriel est déjà inscrit. Veuillez réessayer" });
     }
 
-  
     const insertionQuery = "INSERT INTO client (nom_client, prenom_client, courriel_client, mdp_client, gen_restants) VALUES (?, ?, ?, ?, ?)";
     const parameters = [req.body.nom_client, req.body.prenom_client, req.body.courriel_client, req.body.mdp_client, 3];
 
     con.query(insertionQuery, parameters, function (err, result) {
-      if (err) throw err;
-      res.redirect("/Connexion");
+      if (err) return res.status(500).json({ error: "Erreur lors de l'insertion des données" });
+      res.json({ success: true });
     });
   });
 });

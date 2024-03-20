@@ -1,4 +1,5 @@
     <%- include ("../partials/header.ejs") %>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/inscriptionCSS.css">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
@@ -42,6 +43,9 @@
 
                                 <button type="submit" class="btn btn-outline-light btn-lg px-5" >S'inscrire</button>
 
+
+                                <div class="error-message" style="color: red;"></div>
+
                             </form>
 
                         </div>
@@ -50,4 +54,29 @@
             </div>
         </div>
     </section>
+    <script>
+        $('form').submit(function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            $('.error-message').text(''); // Clear existing error messages
+        
+            $.ajax({
+              url: '/inscription/submit',
+              type: 'POST',
+              data: $(this).serialize(),
+              success: function(data) {
+                window.location.href = "/Connexion"; // Redirect on success
+              },
+              error: function(response) {
+                const errors = response.responseJSON;
+                if(errors && errors.error) {
+                  // Directly target the error-message div at the bottom of the form
+                  $('.error-message').text(errors.error);
+                } else {
+                  // If the error is not in the expected format, log it for debugging
+                  console.log("Unexpected error response:", response);
+                }
+              }
+            });
+        });
+    </script>
     <%- include ("../partials/footer.ejs") %>

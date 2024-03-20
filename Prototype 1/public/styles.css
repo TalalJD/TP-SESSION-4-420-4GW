@@ -203,3 +203,12 @@ body {
         display: flex;
         justify-content: center;
     }
+
+    .black-hover:hover{
+        border: 1px solid black;
+    }
+
+    .black-hover{
+        border-color: transparent;
+        transition: border-color 0.5s;
+    }

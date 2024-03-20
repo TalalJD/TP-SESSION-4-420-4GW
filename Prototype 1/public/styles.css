@@ -212,3 +212,19 @@ body {
         border-color: transparent;
         transition: border-color 0.5s;
     }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #D5C069;
+        border-color: #D5C069;
+    }
+    
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+    }
+
+
+    
+      

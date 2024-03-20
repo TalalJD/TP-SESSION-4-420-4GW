@@ -14,30 +14,31 @@
                       <form action="/connexion/submit" method="post" id="loginForm">
                         <h3>Connectez-vous à EnerGymize</h3>
                         <br><br>
-                        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                        <%- include ("../partials/google.ejs") %>
                         <br><br>
       
                         <div class="form-outline mb-4">
-                          <label class="form-label" for="form2Example11">Nom d'utilisateur</label>
+                          <label class="form-label" for="form2Example11" style="font-weight:500;">Nom d'utilisateur</label>
                           <input type="email" id="adresse_mail" name="adresse_mail" class="form-control black-hover"
                             placeholder="Numéro de téléphone ou adresse e-mail" />
                           
                         </div>
       
                         <div class="form-outline mb-4">
-                          <label class="form-label" for="form2Example22">Mot de passe</label>
+                          <label class="form-label" for="form2Example22" style="font-weight:500;">Mot de passe</label>
                           <input type="password" id="mdp" name="mdp" class="form-control black-hover" />
                           
                         </div>
       
                         
                         <div class="text-center pt-1 mb-5 pb-1 d-flex flex-column">
-                          <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Se connecter</button>
+                          <button class="btn btn-outline-dark " type="submit" style="margin-bottom :5px; ;">Se connecter</button>
+                          
                           <a class="text-muted" href="#!">Mot de passe oublié?</a>
-                        </div>
+                      </div>
                         
                         <div class="align-items-center justify-content-center pb-4 d-flex flex-column">
-                          <p class="mb-0 me-2">Vous n'avez pas un compte?</p>
+                          <p class="mb-0 me-2" style="font-weight:500;">Vous n'avez pas un compte?</p>
                           <a href="/Inscription" type="button" class="text-muted">S'inscrire!</a>
                         </div>
                         

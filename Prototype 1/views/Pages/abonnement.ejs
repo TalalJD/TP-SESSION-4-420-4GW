@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="abonnementCSS.css">
 </head>
 <body>
-    <div class="card-container">
-        <div class="card">
+    <div class="card-container" id="cardContainer">
+        <div class="card" id="card1">
             <h2>GRATUIT</h2>
             <div class="additional-info">
                 <p>Accès limité aux programmes</p>
@@ -24,7 +24,7 @@
                 <button id="loginButton1" type="button">Connectez-vous pour s'abonner</button>
             <% } %>
         </div>
-        <div class="card">
+        <div class="card" id="card2">
             <h2>BASIC</h2>
             <div class="additional-info">
                 <p>Accès illimité aux programmes</p>
@@ -39,7 +39,7 @@
                 <button id="loginButton2" type="button">Connectez-vous pour s'abonner</button>
             <% } %>
         </div>
-        <div class="card">
+        <div class="card" id="card3">
             <h2>PREMIUM</h2>
             <div class="additional-info">
                 <p>Accès au coach</p>
@@ -56,16 +56,75 @@
             <% } %>
         </div>
     </div>
+
+    <!-- Formulaire de paiement -->
+    <div id="paymentForm" style="display: none;">
+        <!-- Ajoutez votre formulaire de paiement ici -->
+        <!-- Par exemple, les champs pour les informations de la carte bancaire -->
+        <h2>Formulaire de paiement</h2>
+        <form action="/process_payment" method="POST">
+            <!-- Ajoutez ici les champs pour les informations de la carte bancaire -->
+            <label for="cardNumber">Numéro de carte :</label>
+            <input type="text" id="cardNumber" name="cardNumber" required><br><br>
+            <label for="expirationDate">Date d'expiration :</label>
+            <input type="text" id="expirationDate" name="expirationDate" placeholder="MM/YY" required><br><br>
+            <label for="cvv">CVV :</label>
+            <input type="text" id="cvv" name="cvv" required><br><br>
+            <button type="submit">Payer</button>
+        </form>
+    </div>
 </body>
 </html>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        var loginButtons = document.querySelectorAll("#loginButton1, #loginButton2, #loginButton3");  
+        var loginButtons = document.querySelectorAll("#loginButton1, #loginButton2, #loginButton3");
         loginButtons.forEach(function(button) {
             button.addEventListener("click", function() {
                 window.location.href = "/connexion";
             });
         });
+
+        var confirmButtons = document.querySelectorAll("#but1, #but2, #but3");
+        confirmButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                event.preventDefault(); // Empêche le comportement par défaut du formulaire
+                // Masquer les cartes d'abonnement
+                document.getElementById("cardContainer").style.display = "none";
+                // Afficher le formulaire de paiement
+                document.getElementById("paymentForm").style.display = "block";
+            });
+        });
+
+        var cardNumberInput = document.getElementById("cardNumber");
+        var expirationDateInput = document.getElementById("expirationDate");
+        var cvvInput = document.getElementById("cvv");
+
+        // Limiter la saisie du numéro de carte à 16 chiffres et accepter uniquement des chiffres
+        cardNumberInput.addEventListener("input", function() {
+            var value = this.value.replace(/\D/g, '').slice(0, 16);
+            this.value = value.replace(/(\d{4})/g, '$1 ').trim();
+        });
+
+        // Limiter la saisie de la date d'expiration à 5 caractères (format MM/YY) et accepter uniquement des chiffres
+        expirationDateInput.addEventListener("input", function() {
+            var value = this.value.replace(/\D/g, '').slice(0, 4);
+            var month = value.slice(0, 2);
+            var year = value.slice(2, 4);
+            // Assurer que le mois est compris entre 1 et 12
+            if (parseInt(month) > 12) {
+                month = "12";
+            }
+            this.value = (month.length >= 2 ? month + '/' : month) + year;
+        });
+
+        // Limiter la saisie du CVV à 3 chiffres et accepter uniquement des chiffres
+        cvvInput.addEventListener("input", function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 3);
+        });
     });
 </script>
+
+
+
 <%- include ("../partials/footer.ejs") %>

@@ -4,7 +4,7 @@ body {
   background: #261E1E;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 70vh;
 }
 
 .card-container {
@@ -144,4 +144,47 @@ body {
   background-repeat: no-repeat; /* Répétition de l'arrière-plan */
   background-attachment: fixed; /* Fixation de l'arrière-plan */
   color: #fff; /* Couleur du texte */
+}
+
+#paymentForm {
+  max-width: 600px; /* Augmentation de la largeur maximale */
+  margin: 0 auto; /* Pour centrer horizontalement */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin-top: 50px; /* Pour l'espacement par rapport aux autres éléments */
+  display: flex; /* Pour permettre d'ajouter des éléments à droite */
+}
+
+#paymentForm h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #000000;
+}
+
+#paymentForm label {
+  display: block;
+  margin-bottom: 10px;
+  color: #000000;
+}
+
+#paymentForm input[type="text"],
+#paymentForm input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#paymentForm input[type="submit"] {
+  background-color: #4CAF50;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+}
+
+#paymentForm input[type="submit"]:hover {
+  background-color: #45a049;
 }

@@ -1,8 +1,3 @@
-/*
-Importation des modules requis
-*/
-
-
 import express from "express";
 import session from "express-session";
 import path from "path";
@@ -15,16 +10,16 @@ import { config } from 'dotenv';
 import { MongoClient } from 'mongodb';
 config();
 
-//const uri = process.env.DB_URI;
+
 const uri = "mongodb+srv://admin:admin@energymizebd.dprvzi7.mongodb.net/?retryWrites=true&w=majority&appName=EnergymizeBD";
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 mongoClient = await connectToMongo();
 app.use(session({
-  secret: 'your_secret_key', // This secret key will be used to sign the session ID cookie.resave: false,
+  secret: 'your_secret_key', 
   saveUninitialized: true,
-  cookie: { secure: false, maxAge: 86400000 } // For HTTPS use secure: true, maxAge sets the cookie to expire after 1 day
+  cookie: { secure: false, maxAge: 86400000 } 
 }));
 /*
 Connexion au serveur
@@ -43,18 +38,17 @@ app.use(express.static("public"));
 
 
 app.get("/", function (req, res) {
-  // Check if the user is logged in
-  let user = null; // Default to null if not logged in
+  let user = null; 
   if (req.session.isLoggedIn) {
-    user = req.session.user; // Set to the logged-in user's session data if they are logged in
+    user = req.session.user; 
   }
  
-  // Render the page with the necessary data
+
   res.render("Pages/index", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
-    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
-    user: user // Pass the user object for conditional display in the template
+    items: [], 
+    user: user 
   });
 });
 app.get("/Inscription", function (req, res) {
@@ -62,7 +56,7 @@ app.get("/Inscription", function (req, res) {
   if (req.session.isLoggedIn) {
     user = req.session.user;
   }
-  // No database query, just render the page
+  
   res.render("Pages/inscription", {
     siteTitle: "Simple Application",
     pageTitle: "Event List",
@@ -77,7 +71,7 @@ app.get("/Connexion", function (req, res) {
   if (req.session.isLoggedIn) {
     user = req.session.user;
   }
-  // No database query, just render the page
+  
 
   res.render("Pages/connexion", {
 
@@ -85,7 +79,7 @@ app.get("/Connexion", function (req, res) {
 
     pageTitle: "Event List",
 
-    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    items: [], 
     user:user
   });
 
@@ -95,7 +89,6 @@ app.get("/Connexion", function (req, res) {
 
 app.get("/Abonnement", function (req, res) {
 
-  // No database query, just render the page
   let user = null;
   if (req.session.isLoggedIn) {
     user = req.session.user;
@@ -107,7 +100,7 @@ app.get("/Abonnement", function (req, res) {
 
     pageTitle: "Event List",
 
-    items: [], // Assuming 'items' is used in your EJS file, pass an empty array or appropriate default value
+    items: [], 
     user:user
   });
 
@@ -194,9 +187,9 @@ app.post('/connexion/submit', (req, res) => {
     const requete = "SELECT * FROM client WHERE courriel_client = ?";
     con.query(requete, [user_email_address], function (error, data) {
       if (data.length > 0) {
-        if (data[0].mdp_client == mdp) { // Assuming email is unique and only one record should match  
-                  req.session.isLoggedIn = true; // Set a flag in the session to indicate logged in status        
-                    req.session.user = data[0]; // Save user info in session        
+        if (data[0].mdp_client == mdp) { 
+                  req.session.isLoggedIn = true;       
+                    req.session.user = data[0];      
                     res.redirect("/");
         } else {
           res.send('Incorrect Password');
@@ -215,9 +208,7 @@ app.post('/connexion/submit', (req, res) => {
 
 app.get('/some-protected-route', function (req, res) {
   if (req.session.isLoggedIn) {
-    // Proceed with the protected route logic  
-  } else {
-    // Redirect to login page or send an error message    
+  } else { 
     res.redirect('/login');
   }
 });
@@ -228,7 +219,7 @@ app.get('/logout', function (req, res) {
       console.log(err);
       res.send("Error logging out");
     } else {
-      res.redirect('/connexion'); // Assuming you have a login page at this route
+      res.redirect('/connexion'); 
     }
   });
 });
@@ -255,16 +246,16 @@ app.post('/abonnement/choisir', function(req, res) {
       console.error(err);
       res.status(500).send('Erreur lors de la mise à jour de l\'abonnement');
     } else {
-      // Effectuer une nouvelle requête pour récupérer les données mises à jour de l'utilisateur
+      
       const userQuery = 'SELECT * FROM client WHERE id_client = ?';
       con.query(userQuery, [userId], function(userErr, userResult) {
         if (userErr) {
           console.error(userErr);
           res.status(500).send('Erreur lors de la récupération des données de l\'utilisateur');
         } else {
-          // Mettre à jour les données de session de l'utilisateur
+          
           req.session.user = userResult[0];
-          // Rediriger vers la page d'accueil ou la page d'abonnement mise à jour
+          
           res.redirect('/');
         }
       });
@@ -275,13 +266,10 @@ app.get('/profile', function(req, res) {
   let user = null;
   if (req.session.isLoggedIn) {
     user = req.session.user;
-    // Correct the query syntax and use placeholder for parameterized query
     const abonnQuery = "SELECT * FROM abonnement WHERE id_abonnement = ?";
 
-    // Execute the query with user's abonnement_id_abonnement
     con.query(abonnQuery, [user.abonnement_id_abonnement], function(err, abonnementDetails) {
       if (err) {
-        // Handle error
         console.error('Database query error:', err);
         return res.status(500).send("Internal Server Error");
       }
@@ -289,13 +277,13 @@ app.get('/profile', function(req, res) {
       res.render("Pages/profile", {
         siteTitle: "Simple Application",
         pageTitle: "Event List",
-        items: [], // Assuming you have other items to pass
+        items: [], 
         user: user,
-        abonnement: abonnement // Pass the abonnement details to the template
+        abonnement: abonnement 
       });
     });
   } else {
-    // If not logged in, redirect or handle accordingly
+    
     res.redirect('/login');
   }
 });

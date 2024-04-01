@@ -351,3 +351,37 @@ app.get('/profile', function(req, res) {
     res.redirect('/login');
   }
 });
+
+
+app.post('/auth/google', (req, res) => {
+  const { courriel_client, prenom_client, nom_client, mdp_client } = req.body;
+
+  // Vérifiez si l'utilisateur existe dans la base de données
+  const query = 'SELECT * FROM client WHERE courriel_client = ?';
+  con.query(query, [courriel_client], (err, result) => {
+    if (err) throw err;
+
+    if (result.length > 0) {
+      // L'utilisateur existe, connectez-le
+      req.session.isLoggedIn = true;
+      req.session.user = result[0];
+      res.json({ success: true, message: 'Utilisateur connecté' });
+    } else {
+      // L'utilisateur n'existe pas, créez un nouvel utilisateur
+      const insertQuery = 'INSERT INTO client (courriel_client, prenom_client, nom_client, mdp_client, gen_restants) VALUES (?, ?, ?, ?, ?)';
+      con.query(insertQuery, [courriel_client, prenom_client, nom_client, mdp_client, 3], (err, result) => {
+        if (err) throw err;
+
+        // Connectez le nouvel utilisateur
+        req.session.isLoggedIn = true;
+        // Récupérez l'utilisateur nouvellement créé pour définir la session
+        const newUserQuery = 'SELECT * FROM client WHERE courriel_client = ?';
+        con.query(newUserQuery, [courriel_client], (err, newUserResult) => {
+          if (err) throw err;
+          req.session.user = newUserResult[0];
+          res.json({ success: true, message: 'Nouvel utilisateur créé et connecté' });
+        });
+      });
+    }
+  });
+});

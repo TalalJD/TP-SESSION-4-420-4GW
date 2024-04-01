@@ -1,8 +1,11 @@
-<%- include ("../partials/head.ejs") %>
+<!DOCTYPE html>
+<html lang="en">
+<%- include ('../partials/head') %>
 
+<body>
+  <main>
 <!-- Template : https://mdbootstrap.com/docs/standard/extended/login/#login-basic-example-->
 <!-- https://dribbble.com/session/new-->
-<script src="https://apis.google.com/js/platform.js" async defer></script>
     <section class="h-100 gradient-form" >
         <div class="container py-5 h-100">
           <div class="row d-flex justify-content-center align-items-center h-100">
@@ -24,11 +27,16 @@
                           
                         </div>
       
-                        <div class="form-outline mb-4">
-                          <label class="form-label" for="form2Example22" style="font-weight:500;">Mot de passe</label>
-                          <input type="password" id="mdp" name="mdp" class="form-control black-hover" />
-                          
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="mdp" style="font-weight:500;">Mot de passe</label>
+                        <div class="input-group">
+                            <input type="password" id="mdp" name="mdp" class="form-control black-hover">
+                            <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility()">
+                                <i class="bi bi-eye-slash" id="eye-icon"></i>
+                            </button>
                         </div>
+                      </div>
+                      
       
                         
                         <div class="text-center pt-1 mb-5 pb-1 d-flex flex-column">
@@ -70,34 +78,9 @@
       </section>
 
       <script src="/connexion.js"></script>
-      <!-- 
-        <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-          event.preventDefault();
-          var adresse_mail = document.getElementById('adresse_mail').value;
-          var mdp = document.getElementById('mdp').value;
-        
-          fetch('/connexion/submit', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ adresse_mail: adresse_mail, mdp: mdp })
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              window.location.href = '/';
-            } else {
-              var alertPlaceholder = document.getElementById('alertPlaceholder');
-              alertPlaceholder.style.display = 'block';
-              alertPlaceholder.textContent = data.message;
-            }
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-        });
-        </script>
-       -->
+      <script src="https://accounts.google.com/gsi/client" async></script>
+
+
+      <%- include ("../partials/footer.ejs") %>
+
       

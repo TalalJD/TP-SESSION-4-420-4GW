@@ -35,3 +35,23 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
       console.error('Error:', error); 
     });
   });
+
+
+  function togglePasswordVisibility() {
+    var passwordInput = document.getElementById("mdp");
+    var eyeIcon = document.getElementById("eye-icon");
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        eyeIcon.classList.remove("bi-eye-slash");
+        eyeIcon.classList.add("bi-eye");
+    } else {
+        passwordInput.type = "password";
+        eyeIcon.classList.remove("bi-eye");
+        eyeIcon.classList.add("bi-eye-slash");
+    }
+}
+
+function loginCallback(response){
+  console.log(response.credential); // Vérifiez que c'est bien un JWT
+}

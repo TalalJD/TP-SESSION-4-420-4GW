@@ -17,6 +17,7 @@
     "express-session": "^1.18.0",
     "express-validator": "^7.0.1",
     "jquery": "^3.7.1",
+    "jwt-decode": "^4.0.0",
     "mongodb": "^6.5.0",
     "mysql": "^2.18.1"
   },

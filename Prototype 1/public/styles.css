@@ -228,3 +228,9 @@ body {
 
     
       
+
+    .indexSportImgContainer input[type="image"] {
+        width: 50%; /* Scale the image to fit the width or */
+        height: auto; /* Scale the image to fit the height, maintaining aspect ratio */
+        object-fit: contain; /* Ensure the whole image is visible, may leave empty space */
+      }

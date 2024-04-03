@@ -162,10 +162,10 @@ export async function InscrireUtilisateur(nom_client, prenom_client, courriel_cl
   let mongoClient;
   try {
     mongoClient = await connectToMongo();
-    const db = mongoClient.db("energymizeBD");
+    const db = mongoClient.db("EnergymizeBD");
     const collection = db.collection("clients");
     let emailCheck = await findStudentsByName(collection, courriel_client);
-    if (emailCheck){
+    if (emailCheck.length > 0){
       return 0;
     }
     const clientDocument = {

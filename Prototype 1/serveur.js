@@ -174,7 +174,8 @@ export async function InscrireUtilisateur(nom_client, prenom_client, courriel_cl
       nom : nom_client,
       prenom : prenom_client,
       courriel : courriel_client,
-      mdp : mdp_client
+      mdp : mdp_client,
+      gen_restante : 3
     };
     await collection.insertOne(clientDocument);
     return 1;
@@ -256,8 +257,6 @@ app.post('/connexion/submit', async (req, res) => {
   const mdp = req.body.mdp;
   // Verifier si ces derniers ne sont pas vides
   if (user_email_address && mdp) {
-    // La requête sql pour vérifier si l'adresse mail existe dans la base de données
-    const requete = "SELECT * FROM client WHERE courriel_client = ?";
     let FoundUser = await ConnectionUtilisateur(user_email_address, mdp);
     if (FoundUser===0){
       res.json({ success: false, message: 'Adresse e-mail incorrecte' });
@@ -372,4 +371,22 @@ app.get('/profile', function(req, res) {
     
     res.redirect('/login');
   }
+});
+
+app.post('/auth/google', async (req, res) => {
+  const { courriel_client, prenom_client, nom_client, mdp_client } = req.body;
+
+  // Vérifiez si l'utilisateur existe dans la base de données
+  let FoundUser = await ConnectionUtilisateur(courriel_client, mdp_client);
+    if (FoundUser===0){
+      let verifier = await InscrireUtilisateur(nom_client,prenom_client,courriel_client,mdp_client);
+      let user = await ConnectionUtilisateur(courriel_client,mdp_client);
+      req.session.isLoggedIn=true;
+      req.session.user=user;
+      res.json({ success: true, message: 'Utilisateur connecté' });
+    } else {
+      req.session.isLoggedIn = true;
+      req.session.user = FoundUser;
+      res.json({ success: true, message: 'Utilisateur connecté' });
+    }
 });

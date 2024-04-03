@@ -50,8 +50,8 @@ export async function connectToMongo() {
 }
 
 // Find function
-export async function findStudentsByName(collection, findParam) {
-  return collection.find({ findParam }).toArray();
+export async function FindStudentsByEmail(collection, findParam) {
+  return collection.find({ courriel: findParam }).toArray();
 }
 
 // End of MongoDB Trials
@@ -164,8 +164,10 @@ export async function InscrireUtilisateur(nom_client, prenom_client, courriel_cl
     mongoClient = await connectToMongo();
     const db = mongoClient.db("EnergymizeBD");
     const collection = db.collection("clients");
-    let emailCheck = await findStudentsByName(collection, courriel_client);
-    if (emailCheck.length > 0){
+    console.log("courriel client: "+courriel_client);
+    let emailCheck = await FindStudentsByEmail(collection, courriel_client);
+    if (emailCheck.length>0){
+      console.log("Matching email: "+emailCheck[0].courriel);
       return 0;
     }
     const clientDocument = {
@@ -180,6 +182,28 @@ export async function InscrireUtilisateur(nom_client, prenom_client, courriel_cl
     await mongoClient.close();
   }
 }
+export async function ConnectionUtilisateur(courriel_client, mdp_client){
+  let mongoClient;
+  try {
+    mongoClient = await connectToMongo();
+    const db = mongoClient.db("EnergymizeBD");
+    const collection = db.collection("clients");
+    let emailCheck = await FindStudentsByEmail(collection, courriel_client);
+    if (emailCheck.length<1){
+      console.log("No users matching email: "+courriel_client);
+      return 0;
+    }
+    if (emailCheck[0].mdp==mdp_client){
+      return emailCheck[0];
+    } else {
+      console.log("Password written: "+mdp_client+" does not match actual password: "+emailCheck[0].mdp);
+      return 1;
+    }
+  } finally {
+    await mongoClient.close();
+  }
+}
+
 
 app.post("/inscription/submit", async function (req, res) {
   if (!req.body.nom_client || !req.body.prenom_client || !req.body.courriel_client || !req.body.mdp_client) {
@@ -187,8 +211,10 @@ app.post("/inscription/submit", async function (req, res) {
   }
   let verifier = await InscrireUtilisateur(req.body.nom_client, req.body.prenom_client, req.body.courriel_client, req.body.mdp_client);
   if (verifier==0){
+    console.log("Refused; email not unique");
     return res.status(400).json({ error: "Ce courriel est déjà inscrit. Veuillez réessayer" });
   } else if (verifier==1){
+    console.log("Added");
     res.json({ success: true });
   }
 });
@@ -224,7 +250,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 
 // La route POST pour la soumission du formulaire de connexion
-app.post('/connexion/submit', (req, res) => {
+app.post('/connexion/submit', async (req, res) => {
   // Extraire l'adresse mail et le mdp du body
   const user_email_address = req.body.adresse_mail;
   const mdp = req.body.mdp;
@@ -232,27 +258,16 @@ app.post('/connexion/submit', (req, res) => {
   if (user_email_address && mdp) {
     // La requête sql pour vérifier si l'adresse mail existe dans la base de données
     const requete = "SELECT * FROM client WHERE courriel_client = ?";
-    // Exécuter la requête
-    con.query(requete, [user_email_address], function (error, data) {
-      // Vérifier s'il existe un client avec cette adresse mail
-      if (data.length > 0) {
-        // Verifier si le mot de passe est correct
-        if (data[0].mdp_client == mdp) { 
-                  // si le mdp existe, on ouvre une session pour l'utilisateur
-                  req.session.isLoggedIn = true;        
-                    req.session.user = data[0];    
-                    // Indiquer la connexion comme réussie
-                    res.json({ success: true, message: 'Connexion réussie' });  
-                    //res.end();
-        } else {
-          // Si le mdp est invalide on affiche un message d'erreur
-          res.json({ success: false, message: 'Mot de passe incorrect' });
-        }
-      } else {
-        // Si l'adresse mail est incorrecte on affiche un message d'erreur
-        res.json({ success: false, message: 'Adresse e-mail incorrecte' });
-      }
-    });
+    let FoundUser = await ConnectionUtilisateur(user_email_address, mdp);
+    if (FoundUser===0){
+      res.json({ success: false, message: 'Adresse e-mail incorrecte' });
+    } else if (FoundUser===1){
+      res.json({ success: false, message: 'Mot de passe incorrect' });
+    } else {
+      req.session.isLoggedIn=true;
+      req.session.user = FoundUser;
+      res.json({ success: true, message: 'Connexion réussie' });  
+    }
   } else {
     // S'il entre rien on indique un message d'erreur
     res.json({ success: false, message: 'Veuillez entrer une adresse e-mail et un mot de passe' });
@@ -281,6 +296,13 @@ app.get('/logout', function (req, res) {
     }
   });
 });
+
+app.post('/index/choisir', async function(req,res){
+  const idSport = req.body.id_sport;
+  const userId = req.session.user.id_client;
+  console.log(idSport);
+});
+
 app.post('/abonnement/choisir', function(req, res) {
   const idAbonnement = req.body.id_abonnement; 
   const userId = req.session.user.id_client; 
@@ -350,38 +372,4 @@ app.get('/profile', function(req, res) {
     
     res.redirect('/login');
   }
-});
-
-
-app.post('/auth/google', (req, res) => {
-  const { courriel_client, prenom_client, nom_client, mdp_client } = req.body;
-
-  // Vérifiez si l'utilisateur existe dans la base de données
-  const query = 'SELECT * FROM client WHERE courriel_client = ?';
-  con.query(query, [courriel_client], (err, result) => {
-    if (err) throw err;
-
-    if (result.length > 0) {
-      // L'utilisateur existe, connectez-le
-      req.session.isLoggedIn = true;
-      req.session.user = result[0];
-      res.json({ success: true, message: 'Utilisateur connecté' });
-    } else {
-      // L'utilisateur n'existe pas, créez un nouvel utilisateur
-      const insertQuery = 'INSERT INTO client (courriel_client, prenom_client, nom_client, mdp_client, gen_restants) VALUES (?, ?, ?, ?, ?)';
-      con.query(insertQuery, [courriel_client, prenom_client, nom_client, mdp_client, 3], (err, result) => {
-        if (err) throw err;
-
-        // Connectez le nouvel utilisateur
-        req.session.isLoggedIn = true;
-        // Récupérez l'utilisateur nouvellement créé pour définir la session
-        const newUserQuery = 'SELECT * FROM client WHERE courriel_client = ?';
-        con.query(newUserQuery, [courriel_client], (err, newUserResult) => {
-          if (err) throw err;
-          req.session.user = newUserResult[0];
-          res.json({ success: true, message: 'Nouvel utilisateur créé et connecté' });
-        });
-      });
-    }
-  });
 });

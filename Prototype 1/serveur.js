@@ -115,6 +115,23 @@ app.get("/Connexion", function (req, res) {
 
 });
 
+app.get("/App", function (req, res) {
+  let user = null;
+  if (req.session.isLoggedIn) {
+    user = req.session.user;
+  }
+
+  res.render("Pages/app", {
+
+    siteTitle: "Simple Application",
+
+    pageTitle: "Event List",
+
+    items: [], 
+    user:user
+  });
+
+});
 
 
 app.get("/Abonnement", function (req, res) {

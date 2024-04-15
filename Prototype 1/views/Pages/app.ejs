@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include ('../partials/head') %>
+<link rel="stylesheet" href="/app.css">
+
+<body>
+    <div class="side-bar">
+            <a>
+                <i class="fa-solid fa-calendar-days icons" style="color: #000000;" name="calendarIcon"></i>
+            </a>
+    
+            <a>
+                <i class="fa-solid fa-user icons" style="color: #000000;" name="profileIcon"></i>
+            </a>
+    
+            <a>
+                <i class="fa-sharp fa-solid fa-plus icons" style="color: #000000;" name="plusIcon"></i>
+            </a>
+           
+            
+           
+    
+            <a href="/">
+                <i class="fa-solid fa-right-from-bracket icons" style="color: #000000;" name="exitIcon"></i>
+            </a>
+    
+        
+    </div>
+    <div class="profile-page hidden">
+        <style>
+            .theme-yellow, .theme-black {
+                padding: 10px; /* Augmente l'espace interne */
+                margin-bottom: 10px; /* Espacement entre les containers */
+            }
+            .theme-yellow {
+                background-color: #D5C069;
+                color: black;
+            }
+            .theme-black {
+                background-color: black;
+                color: #D5C069;
+            }
+            .user-image { 
+                max-width: 100%; 
+                height: auto; 
+                object-fit: cover; /* Ajuste les proportions */
+            }
+            .row.align-items-stretch {
+                display: flex;
+                flex-wrap: wrap;
+            }
+        </style>
+        <div class="container mt-4">
+            <div class="row align-items-stretch">
+                <!-- Colonne pour les informations -->
+                <div class="col-md-8">
+                    <div class="row mb-2">
+                        <div class="col-sm-2 theme-black">Id</div>
+                        <div class="col-sm-4 theme-yellow"><%= user.id_client %></div>
+                    </div>
+                    <!-- Répétez pour les autres lignes d'informations -->
+                    <div class="row mb-2">
+                        <div class="col-sm-2 theme-black">Nom</div>
+                        <div class="col-sm-4 theme-yellow"><%= user.nom_client %></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-2 theme-black">Prenom</div>
+                        <div class="col-sm-4 theme-yellow"><%= user.prenom_client %></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-2 theme-black">Courriel</div>
+                        <div class="col-sm-4 theme-yellow"><%= user.courriel_client %></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-2 theme-black">Generations Restantes</div>
+                        <div class="col-sm-4 theme-yellow"><%= user.gen_restants %></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-2 theme-black">Abonnement</div>
+                        <div class="col-sm-4 theme-yellow"><%= abonnement.nom_abonnement %></div>
+                    </div>
+                </div>
+                <!-- Colonne pour l'image, placée à la droite des détails -->
+                <div class="col-md-4">
+                    <img src="imgs/flexingMan.png" alt="Image Utilisateur" class="user-image">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script src="https://kit.fontawesome.com/df1a2f4d51.js" crossorigin="anonymous"></script>
+<script> document.getElementById("profileIcon").addEventListener("click", function() {
+    var profilePage = document.querySelector(".profile-page");
+    profilePage.classList.toggle("hidden");
+    profilePage.classList.toggle("show");
+});</script>
+<%- include ("../partials/footer.ejs") %>

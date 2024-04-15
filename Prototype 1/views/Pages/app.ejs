@@ -1,29 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include ('../partials/head') %>
+<%- include('../partials/head') %>
+<link rel="stylesheet" href="/app.css">
 <body>
-    <div class="side-bar">
-            <a href="">
-                <i class="fa-solid fa-calendar-days icons" style="color: #000000;"></i>
+    <div class="main-container">
+        <div class="side-bar">
+            <!-- Lien pour l'icône du calendrier -->
+            <a href="/calendar">
+                <i class="fa-solid fa-calendar-days icons" style="color: black;"></i>
             </a>
-    
-            <a href="">
-                <i class="fa-solid fa-user icons" style="color: #000000;"></i>
+            
+            <!-- Lien pour l'icône de l'utilisateur -->
+            <a href="/user">
+                <i class="fa-solid fa-user icons" style="color: black;"></i>
             </a>
-    
-            <a href="">
-                <i class="fa-sharp fa-solid fa-plus icons" style="color: #000000;"></i>
+            
+            <!-- Lien pour ajouter (l'icône "+") dans la barre latérale -->
+            <a id="add-icon-sidebar" href="#">
+                <i class="fa-sharp fa-solid fa-plus icons " style="color: black;"></i>
             </a>
-    
-           
-    
-            <a href="/">
-                <i class="fa-solid fa-right-from-bracket icons" style="color: #000000;"></i>
+            
+            <!-- Lien pour la déconnexion (l'icône de sortie) -->
+            <a href="/logout">
+                <i class="fa-solid fa-right-from-bracket icons" style="color: black;"></i>
             </a>
-    
-        
+        </div>
+
+        <div id="card-container" class="card-container">
+            <!-- Les cartes seront ajoutées ici par JavaScript -->
+        </div>
     </div>
 
+    <script src="https://kit.fontawesome.com/df1a2f4d51.js" crossorigin="anonymous"></script>
 
-<script src="https://kit.fontawesome.com/df1a2f4d51.js" crossorigin="anonymous"></script>
-<%- include ("../partials/footer.ejs") %>
+    <script>
+        // Fonction pour ajouter une carte
+        function addCard() {
+            // Retirer l'icône '+' de l'ancienne dernière carte, s'il y en a une
+            var existingCards = document.querySelectorAll('.card');
+            if (existingCards.length > 0) {
+                var lastCard = existingCards[existingCards.length - 1];
+                lastCard.querySelector('.icons').classList.remove('fa-plus');
+            }
+    
+            // Créer une nouvelle carte avec l'icône '+'
+            var newCard = document.createElement('div');
+            newCard.className = 'card';
+            newCard.innerHTML = '<div class="card-content"><i class="fa-sharp fa-solid fa-plus icons"></i></div>';
+            document.getElementById('card-container').appendChild(newCard);
+        }
+    
+        // Ajouter un gestionnaire de clics sur l'icône "+" de la barre latérale
+        document.getElementById('add-icon-sidebar').addEventListener('click', function(event) {
+            event.preventDefault(); // Empêcher le comportement par défaut du lien
+            if (document.querySelectorAll('.card').length === 0) { // Ajouter la première carte seulement si aucune carte n'existe
+                addCard();
+            }
+        });
+    
+        // Gérer le clic sur les éléments ajoutés dynamiquement en utilisant la délégation
+        document.getElementById('card-container').addEventListener('click', function(event) {
+            if (event.target.classList.contains('fa-plus')) {
+                addCard();
+            }
+        });
+    
+        // Fonction pour permettre le défilement horizontal avec la roulette de la souris
+        function enableHorizontalScroll(event) {
+            // Empêcher le défilement vertical par défaut
+            event.preventDefault();
+            // Calculer le déplacement horizontal basé sur le delta de la roulette
+            var delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
+            document.querySelector('.card-container').scrollLeft -= (delta * 40); // Ajustez la valeur 40 si nécessaire
+        }
+    
+        // Appliquer le gestionnaire d'événements sur le conteneur des cartes
+        document.querySelector('.card-container').addEventListener('mousewheel', enableHorizontalScroll, false);
+        document.querySelector('.card-container').addEventListener('DOMMouseScroll', enableHorizontalScroll, false);
+    </script>
+    
+
+    <%- include('../partials/footer.ejs') %>
+</body>
+</html>

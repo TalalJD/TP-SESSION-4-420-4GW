@@ -76,54 +76,7 @@
 </body>
 </html>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var loginButtons = document.querySelectorAll("#loginButton1, #loginButton2, #loginButton3");
-        loginButtons.forEach(function(button) {
-            button.addEventListener("click", function() {
-                window.location.href = "/connexion";
-            });
-        });
 
-        var confirmButtons = document.querySelectorAll("#but1, #but2, #but3");
-        confirmButtons.forEach(function(button) {
-            button.addEventListener("click", function(event) {
-                event.preventDefault(); // Empêche le comportement par défaut du formulaire
-                // Masquer les cartes d'abonnement
-                document.getElementById("cardContainer").style.display = "none";
-                // Afficher le formulaire de paiement
-                document.getElementById("paymentForm").style.display = "block";
-            });
-        });
-
-        var cardNumberInput = document.getElementById("cardNumber");
-        var expirationDateInput = document.getElementById("expirationDate");
-        var cvvInput = document.getElementById("cvv");
-
-        // Limiter la saisie du numéro de carte à 16 chiffres et accepter uniquement des chiffres
-        cardNumberInput.addEventListener("input", function() {
-            var value = this.value.replace(/\D/g, '').slice(0, 16);
-            this.value = value.replace(/(\d{4})/g, '$1 ').trim();
-        });
-
-        // Limiter la saisie de la date d'expiration à 5 caractères (format MM/YY) et accepter uniquement des chiffres
-        expirationDateInput.addEventListener("input", function() {
-            var value = this.value.replace(/\D/g, '').slice(0, 4);
-            var month = value.slice(0, 2);
-            var year = value.slice(2, 4);
-            // Assurer que le mois est compris entre 1 et 12
-            if (parseInt(month) > 12) {
-                month = "12";
-            }
-            this.value = (month.length >= 2 ? month + '/' : month) + year;
-        });
-
-        // Limiter la saisie du CVV à 3 chiffres et accepter uniquement des chiffres
-        cvvInput.addEventListener("input", function() {
-            this.value = this.value.replace(/\D/g, '').slice(0, 3);
-        });
-    });
-</script>
 
 
 

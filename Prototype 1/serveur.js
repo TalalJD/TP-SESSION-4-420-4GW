@@ -57,8 +57,10 @@ export async function FindStudentsByEmail(collection, findParam) {
 export async function FindAbonnement(collection, findParam){
   return collection.find({id_Abonnement : findParam}).toArray();
 }
+import { ObjectId } from 'mongodb';
+
 export async function UpdateClientById(collection, clientId, updatedFields){
-  await collection.upateMany({clientId}, {$set:updatedFields});
+  await collection.updateMany({_id: new ObjectId(clientId)}, {$set: updatedFields});
 }
 
 // End of MongoDB Trials
@@ -342,17 +344,17 @@ app.post('/index/choisir', async function(req,res){
 
 app.post('/abonnement/choisir', async function(req, res) {
   console.log("Entered Abonnement");
-  const idAbonnementBody = req.body.id_abonnement; 
+  const idAbonnementBody = parseInt(req.body.id_abonnement); 
   const userId = req.session.user._id; 
   let generationsRestantes = 0;
   switch (idAbonnementBody) {
-    case '1': 
+    case 1: 
       generationsRestantes = 3;
       break;
-    case '2': 
+    case 2: 
       generationsRestantes = 10;
       break;
-    case '3': 
+    case 3: 
       generationsRestantes = -1; 
       break;
     default:
@@ -364,6 +366,7 @@ app.post('/abonnement/choisir', async function(req, res) {
     mongoClient = await connectToMongo();
     const db = mongoClient.db("EnergymizeBD");
     const collection = db.collection("clients");
+    console.log("User ID:", userId);
     await UpdateClientById(collection, userId,{
       idAbonnement: idAbonnementBody,
       gens : generationsRestantes,

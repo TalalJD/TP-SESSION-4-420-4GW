@@ -1,0 +1,17 @@
+.profile-page {
+    position: fixed;
+    top: 0;
+    left: -300px; /* Déplace la page hors de l'écran à gauche */
+    width: 300px; /* Largeur de la page */
+    height: 100%; /* Hauteur de la page */
+    background-color: white; /* Couleur de fond de la page */
+    transition: left 0.5s ease; /* Animation de glissement */
+}
+
+.hidden {
+    left: -300px; /* Cache la page à gauche */
+}
+
+.show {
+    left: 0; /* Affiche la page à côté de la barre latérale */
+}

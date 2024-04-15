@@ -1,17 +1,19 @@
 .profile-page {
-    position: fixed;
+    position: absolute;
     top: 0;
-    left: -300px; /* Déplace la page hors de l'écran à gauche */
-    width: 300px; /* Largeur de la page */
+    left: 500%; /* Placer la page à droite de la barre latérale */
+    width: 1200px; /* Largeur de la page */
     height: 100%; /* Hauteur de la page */
     background-color: white; /* Couleur de fond de la page */
     transition: left 0.5s ease; /* Animation de glissement */
+    overflow-y: auto; /* Permettre le défilement vertical si nécessaire */
 }
 
+
 .hidden {
-    left: -300px; /* Cache la page à gauche */
+    left: -1300px; /* Cache la page à gauche */
 }
 
 .show {
-    left: 0; /* Affiche la page à côté de la barre latérale */
+    left: 100px; /* Affiche la page à côté de la barre latérale */
 }

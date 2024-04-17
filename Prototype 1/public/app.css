@@ -1,37 +1,88 @@
+
+.profile-page {
+    position: absolute;
+    top: 0;
+    left: 500%; /*slide la page a droit*/
+    width: 100%; 
+    height: 100%; 
+    transition: left 0.5s ease; /* Animation de glissement */
+    z-index: 0;
+}
+
 .side-bar {
-  flex-basis: 6vw; /* ou une largeur fixe selon vos préférences */
-  background-color: #D5C069;
-  display: flex;
-  flex-direction: column;
-  align-items: center;/* Empêche le contenu de déborder lorsque la barre latérale est agrandie */
+    position: relative; /* Fait en sorte d'etre sur que le z index marche */
+    z-index: 1; /*Mettre une valeure Z plus grande que la page profile pour apparaitre au dessus*/
 }
 
-.icons {
-  align-items: center;
-  font-size: 8.5vh;
-  cursor: pointer;
-  padding-left: 10%;
-  padding-top: 8vh; /* Utilisation d'une valeur fixe pour le padding top */
-  padding-bottom: 8vh; /* Utilisation d'une valeur fixe pour le padding bottom */
-  overflow: hidden;
+.side-bar a {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px;
+    white-space: nowrap; 
 }
 
-.icons:hover {
-  color: gray;
+
+
+#profileIcon span{
+    padding-right: 35px;
 }
 
-.side-bar:hover {
-  width: 15vw; /* Ajuste la largeur de la barre latérale au survol */
+#exitIcon{
+    padding-right: 35px;
 }
 
-.side-bar:hover .icons {
-  padding-left: 10%; /* Maintient le padding fixe */
+
+#calendarIcon span{
+    padding-right: 19px;
 }
 
-.main-container {
-  display: flex;
-  height: 100vh;
+.side-bar a i {
+    color: #000000;
+    padding-right: 70px; 
 }
+
+
+.side-bar a span {
+    opacity: 0; /* cacher le text initiallement */
+    color:inherit;
+    font-size: 1.05rem;
+        font-family: sans-serif;
+        font-weight: bold;
+
+
+}
+
+.side-bar:hover a span {
+    opacity: 1; /* faire apparaitre le text quand l'utilisateur passer sa souris sur la side bar */
+}
+
+/* Media Query for Smaller Screens */
+@media screen and (max-width: 768px) {
+    .side-bar {
+        width: 150px; /* Adjust width for smaller screens */
+        min-width: 60px; /* Adjust minimum width for smaller screens */
+    }
+
+    .side-bar:hover {
+        width: 200px; /* Keep the width same on hover for smaller screens */
+    }
+
+    .side-bar a span {
+        margin-left: 8px; /* Adjust margin for smaller screens */
+    }
+}
+
+.hidden {
+    left: -1500px; /* Cache la page à gauche */
+}
+
+.show {
+    left: 90px; /* Affiche la page à côté de la sidebar */
+}
+
 
 .card-container {
   display: flex;

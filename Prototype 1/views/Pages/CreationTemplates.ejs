@@ -1,37 +1,61 @@
 <%- include ("../partials/header.ejs") %>
-
 <style>
-    .TemplateCard{
-        height: 500px;
-        width: 300px;
-        border-radius: 10px;
-        color:black;
-        font-weight: bolder;
-        font-size: 100px;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        background-color: wheat;
-        margin-left: 30px;
-    }
-    .Clickable {
-
-    }
-    .NonClickable {
-
-    }
+.searchBody{
+    display: flex;
+    flex-direction: row; /* Arrange children vertically */
+    align-items: center; /* Center items horizontally within the container */
+    justify-content: space-evenly; /* Distribute space evenly between children */
+    width: 90%; /* Adjust width as needed */
+    background-color: #333; /* Example background color */
+    padding: 20px;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for better visibility */
+    margin: auto; /* Center the searchBody horizontally and vertically if inside another flex container or full page */
+}
+.searchFactor{
+    display: flex;
+    flex-direction: row;
+    margin-left: 10px;
+    margin-bottom: 5px;
+}
+h4{
+    color: white;
+    width: 120px;
+}
+p{
+    color:white;
+}
+input{
+    border-radius: 15px;
+    margin-left: 5px;
+}
+button {
+    border-radius: 15px;
+    margin-left: 5px;
+}
+.searchFactors{
+    display: flex;
+    flex-direction: column;
+}
 </style>
 
-<% if (user.gens!=0){ %>
-
-<div class="TemplateCard Clickable">
-    +
+<div class="searchBody">
+    <div class="searchFactors">
+        <div class="searchFactor">
+            <h4>Muscle:</h4>
+            <input type="text" id="muscleInput">
+            <button id="searchButtonMuscle">Chercher</button>
+        </div>
+        <div class="searchFactor">
+            <h4>Nom:</h4>
+            <input type="text" id="nameInput">
+            <button id="searchButtonName">Chercher</button>
+        </div>
+    </div>
+    <div class="results" id="results">
+        <h4>Exercises trouvées:</h4>
+        <div class="result" id="result" style="color:white"></div>
+    </div>
 </div>
-
-<% } else { %>
-
-<div class="TemplateCard NonClickable">
-    +
-</div>
-<% } %>
+<script src="/creationTemplate.js"></script>
 <%- include ("../partials/footer.ejs") %>

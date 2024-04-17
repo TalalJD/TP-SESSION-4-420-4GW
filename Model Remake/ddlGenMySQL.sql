@@ -139,3 +139,7 @@ INSERT INTO abonnement (nom_abonnement, nb_generations) VALUES
 ('GRATUIT', 3),
 ('BASIC', 10),
 ('PREMIUM', -1);
+-- Ajout tables workout
+ALTER TABLE workout
+ADD COLUMN dureeSeconde_workout INT,
+ADD COLUMN IsTemplate_workout BOOLEAN DEFAULT FALSE;

@@ -141,7 +141,7 @@ app.get("/App", async function (req, res) {
   
       items: [], 
       user:user,
-      abonnement:abonnement
+      abonnement:abonnement[0]
     });
   } else {
     res.redirect('/login');
@@ -371,6 +371,10 @@ app.post('/abonnement/choisir', async function(req, res) {
       idAbonnement: idAbonnementBody,
       gens : generationsRestantes,
     });
+
+    req.session.user.idAbonnement = idAbonnementBody;
+    req.session.user.gens = generationsRestantes;
+    
     res.redirect('/');
   } finally {
     await mongoClient.close();

@@ -225,3 +225,39 @@ body {
         border-color: #0a58ca;
     }
 
+    .side-bar {
+        display: flex;
+        flex-direction: column;
+        background-color: #D5C069;
+        width: 6vw;
+        height: 100vh;
+        justify-items: center;
+        transition: width 0.3s ease-in-out; /* Transition seulement pour la largeur */
+        overflow: hidden; /* Empêche le contenu de déborder lorsque la barre latérale est agrandie */
+    }
+     
+    .icons {
+        align-items: center;
+        font-size: 8.5vh;
+        cursor: pointer;
+        padding-left: 10%;
+        padding-top: 8vh; /* Utilisation d'une valeur fixe pour le padding top */
+        padding-bottom: 8vh; /* Utilisation d'une valeur fixe pour le padding bottom */
+        overflow: hidden;
+    }
+     
+    .icons:hover {
+        color: gray;
+    }
+     
+    .side-bar:hover {
+        width: 15vw; /* Ajuste la largeur de la barre latérale au survol */
+    }
+     
+    .side-bar:hover .icons {
+        padding-left: 10%; /* Maintient le padding fixe */
+    }
+
+
+    
+      

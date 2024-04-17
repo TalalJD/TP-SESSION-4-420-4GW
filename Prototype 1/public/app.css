@@ -1,4 +1,3 @@
-
 .profile-page {
     position: absolute;
     top: 0;
@@ -75,45 +74,11 @@
     }
 }
 
+
 .hidden {
     left: -1500px; /* Cache la page à gauche */
 }
 
 .show {
     left: 90px; /* Affiche la page à côté de la sidebar */
-}
-
-
-.card-container {
-  display: flex;
-  flex-direction: row; /* Aligner les cartes horizontalement */
-  overflow-x: auto; /* Permettre le défilement horizontal */
-  white-space: nowrap; /* Garder toutes les cartes sur la même ligne */
-  padding: 20px;
-  align-items: flex-start; /* Alignement vertical des cartes */
-}
-
-.card {
-  top: 30px;
-  width: 450px;
-  height: 800px !important;
-  margin: 10px;
-  background-color: #D5C069 !important;
-  display: flex;
-  justify-content: center; /* Centrage horizontal */
-  align-items: center; /* Centrage vertical */
-  flex-shrink: 0; /* Empêcher les cartes de rétrécir */
-}
-
-.card-content {
-  display: flex;
-  justify-content: center; /* Centrage horizontal du contenu */
-  align-items: center; /* Centrage vertical du contenu */
-  width: 100%; /* La largeur doit couvrir toute la carte */
-  height: 100%; /* La hauteur doit couvrir toute la carte */
-}
-
-/* Assurez-vous que les icônes à l'intérieur de .card-content sont aussi centrées */
-.card-content .fa-plus {
-  font-size: 3em; /* Ajustez la taille de la police selon vos besoins */
 }

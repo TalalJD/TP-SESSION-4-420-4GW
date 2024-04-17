@@ -143,3 +143,5 @@ INSERT INTO abonnement (nom_abonnement, nb_generations) VALUES
 ALTER TABLE workout
 ADD COLUMN dureeSeconde_workout INT,
 ADD COLUMN IsTemplate_workout BOOLEAN DEFAULT FALSE;
+ALTER TABLE workout
+ADD COLUMN date_workout DATETIME;

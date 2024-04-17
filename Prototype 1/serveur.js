@@ -54,6 +54,15 @@ export async function FindStudentsByEmail(collection, findParam) {
   return collection.find({ courriel: findParam }).toArray();
 }
 
+export async function FindAbonnement(collection, findParam){
+  return collection.find({id_Abonnement : findParam}).toArray();
+}
+import { ObjectId } from 'mongodb';
+
+export async function UpdateClientById(collection, clientId, updatedFields){
+  await collection.updateMany({_id: new ObjectId(clientId)}, {$set: updatedFields});
+}
+
 // End of MongoDB Trials
 
 const server = app.listen(4000, function () {
@@ -108,22 +117,35 @@ app.get("/Connexion", function (req, res) {
 
 });
 
-app.get("/App", function (req, res) {
+app.get("/App", async function (req, res) {
   let user = null;
+  let abonnement;
   if (req.session.isLoggedIn) {
     user = req.session.user;
+    let mongoClient;
+    try {
+      mongoClient = await connectToMongo();
+      const db = mongoClient.db("EnergymizeBD");
+      const collection = db.collection("abonnement");
+      abonnement = await FindAbonnement(collection,String(user.idAbonnement));
+      console.log("Id abonnement: "+user.idAbonnement);
+      console.log("Nom abonnement found: "+abonnement[0])
+    } finally {
+      mongoClient.close();
+    }
+    res.render("Pages/app", {
+
+      siteTitle: "Simple Application",
+  
+      pageTitle: "Event List",
+  
+      items: [], 
+      user:user,
+      abonnement:abonnement
+    });
+  } else {
+    res.redirect('/login');
   }
-
-  res.render("Pages/app", {
-
-    siteTitle: "Simple Application",
-
-    pageTitle: "Event List",
-
-    items: [], 
-    user:user
-  });
-
 });
 
 
@@ -192,7 +214,8 @@ export async function InscrireUtilisateur(nom_client, prenom_client, courriel_cl
       prenom : prenom_client,
       courriel : courriel_client,
       mdp : mdp_client,
-      gen_restante : 3
+      gens : 3,
+      idAbonnement : 1
     };
     await collection.insertOne(clientDocument);
     return 1;
@@ -319,76 +342,69 @@ app.post('/index/choisir', async function(req,res){
   console.log(idSport);
 });
 
-app.post('/abonnement/choisir', function(req, res) {
-  const idAbonnement = req.body.id_abonnement; 
-  const userId = req.session.user.id_client; 
+app.post('/abonnement/choisir', async function(req, res) {
+  console.log("Entered Abonnement");
+  const idAbonnementBody = parseInt(req.body.id_abonnement); 
+  const userId = req.session.user._id; 
   let generationsRestantes = 0;
-  switch (idAbonnement) {
-    case '1': 
+  switch (idAbonnementBody) {
+    case 1: 
       generationsRestantes = 3;
       break;
-    case '2': 
+    case 2: 
       generationsRestantes = 10;
       break;
-    case '3': 
+    case 3: 
       generationsRestantes = -1; 
       break;
     default:
       generationsRestantes = 0;
   }
-  const updateQuery = 'UPDATE client SET abonnement_id_abonnement = ?, gen_restants = ? WHERE id_client = ?';
-  con.query(updateQuery, [idAbonnement, generationsRestantes, userId], function(err, result) {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Erreur lors de la mise à jour de l\'abonnement');
-    } else {
-      // Effectuer une nouvelle requête pour récupérer les données mises à jour de l'utilisateur
-      const userQuery = 'SELECT * FROM client WHERE id_client = ?';
-      con.query(userQuery, [userId], function(userErr, userResult) {
-        if (userErr) {
-          console.error(userErr);
-          res.status(500).send('Erreur lors de la récupération des données de l\'utilisateur');
-        } else {
-          // Mettre à jour les données de session de l'utilisateur
-          req.session.user = userResult[0];
-          // Rediriger vers la page d'accueil ou la page d'abonnement mise à jour
-          res.redirect('/');
-        }
-      });
-    }
-  });
+  let mongoClient;
+  try {
+    console.log("Attempting mongo update abonnement");
+    mongoClient = await connectToMongo();
+    const db = mongoClient.db("EnergymizeBD");
+    const collection = db.collection("clients");
+    console.log("User ID:", userId);
+    await UpdateClientById(collection, userId,{
+      idAbonnement: idAbonnementBody,
+      gens : generationsRestantes,
+    });
+    res.redirect('/');
+  } finally {
+    await mongoClient.close();
+  }
 });
-app.get('/profile', function(req, res) {
+
+app.get('/profile', async function(req, res) {
   let user = null;
+  let abonnement;
   if (req.session.isLoggedIn) {
     user = req.session.user;
-  
-    const abonnQuery = "SELECT * FROM abonnement WHERE id_abonnement = ?";
-
-    
-    con.query(abonnQuery, [user.abonnement_id_abonnement], function(err, abonnementDetails) {
-      if (err) {
-       
-        console.error('Database query error:', err);
-        return res.status(500).send("Internal Server Error");
-      }
-
-      
-      let abonnement = abonnementDetails[0];
-
-      res.render("Pages/profile", {
-        siteTitle: "Simple Application",
-        pageTitle: "Event List",
-        items: [], 
-        user: user,
-        abonnement: abonnement 
-      });
+    let mongoClient;
+    try {
+      mongoClient = await connectToMongo();
+      const db = mongoClient.db("EnergymizeBD");
+      const collection = db.collection("abonnement");
+      abonnement = await FindAbonnement(collection,String(user.idAbonnement));
+      console.log("Id abonnement: "+user.idAbonnement);
+      console.log("Nom abonnement found: "+abonnement[0])
+    } finally {
+      mongoClient.close();
+    }
+    res.render("Pages/profile", {
+      siteTitle: "Simple Application",
+      pageTitle: "Event List",
+      items: [], 
+      user: user,
+      abonnement: abonnement[0]
     });
   } else {
-    
     res.redirect('/login');
   }
 });
+
 
 app.post('/auth/google', async (req, res) => {
   const { courriel_client, prenom_client, nom_client, mdp_client } = req.body;

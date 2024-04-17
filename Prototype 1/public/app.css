@@ -11,7 +11,7 @@
     position: absolute;
     top: 50%; /* Position the top edge of the card at the vertical center of the parent container */
     transform: translate(-50%, -50%); /* Move the card back up and to the left by half of its own width and height */
-    margin-left: 200px;
+    margin-left: 250px;
     /* Other styles */
     transition: left 0.5s ease; /* Animation de glissement */
     z-index: 0;

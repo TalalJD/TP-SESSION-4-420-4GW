@@ -1,19 +1,84 @@
 .profile-page {
     position: absolute;
     top: 0;
-    left: 500%; /* Placer la page à droite de la barre latérale */
-    width: 1200px; /* Largeur de la page */
-    height: 100%; /* Hauteur de la page */
-    background-color: white; /* Couleur de fond de la page */
+    left: 500%; /*slide la page a droit*/
+    width: 100%; 
+    height: 100%; 
     transition: left 0.5s ease; /* Animation de glissement */
-    overflow-y: auto; /* Permettre le défilement vertical si nécessaire */
+    z-index: 0;
+}
+
+.side-bar {
+    position: relative; /* Fait en sorte d'etre sur que le z index marche */
+    z-index: 1; /*Mettre une valeure Z plus grande que la page profile pour apparaitre au dessus*/
+}
+
+.side-bar a {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px;
+    white-space: nowrap; 
+}
+
+
+
+#profileIcon span{
+    padding-right: 35px;
+}
+
+#exitIcon{
+    padding-right: 35px;
+}
+
+
+#calendarIcon span{
+    padding-right: 19px;
+}
+
+.side-bar a i {
+    color: #000000;
+    padding-right: 70px; 
+}
+
+
+.side-bar a span {
+    opacity: 0; /* cacher le text initiallement */
+    color:inherit;
+    font-size: 1.05rem;
+        font-family: sans-serif;
+        font-weight: bold;
+
+
+}
+
+.side-bar:hover a span {
+    opacity: 1; /* faire apparaitre le text quand l'utilisateur passer sa souris sur la side bar */
+}
+
+/* Media Query for Smaller Screens */
+@media screen and (max-width: 768px) {
+    .side-bar {
+        width: 150px; /* Adjust width for smaller screens */
+        min-width: 60px; /* Adjust minimum width for smaller screens */
+    }
+
+    .side-bar:hover {
+        width: 200px; /* Keep the width same on hover for smaller screens */
+    }
+
+    .side-bar a span {
+        margin-left: 8px; /* Adjust margin for smaller screens */
+    }
 }
 
 
 .hidden {
-    left: -1300px; /* Cache la page à gauche */
+    left: -1500px; /* Cache la page à gauche */
 }
 
 .show {
-    left: 100px; /* Affiche la page à côté de la barre latérale */
+    left: 90px; /* Affiche la page à côté de la sidebar */
 }

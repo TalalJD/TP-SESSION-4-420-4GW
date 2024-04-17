@@ -1,4 +1,4 @@
-<%- include ("../partials/header.ejs") %>
+<%- include("../partials/header.ejs") %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +9,7 @@
 </head>
 <body>
     <div class="card-container" id="cardContainer">
+        <!-- Card 1 - Gratuit -->
         <div class="card" id="card1">
             <h2>GRATUIT</h2>
             <div class="additional-info">
@@ -16,14 +17,13 @@
                 <p>3 essais pour générer des programmes</p>
             </div>
             <% if (user) { %>
-                <form action="/abonnement/choisir" method="POST">
-                    <input type="hidden" name="id_abonnement" value="1">
-                    <button id="but1" type="submit" <% if (user.abonnement_id_abonnement == 1) { %>disabled<% } %>>Confirmer</button>
-                </form>
+                <button type="button" onclick="showPaymentForm('1')" id="but1" <% if (user.abonnement_id_abonnement === 1) { %>disabled<% } %>>Confirmer</button>
             <% } else { %>
                 <button id="loginButton1" type="button">Connectez-vous pour s'abonner</button>
             <% } %>
         </div>
+
+        <!-- Card 2 - Basic -->
         <div class="card" id="card2">
             <h2>BASIC</h2>
             <div class="additional-info">
@@ -31,14 +31,13 @@
                 <p>10 essais par mois pour générer des programmes</p>
             </div>
             <% if (user) { %>
-                <form action="/abonnement/choisir" method="POST">
-                    <input type="hidden" name="id_abonnement" value="2">
-                    <button id="but2" type="submit" <% if (user.abonnement_id_abonnement == 2) { %>disabled<% } %>>Confirmer</button>
-                </form>
+                <button type="button" onclick="showPaymentForm('2')" id="but2" <% if (user.abonnement_id_abonnement === 2) { %>disabled<% } %>>Confirmer</button>
             <% } else { %>
                 <button id="loginButton2" type="button">Connectez-vous pour s'abonner</button>
             <% } %>
         </div>
+
+        <!-- Card 3 - Premium -->
         <div class="card" id="card3">
             <h2>PREMIUM</h2>
             <div class="additional-info">
@@ -47,10 +46,7 @@
                 <p>Accès aux plans de nutrition</p>
             </div>
             <% if (user) { %>
-                <form action="/abonnement/choisir" method="POST">
-                    <input type="hidden" name="id_abonnement" value="3">
-                    <button id="but3" type="submit" <% if (user.abonnement_id_abonnement == 3) { %>disabled<% } %>>Confirmer</button>
-                </form>
+                <button type="button" onclick="showPaymentForm('3')" id="but3" <% if (user.abonnement_id_abonnement === 3) { %>disabled<% } %>>Confirmer</button>
             <% } else { %>
                 <button id="loginButton3" type="button">Connectez-vous pour s'abonner</button>
             <% } %>
@@ -59,25 +55,26 @@
 
     <!-- Formulaire de paiement -->
     <div id="paymentForm" style="display: none;">
-        <!-- Ajoutez votre formulaire de paiement ici -->
-        <!-- Par exemple, les champs pour les informations de la carte bancaire -->
         <h2>Formulaire de paiement</h2>
         <form action="/process_payment" method="POST">
-            <!-- Ajoutez ici les champs pour les informations de la carte bancaire -->
+            <input type="hidden" id="planId" name="planId" value="">
             <label for="cardNumber">Numéro de carte :</label>
-            <input type="text" id="cardNumber" name="cardNumber" required><br><br>
-            <label for="expirationDate">Date d'expiration :</label>
-            <input type="text" id="expirationDate" name="expirationDate" placeholder="MM/YY" required><br><br>
+            <input type="text" id="cardNumber" name="cardNumber" pattern="\d*" minlength="16" maxlength="16" required><br><br>
+            <label for="expirationDate">Date d'expiration (MMYY) :</label>
+            <input type="text" id="expirationDate" name="expirationDate" pattern="\d*" minlength="4" maxlength="4" placeholder="MMYY" required><br><br>
             <label for="cvv">CVV :</label>
-            <input type="text" id="cvv" name="cvv" required><br><br>
+            <input type="text" id="cvv" name="cvv" pattern="\d*" minlength="3" maxlength="3" required><br><br>
             <button type="submit">Payer</button>
         </form>
     </div>
+
+    <script>
+        function showPaymentForm(planId) {
+            document.getElementById('paymentForm').style.display = 'block';
+            document.getElementById('planId').value = planId;
+            document.getElementById('paymentForm').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
-
-
-
-
-
-<%- include ("../partials/footer.ejs") %>
+<%- include("../partials/footer.ejs") %>

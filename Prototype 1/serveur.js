@@ -144,7 +144,7 @@ app.get("/App", async function (req, res) {
       abonnement:abonnement[0]
     });
   } else {
-    res.redirect('/login');
+    res.redirect('/Connexion');
   }
 });
 
@@ -398,6 +398,7 @@ app.post('/abonnement/choisir', async function(req, res) {
   }
 });
 
+
 app.get('/profile', async function(req, res) {
   let user = null;
   let abonnement;
@@ -422,7 +423,7 @@ app.get('/profile', async function(req, res) {
       abonnement: abonnement[0]
     });
   } else {
-    res.redirect('/login');
+    res.redirect('/Connexion');
   }
 });
 
@@ -430,7 +431,6 @@ app.get('/profile', async function(req, res) {
 app.post('/auth/google', async (req, res) => {
   const { courriel_client, prenom_client, nom_client, mdp_client } = req.body;
 
-  // Vérifiez si l'utilisateur existe dans la base de données
   let FoundUser = await ConnectionUtilisateur(courriel_client, mdp_client);
     if (FoundUser===0){
       let verifier = await InscrireUtilisateur(nom_client,prenom_client,courriel_client,mdp_client);
@@ -444,3 +444,61 @@ app.post('/auth/google', async (req, res) => {
       res.json({ success: true, message: 'Utilisateur connecté' });
     }
 });
+
+app.post('/process_payment', async (req, res) => {
+  const { cardNumber, expirationDate, cvv, planId } = req.body;
+  let mongoClient;
+
+  try {
+    mongoClient = await connectToMongo();
+    const db = mongoClient.db("EnergymizeBD");
+    const clientsCollection = db.collection("clients");
+    const carteClientCollection = db.collection("carte_client");
+    const paymentSuccessful = true; 
+    
+    if (paymentSuccessful) {
+      await clientsCollection.updateOne(
+        { _id: new ObjectId(req.session.user._id) },
+        { $set: { idAbonnement: parseInt(planId) } }
+      );
+      await carteClientCollection.insertOne({
+        userId: new ObjectId(req.session.user._id),
+        num_carte: cardNumber, 
+        date_carte: expirationDate, 
+        cvv_carte: cvv 
+      });
+      res.redirect('/success-page');
+    } else {
+      res.redirect('/failure-page');
+    }
+  } catch (error) {
+    console.error('Payment processing error:', error);
+    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
+  } finally {
+    if (mongoClient) {
+      await mongoClient.close();
+    }
+  }
+});
+
+
+
+
+
+app.get('/success-page', function(req, res) {
+  res.render('Pages/success', { 
+    siteTitle: 'Payment Success',
+    pageTitle: 'Transaction Completed',
+    user: req.session.user 
+  });
+});
+
+app.get('/failure-page', (req, res) => {
+  res.render('Pages/failure', { 
+    siteTitle: 'Payment Failure',
+    pageTitle: 'Transaction Failed',
+    message: 'We were unable to process your transaction. Please try again.',
+    user: req.session.user 
+  });
+});
+

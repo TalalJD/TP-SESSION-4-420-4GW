@@ -1,0 +1,36 @@
+<%- include("../partials/header.ejs") %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+    <style>
+        .centered {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 40vh; 
+            color: aliceblue; 
+            font-family: Arial, sans-serif; 
+        }
+        body {
+            background: #333; 
+            margin: 0; 
+        }
+        a {
+            color: aliceblue;
+            text-decoration: none; 
+        }
+    </style>
+</head>
+<body>
+    <div class="centered">
+        <h1>Échec de paiement</h1>
+        <p><%= message %></p>
+        <a href="/">Essayer à nouveau</a>
+    </div>
+</body>
+</html>
+<%- include("../partials/footer.ejs") %>

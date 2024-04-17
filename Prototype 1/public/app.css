@@ -7,6 +7,28 @@
     transition: left 0.5s ease; /* Animation de glissement */
     z-index: 0;
 }
+.exercice-card {
+    position: absolute;
+    top: 50%; /* Position the top edge of the card at the vertical center of the parent container */
+    transform: translate(-50%, -50%); /* Move the card back up and to the left by half of its own width and height */
+    margin-left: 200px;
+    /* Other styles */
+    transition: left 0.5s ease; /* Animation de glissement */
+    z-index: 0;
+    width: 15%;
+    height: 80%;
+    background-color: #D5C069 !important;
+    border-radius: 10px;
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center;
+
+}
+.exercice-card i {
+    margin-right: 20px; /* Adjust the margin as needed */
+}
+
+
 
 .side-bar {
     position: relative; /* Fait en sorte d'etre sur que le z index marche */
@@ -82,3 +104,23 @@
 .show {
     left: 90px; /* Affiche la page à côté de la sidebar */
 }
+
+/* Card container */
+
+
+/* Individual card */
+.card {
+    width: 450px;
+    height: 800px !important;
+    margin: 10px;
+    background-color: #D5C069 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Card content */
+
+
+  

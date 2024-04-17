@@ -168,6 +168,23 @@ app.get("/Abonnement", function (req, res) {
 
 });
 
+app.get("/CreateTemplate", async function (req,res){
+  let user = null;
+  if (req.session.isLoggedIn) {
+    user = req.session.user;
+  }
+
+  res.render("Pages/CreationTemplates", {
+
+    siteTitle: "Simple Application",
+
+    pageTitle: "Event List",
+
+    items: [], 
+    user:user
+  });
+
+});
 
 
 const con = mysql.createConnection({

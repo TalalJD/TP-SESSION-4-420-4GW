@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
+    // Requete AJAX prise de : https://www.api-ninjas.com/api/exercises
 });
 function displayResults(exercises) {
     console.log("Displaying results");
@@ -40,11 +41,58 @@ function displayResults(exercises) {
     resultDiv.innerHTML = ''; // Clear previous results
     if (exercises.length > 0) {
         exercises.forEach(function(exercise) {
+            var exerciceDiv = document.createElement('div');
+            exerciceDiv.style= "display: flex; flex-direction: row; margin-left: 10px;"
             var p = document.createElement('p');
             p.textContent = exercise.name + " - " + exercise.difficulty;
-            resultDiv.appendChild(p);
+            p.style = "width: 300px";
+            exerciceDiv.append(p);
+
+            var selectExerciseButton = document.createElement('button');
+            selectExerciseButton.innerText = "Selectionner";
+            selectExerciseButton.onclick = function() {
+                appendExerciseToDOM(exercise);
+            };            
+            exerciceDiv.append(selectExerciseButton);
+            resultDiv.appendChild(exerciceDiv);
         });
     } else {
-        resultDiv.textContent = "Aucun exercice n'a été trouvé pour ce groupe musculaire.";
+        resultDiv.textContent = "Aucun exercice n'a été trouvé pour cette requete.";
     }
+}
+
+function appendExerciseToDOM(exercise){
+    const body = document.body;
+    const searchBody = document.createElement('div');
+    searchBody.className = 'searchBody';
+    searchBody.style.marginTop = '30px';
+
+    const searchFactors = document.createElement('div');
+    searchFactors.className = 'searchFactors';
+
+    // Name section
+    const nameFactor = document.createElement('div');
+    nameFactor.className = 'searchFactor';
+    const nameTitle = document.createElement('h4');
+    nameTitle.textContent = 'Name:';
+    const nameValue = document.createElement('h4');
+    nameValue.textContent = exercise.name;
+    nameFactor.appendChild(nameTitle);
+    nameFactor.appendChild(nameValue);
+
+    // Muscle section
+    const muscleFactor = document.createElement('div');
+    muscleFactor.className = 'searchFactor';
+    const muscleTitle = document.createElement('h4');
+    muscleTitle.textContent = 'Muscle:';
+    const muscleValue = document.createElement('h4');
+    muscleValue.textContent = exercise.muscle;
+    muscleFactor.appendChild(muscleTitle);
+    muscleFactor.appendChild(muscleValue);
+
+    // Append to main container
+    searchFactors.appendChild(nameFactor);
+    searchFactors.appendChild(muscleFactor);
+    searchBody.appendChild(searchFactors);
+    body.appendChild(searchBody);
 }

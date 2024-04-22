@@ -24,6 +24,9 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false, maxAge: 86400000 } 
 }));
+
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
 /*
 Connexion au serveur
 */
@@ -185,8 +188,6 @@ app.get("/CreateTemplate", async function (req,res){
   });
 
 });
-
-
 const con = mysql.createConnection({
 
   host: "localhost",
@@ -304,8 +305,7 @@ app.get("/indexSport", function(req,res){
   });
 });
 
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); 
+
 
 // La route POST pour la soumission du formulaire de connexion
 app.post('/connexion/submit', async (req, res) => {
@@ -426,6 +426,7 @@ app.get('/profile', async function(req, res) {
     res.redirect('/Connexion');
   }
 });
+
 
 
 app.post('/auth/google', async (req, res) => {

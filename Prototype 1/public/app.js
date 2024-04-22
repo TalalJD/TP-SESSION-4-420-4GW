@@ -1,41 +1,35 @@
 document.addEventListener("DOMContentLoaded", function() {
     var profileIcon = document.getElementById("profileIcon");
     var plusIcon = document.getElementById("plusIcon");
+    var nouvelleCard = document.getElementById("nouvelleCard");
     var profilePage = document.querySelector(".profile-page");
     var exerciceCard = document.querySelector(".exercice-card");
-
-    function hideAllExcept(element) {
-        if (element === profileIcon) {
-            profilePage.classList.add("show");
-            profilePage.classList.remove("hidden");
-            exerciceCard.classList.remove("show");
-            exerciceCard.classList.add("hidden");
-        } else if (element === plusIcon) {
-            exerciceCard.classList.add("show");
-            exerciceCard.classList.remove("hidden");
-            profilePage.classList.remove("show");
-            profilePage.classList.add("hidden");
-        }
-        document.body.style.overflow = "hidden";
-    }
+    var exercicetemplates = document.querySelector(".exercice-templates");
 
     profileIcon.addEventListener("click", function() {
-        if (!profilePage.classList.contains("show")) {
-            hideAllExcept(profileIcon);
-        } else {
-            profilePage.classList.remove("show");
-            profilePage.classList.add("hidden");
-            document.body.style.overflow = "auto";
-        }
+        toggleVisibility(profilePage);
     });
 
     plusIcon.addEventListener("click", function() {
-        if (!exerciceCard.classList.contains("show")) {
-            hideAllExcept(plusIcon);
+        toggleVisibility(exerciceCard);
+    });
+
+    nouvelleCard.addEventListener("click", function() {
+        toggleVisibility(exerciceCard);
+        toggleVisibility(exercicetemplates);
+    });
+
+    function toggleVisibility(element) {
+        var isHidden = element.classList.contains("hidden");
+
+        if (isHidden) {
+            element.classList.remove("hidden");
+            element.classList.add("show");
+            document.body.style.overflow = "hidden";
         } else {
-            exerciceCard.classList.remove("show");
-            exerciceCard.classList.add("hidden");
+            element.classList.remove("show");
+            element.classList.add("hidden");
             document.body.style.overflow = "auto";
         }
-    });
+    }
 });

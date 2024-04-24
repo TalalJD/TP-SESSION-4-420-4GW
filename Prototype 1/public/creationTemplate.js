@@ -73,9 +73,9 @@ function appendExerciseToDOM(exercise){
     // Name section
     const nameFactor = document.createElement('div');
     nameFactor.className = 'searchFactor';
-    const nameTitle = document.createElement('h4');
-    nameTitle.textContent = 'Name:';
-    const nameValue = document.createElement('h4');
+    const nameTitle = document.createElement('p');
+    nameTitle.textContent = 'Name: ';
+    const nameValue = document.createElement('p');
     nameValue.textContent = exercise.name;
     nameFactor.appendChild(nameTitle);
     nameFactor.appendChild(nameValue);
@@ -83,16 +83,27 @@ function appendExerciseToDOM(exercise){
     // Muscle section
     const muscleFactor = document.createElement('div');
     muscleFactor.className = 'searchFactor';
-    const muscleTitle = document.createElement('h4');
-    muscleTitle.textContent = 'Muscle:';
-    const muscleValue = document.createElement('h4');
+    const muscleTitle = document.createElement('p');
+    muscleTitle.textContent = 'Muscle: ';
+    const muscleValue = document.createElement('p');
     muscleValue.textContent = exercise.muscle;
     muscleFactor.appendChild(muscleTitle);
     muscleFactor.appendChild(muscleValue);
 
+    // Equipment section
+    const equipFactor = document.createElement('div');
+    equipFactor.className = 'searchFactor';
+    const equipTitle = document.createElement('p');
+    const equipValue = document.createElement('p');
+    equipTitle.textContent = "Équipement : "
+    equipValue.textContent = exercise.equipment;
+    equipFactor.appendChild(equipTitle);
+    equipFactor.appendChild(equipValue);
+
     // Append to main container
     searchFactors.appendChild(nameFactor);
     searchFactors.appendChild(muscleFactor);
+    searchFactors.appendChild(equipFactor);
     searchBody.appendChild(searchFactors);
     body.appendChild(searchBody);
 }

@@ -1,60 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include ('../partials/head') %>
-<link rel="stylesheet" href="/app.css">
+    <link rel="stylesheet" href="/app.css">
 
-<body>
+
     <div class="side-bar">
-            <a id="calendarIcon">
-                <i class="fa-solid fa-calendar-days icons" style="color: #000000;" name="calendarIcon"></i>
-                <span>Calendrier</span>
-            </a>
-    
-            <a id="profileIcon">
-                <i class="fa-solid fa-user icons" style="color: #000000;" name="profileIcon"></i>
-                <span>Profile</span>
-            </a>
-            
-            <a id="plusIcon"> 
-                <i class="fa-sharp fa-solid fa-plus icons" style="color: #000000;" name="plusIcon"></i>
-                <span>Entrainements</span>
-            </a>
-           
-            <a href="/" id="exitIcon">
-                <i class="fa-solid fa-right-from-bracket icons" style="color: #000000;" name="exitIcon"></i>
-                <span>Acceuil</span>
-            </a>
-    
-        
+        <a id="calendarIcon">
+            <i class="fa-solid fa-calendar-days icons" style="color: #000000;" name="calendarIcon"></i>
+            <span>Calendrier</span>
+        </a>
+
+        <a id="profileIcon">
+            <i class="fa-solid fa-user icons" style="color: #000000;" name="profileIcon"></i>
+            <span>Profile</span>
+        </a>
+
+        <a id="plusIcon">
+            <i class="fa-sharp fa-solid fa-plus icons" style="color: #000000;" name="plusIcon"></i>
+            <span>Entrainements</span>
+        </a>
+
+        <a href="/" id="exitIcon">
+            <i class="fa-solid fa-right-from-bracket icons" style="color: #000000;" name="exitIcon"></i>
+            <span>Acceuil</span>
+        </a>
+
+
     </div>
     <div class="profile-page hidden">
         <style>
-            .theme-yellow, .theme-black {
-                padding: 10px; /* Augmente l'espace interne */
-                margin-bottom: 10px; /* Espacement entre les containers */
+            .theme-yellow,
+            .theme-black {
+                padding: 10px;
+                /* Augmente l'espace interne */
+                margin-bottom: 10px;
+                /* Espacement entre les containers */
             }
+
             .theme-yellow {
                 background-color: #D5C069;
                 color: black;
             }
+
             .theme-black {
                 background-color: black;
                 color: #D5C069;
             }
-            .user-image { 
-                max-width: 100%; 
-                height: auto; 
-                object-fit: cover; /* Ajuste les proportions */
+
+            .user-image {
+                max-width: 100%;
+                height: auto;
+                object-fit: cover;
+                /* Ajuste les proportions */
             }
+
             .row.align-items-stretch {
                 display: flex;
                 flex-wrap: wrap;
             }
+
             .btn-outline-light {
-    background-color: #D5C069; /* Change background color */
-    color: black; /* Change text color */
-    /* Add more styles as needed */
-}
+                background-color: #D5C069;
+                /* Change background color */
+                color: black;
+                /* Change text color */
+                /* Add more styles as needed */
+            }
         </style>
         <div class="container mt-4">
             <div class="row align-items-stretch">
@@ -62,35 +73,47 @@
                 <div class="col-md-8">
                     <div class="row mb-2">
                         <div class="col-sm-2 theme-black">Id</div>
-                        <div class="col-sm-4 theme-yellow"><%= user._id %></div>
+                        <div class="col-sm-4 theme-yellow">
+                            <%= user._id %>
+                        </div>
                     </div>
                     <!-- Répétez pour les autres lignes d'informations -->
                     <div class="row mb-2">
                         <div class="col-sm-2 theme-black">Nom</div>
-                        <div class="col-sm-4 theme-yellow"><%= user.nom %></div>
+                        <div class="col-sm-4 theme-yellow">
+                            <%= user.nom %>
+                        </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-sm-2 theme-black">Prenom</div>
-                        <div class="col-sm-4 theme-yellow"><%= user.prenom %></div>
+                        <div class="col-sm-4 theme-yellow">
+                            <%= user.prenom %>
+                        </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-sm-2 theme-black">Courriel</div>
-                        <div class="col-sm-4 theme-yellow"><%= user.courriel %></div>
+                        <div class="col-sm-4 theme-yellow">
+                            <%= user.courriel %>
+                        </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-sm-2 theme-black">Generations Restantes</div>
-                        <div class="col-sm-4 theme-yellow"><%= user.gens %></div>
+                        <div class="col-sm-4 theme-yellow">
+                            <%= user.gens %>
+                        </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-sm-2 theme-black">Abonnement</div>
-                        <div class="col-sm-4 theme-yellow"><%= abonnement.nom_Abonnement %></div>
+                        <div class="col-sm-4 theme-yellow">
+                            <%= abonnement.nom_Abonnement %>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="/Abonnement">
                                 <button class="btn btn-outline-light">Changer mon abonnement</button>
                             </a>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -103,26 +126,212 @@
     </div>
 
     <div class="exercice-card hidden">
-        <i class="fa-sharp fa-solid fa-plus icons" style="color: #000000;" name="plusIcon" id = "nouvelleCard"></i>
+        <i class="fa-sharp fa-solid fa-plus icons" style="color: #000000;" name="plusIcon" id="NouvelEntrainement"></i>
     </div>
-    <div class="exercice-templates hidden">
-        <div class="container">
-            <div class="left-side">
-                <!-- Cards go here -->
-                <div class="card1"></div>
-                <div class="card1"></div>
-                <!-- Repeat for other cards -->
-            </div>
-            <div class="line"></div> <!-- Moved the line div inside the container -->
-            <div class="right-side">
-                <!-- Text input boxes go here -->
-                <input type="text" placeholder="Type here">
-                <input type="text" placeholder="Type here">
+    <div class="Choisir-Entrainement hidden">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--ligne de code prise de
+          https://www.w3schools.com/css/css_rwd_viewport.asp-->
+        <style>
+            .grid-container {
+                width: 520px;
+                /* Adjust as needed */
+                height: 85%;
+                /* Adjust as needed */
+                margin-left: 50px;
+                margin-top: 35px;
+                overflow: auto;
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .grid-item {
+                width: 230px;
+                height: 230px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .grid-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .card-content {
+                padding: 10px;
+                color: #D5C069;
+                text-align: center;
+                font-family: sans-serif;
+            }
+
+            .entrPrefait {
+                margin-left: 50px;
+                color: white;
+                font-family: sans-serif;
+                font-size: 2rem;
+                /* Adjust font size as needed */
+                margin-bottom: 20px;
+                /* Adjust spacing between title and grid */
+                margin-top: 20px;
+            }
+
+            .entrCustom {
+                margin-left: 750px;
+                color: white;
+                font-family: sans-serif;
+                font-size: 2rem;
+                position:fixed;
+                top: 20px;
+                /* Adjust font size as needed */
+                
+                /* Adjust spacing between title and grid */
+                
+            }
+
+            .return-button {
+                position: absolute;
+                bottom: 10px;
+                /* Adjust bottom spacing as needed */
+                margin-left: 1275px;
+                padding: 10px 20px;
+                background-color: #D5C069;
+                /* Background color */
+                color: black;
+                /* Text color */
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .search-bar {
+                position: absolute;
+                margin-top: 25px;
+                margin-left: 750px;
+                /* Position 500px to the right of the grid */
+                display: flex;
+                align-items: center;
+            }
+
+            .search-bar input[type="text"] {
+                padding: 5px;
+                margin-right: 5px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .search-bar button {
+                padding: 5px 10px;
+                background-color: #D5C069;
+                border: none;
+                border-radius: 5px;
+                color: black;
+                cursor: pointer;
+            }
+            .vertical-line {
+    position: absolute;
+    top: 0;
+    margin-left: 675px;
+    width: 20px;
+    height: 100%;
+    background-color:#D5C069;
+}
+
+        </style>
+        <h3 class="entrPrefait">Nos entraînements prêts à l'emploi !</h3>
+        <h3 class="entrCustom">Créez votre propre entraînement !</h3>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Enter your search term">
+            <button id="searchButton">Search</button>
+        </div>
+        <div class="vertical-line"></div>
+        <div class="grid-container">
+            <div class="grid">
+                <div class="grid-item">
+                    <!-- <img src="https://via.placeholder.com/200x200" alt="Placeholder Image">-->
+                    <div class="card-content">
+                        <h3>Card 1</h3>
+                        <p>Description of Card 1</p>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <!--<img src="https://via.placeholder.com/200x200" alt="Placeholder Image">-->
+                    <div class="card-content">
+                        <h3>Card 2</h3>
+                        <p>Description of Card 2</p>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <!-- <img src="https://via.placeholder.com/200x200" alt="Placeholder Image">-->
+                    <div class="card-content">
+                        <h3>Card 3</h3>
+                        <p>Description of Card 3</p>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <!--   <img src="https://via.placeholder.com/200x200" alt="Placeholder Image">-->
+                    <div class="card-content">
+                        <h3>Card 4</h3>
+                        <p>Description of Card 4</p>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <!--   <img src="https://via.placeholder.com/200x200" alt="Placeholder Image">-->
+                    <div class="card-content">
+                        <h3>Card 5</h3>
+                        <p>Description of Card 5</p>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <!--   <img src="https://via.placeholder.com/200x200" alt="Placeholder Image">-->
+                    <div class="card-content">
+                        <h3>Card 6</h3>
+                        <p>Description of Card 6</p>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <!--  <img src="https://via.placeholder.com/200x200" alt="Placeholder Image">-->
+                    <div class="card-content">
+                        <h3>Card 7</h3>
+                        <p>Description of Card 7</p>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <!--  <img src="https://via.placeholder.com/200x200" alt="Placeholder Image">-->
+                    <div class="card-content">
+                        <h3>Card 8</h3>
+                        <p>Description of Card 8</p>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <!-- <img src="https://via.placeholder.com/200x200" alt="Placeholder Image">-->
+                    <div class="card-content">
+                        <h3>Card 9</h3>
+                        <p>Description of Card 9</p>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <!--  <img src="https://via.placeholder.com/200x200" alt="Placeholder Image">-->
+                    <div class="card-content">
+                        <h3>Card 10</h3>
+                        <p>Description of Card 10</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+        <!-- Return button -->
+        <button class="return-button" onclick="hideChoisirEntrainement()">Retourner</button>
+        </div>
     
 
-<script src="https://kit.fontawesome.com/df1a2f4d51.js" crossorigin="anonymous"></script>
-<script src="/app.js"></script>
-<%- include ("../partials/footer.ejs") %>
+    
+
+
+
+    <script src="https://kit.fontawesome.com/df1a2f4d51.js" crossorigin="anonymous"></script>
+    <script src="/app.js"></script>
+    <%- include ("../partials/footer.ejs") %>

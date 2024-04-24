@@ -147,7 +147,7 @@ app.get("/App", async function (req, res) {
       abonnement:abonnement[0]
     });
   } else {
-    res.redirect('/Connexion');
+    res.redirect('/login');
   }
 });
 
@@ -423,7 +423,7 @@ app.get('/profile', async function(req, res) {
       abonnement: abonnement[0]
     });
   } else {
-    res.redirect('/Connexion');
+    res.redirect('/login');
   }
 });
 

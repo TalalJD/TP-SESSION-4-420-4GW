@@ -140,8 +140,14 @@ INSERT INTO abonnement (nom_abonnement, nb_generations) VALUES
 ('BASIC', 10),
 ('PREMIUM', -1);
 -- Ajout tables workout
-ALTER TABLE workout
-ADD COLUMN dureeSeconde_workout INT,
-ADD COLUMN IsTemplate_workout BOOLEAN DEFAULT FALSE;
-ALTER TABLE workout
-ADD COLUMN date_workout DATETIME;
+    ALTER TABLE workout
+    ADD COLUMN dureeSeconde_workout INT,
+    ADD COLUMN IsTemplate_workout BOOLEAN DEFAULT FALSE;
+    ALTER TABLE workout
+    ADD COLUMN date_workout DATETIME;
+    -- Suppression de la contrainte de clé étrangère
+    ALTER TABLE workout DROP FOREIGN KEY workout_client_fk;
+    -- Suppression de la colonne client_id_client
+    ALTER TABLE workout DROP COLUMN client_id_client;
+    -- Ajout d'une nouvelle colonne pour stocker l'identifiant MongoDB du client
+    ALTER TABLE workout ADD COLUMN client_id_mongodb VARCHAR(24);

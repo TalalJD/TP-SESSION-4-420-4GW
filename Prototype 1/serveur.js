@@ -44,7 +44,8 @@ export async function connectToMongo() {
       mongoClient = new MongoClient(uri);
       console.log("Connection à MongoDB...");
       await mongoClient.connect();
-      console.log("Connecté à MongoDB!");
+      console.log("Connecté à MongoDB!");``
+      //console.log("User id : " + new ObjectId(req.session.user._id));
       return mongoClient;
   } catch (error) {
       console.error("Erreur de connexion à MongoDB!", error);4869
@@ -482,7 +483,140 @@ app.post('/process_payment', async (req, res) => {
   }
 });
 
+app.get('/affichage_workout', async function(req, res){
+ 
+  let user = null;
+  if (req.session.isLoggedIn) {
+    user = req.session.user;
+  }
+ /*
+  res.render("Pages/affichage_workout", {
+    siteTitle: "Simple Application",
+    pageTitle: "Event List",
+    items: [],
+    user: user,
+  });
+  */
 
+  const isTemplate = req.query.type === 'template';
+ 
+    console.log(user._id);
+
+    con.query(
+      'SELECT * FROM workout WHERE client_id_mongodb = ?  AND IsTemplate_workout=?',
+      [user._id, isTemplate],
+      (error, workouts) => {
+          if (error) {
+              console.error('Error fetching workouts:', error);
+              return res.status(500).send('Server Error');
+          }
+  
+          // Utiliser un compteur pour suivre quand toutes les requêtes imbriquées sont complètes
+          let completedWorkouts = 0;
+  
+          if (workouts.length === 0) {
+              res.render("Pages/affichage_workout", {
+                  siteTitle: "Simple Application",
+                  pageTitle: "Liste des Workouts",
+                  workouts: [],
+                  user: user
+              });
+          } else {
+              workouts.forEach((workout, index) => {
+                  con.query(
+                      'SELECT * FROM exo_exec WHERE workout_id_workout = ?',
+                      [workout.id_workout],
+                      (error, exercises) => {
+                          if (error) {
+                              console.error('Error fetching exercises:', error);
+                              return res.status(500).send('Server Error');
+                          }
+  
+                          workouts[index].exercises = exercises;
+  
+                          let completedExercises = 0;
+  
+                          if (exercises.length === 0) {
+                              completedWorkouts++;
+                              if (completedWorkouts === workouts.length) {
+                                  res.render("Pages/affichage_workout", {
+                                      siteTitle: "Simple Application",
+                                      pageTitle: "Liste des Workouts",
+                                      workouts: workouts,
+                                      user: user
+                                  });
+                              }
+                          } else {
+                              exercises.forEach((exercise, exIndex) => {
+                                  con.query(
+                                      'SELECT s.*, e.nom_exo FROM serie s JOIN exo e ON s.exo_id_exo = e.id_exo  WHERE exo_exec_id_exo_exec = ?',
+                                      [exercise.id_exo_exec],
+                                      (error, series) => {
+                                          if (error) {
+                                              console.error('Error fetching series:', error);
+                                              return res.status(500).send('Server Error');
+                                          }
+  
+                                          workouts[index].exercises[exIndex].series = series;
+                                          completedExercises++;
+  
+                                          if (completedExercises === exercises.length) {
+                                              completedWorkouts++;
+                                              if (completedWorkouts === workouts.length) {
+                                                  res.render("Pages/affichage_workout", {
+                                                      siteTitle: "Simple Application",
+                                                      pageTitle: "Liste des Workouts",
+                                                      workouts: workouts,
+                                                      user: user
+                                                  });
+                                              }
+                                          }
+                                      }
+                                  );
+                              });
+                          }
+                      }
+                  );
+              });
+          }
+      }
+  );
+
+  
+  /*
+  const { type } = req.params;
+  const isTemplate = type === 'template';
+  
+
+  try {
+    const connection = await mysql.createConnection(mysqlConfig);
+    const [workouts] = await connection.execute(
+      'SELECT * FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = ?',
+      [req.session.user.client_id_mongodb, isTemplate]
+    );
+
+    const workoutsWithExercises = await Promise.all(workouts.map(async (workout) => {
+      const [exo_execs] = await connection.execute(
+        'SELECT * FROM exo_exec WHERE workout_id_workout = ?',
+        [workout.id_workout]
+      );
+      const exercises = await Promise.all(exo_execs.map(async (exec) => {
+        const [series] = await connection.execute(
+          'SELECT * FROM serie WHERE exo_exec_id_exo_exec = ?',
+          [exec.id_exo_exec]
+        );
+        return { ...exec, series };
+      }));
+      return { ...workout, exercises };
+    }));
+
+    await connection.end();
+    res.json(workoutsWithExercises);
+  } catch (error) {
+    console.error('An error occurred while fetching workouts:', error);
+    res.status(500).send('Server error');
+  }*/
+});
 
 
 

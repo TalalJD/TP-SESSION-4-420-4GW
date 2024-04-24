@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", function() {
     var plusIcon = document.getElementById("plusIcon");
     var profilePage = document.querySelector(".profile-page");
     var exerciceCard = document.querySelector(".exercice-card");
+    var nouvelEntrainement = document.getElementById("NouvelEntrainement");
+    var choisirEntrainement = document.querySelector(".Choisir-Entrainement");
+    var returnButton = document.querySelector('.return-button');
 
     function hideAllExcept(element) {
         if (element === profileIcon) {
@@ -10,9 +13,20 @@ document.addEventListener("DOMContentLoaded", function() {
             profilePage.classList.remove("hidden");
             exerciceCard.classList.remove("show");
             exerciceCard.classList.add("hidden");
+            choisirEntrainement.classList.remove("show");
+            choisirEntrainement.classList.add("hidden");
         } else if (element === plusIcon) {
             exerciceCard.classList.add("show");
             exerciceCard.classList.remove("hidden");
+            profilePage.classList.remove("show");
+            profilePage.classList.add("hidden");
+            choisirEntrainement.classList.remove("show");
+            choisirEntrainement.classList.add("hidden");
+        } else if (element === nouvelEntrainement) {
+            choisirEntrainement.classList.add("show");
+            choisirEntrainement.classList.remove("hidden");
+            exerciceCard.classList.remove("show");
+            exerciceCard.classList.add("hidden");
             profilePage.classList.remove("show");
             profilePage.classList.add("hidden");
         }
@@ -37,5 +51,21 @@ document.addEventListener("DOMContentLoaded", function() {
             exerciceCard.classList.add("hidden");
             document.body.style.overflow = "auto";
         }
+    });
+
+    nouvelEntrainement.addEventListener("click", function() {
+        if (!choisirEntrainement.classList.contains("show")) {
+            hideAllExcept(nouvelEntrainement);
+        } else {
+            choisirEntrainement.classList.remove("show");
+            choisirEntrainement.classList.add("hidden");
+            document.body.style.overflow = "auto";
+        }
+    });
+    
+    returnButton.addEventListener("click", function(){
+        choisirEntrainement.classList.remove('show');
+        choisirEntrainement.classList.add('hidden');
+        exerciceCard.classList.add("show");
     });
 });

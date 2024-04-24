@@ -13,7 +13,7 @@ import dateFormat from "dateformat";
 import bodyParser from "body-parser";
 import { config } from 'dotenv';
 import { MongoClient } from 'mongodb';
-
+import crypto from 'crypto';
 config();
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -427,7 +427,20 @@ app.get('/profile', async function(req, res) {
   }
 });
 
+app.post('/choisirExercise', async (req,res) => {
+  const exercise = req.body;
+  const inputToHashIdString = exercise.name+'-'+exercise.type+'-'+exercise.equipment;
+  const hashedID = await hashSHA1(inputToHashIdString);
+  console.log("Pre-hash: "+inputToHashIdString);
+  console.log("Post hash: "+hashedID);
+  res.status(200).json({ message: 'Exercise received' });
+});
 
+async function hashSHA1(inputString) {
+  return crypto.createHash('sha1')
+               .update(inputString)
+               .digest('hex');
+}
 
 app.post('/auth/google', async (req, res) => {
   const { courriel_client, prenom_client, nom_client, mdp_client } = req.body;

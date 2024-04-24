@@ -61,7 +61,11 @@ function displayResults(exercises) {
     }
 }
 
-function appendExerciseToDOM(exercise){
+function ChooseExercise(exercice){
+
+}
+
+async function appendExerciseToDOM(exercise){
     const body = document.body;
     const searchBody = document.createElement('div');
     searchBody.className = 'searchBody';
@@ -106,4 +110,34 @@ function appendExerciseToDOM(exercise){
     searchFactors.appendChild(equipFactor);
     searchBody.appendChild(searchFactors);
     body.appendChild(searchBody);
+    var preHash = exercise.name+'-'+exercise.type+'-'+exercise.equipment;
+    var hashed = await hashSHA1(preHash);
+    console.log("Pre-hash: "+preHash);
+    console.log("Hashed : "+hashed);
+    sendDataToServer(exercise);
+}
+
+function sendDataToServer(exercise){
+    fetch('choisirExercise', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(exercise)
+    })
+    .then(response => response.json())
+    .then(data => console.log('Success:', data))
+    .catch((error) => console.error('Error:', error));
+}
+
+async function hashSHA1(inputString){
+    const encoder = new TextEncoder();
+    const data = encoder.encode(inputString);
+
+    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+
+    return hashHex; // This will be a 40-character hexadecimal string
 }

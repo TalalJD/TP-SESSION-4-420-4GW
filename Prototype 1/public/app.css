@@ -36,10 +36,12 @@
 
 }
 .exercice-card i {
-    padding: 10px; 
-    margin-right: 20px; 
-    cursor: pointer; 
+    display: inline-block; /* Ensure the element takes up space */
+    width: auto; /* Allow the width to adjust based on content */
+    padding-right: 20px; /* Adjust padding as needed */
+    cursor: pointer; /* Change cursor to indicate clickability */
 }
+
 
 
 

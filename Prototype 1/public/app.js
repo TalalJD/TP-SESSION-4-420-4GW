@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    nouvelEntrainement.addEventListener("click", function() {
+    exerciceCard.addEventListener("click", function() {
         if (!choisirEntrainement.classList.contains("show")) {
             hideAllExcept(nouvelEntrainement);
         } else {

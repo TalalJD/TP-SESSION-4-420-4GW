@@ -140,14 +140,33 @@ INSERT INTO abonnement (nom_abonnement, nb_generations) VALUES
 ('BASIC', 10),
 ('PREMIUM', -1);
 -- Ajout tables workout
-    ALTER TABLE workout
-    ADD COLUMN dureeSeconde_workout INT,
-    ADD COLUMN IsTemplate_workout BOOLEAN DEFAULT FALSE;
-    ALTER TABLE workout
-    ADD COLUMN date_workout DATETIME;
-    -- Suppression de la contrainte de clé étrangère
-    ALTER TABLE workout DROP FOREIGN KEY workout_client_fk;
-    -- Suppression de la colonne client_id_client
+
     ALTER TABLE workout DROP COLUMN client_id_client;
     -- Ajout d'une nouvelle colonne pour stocker l'identifiant MongoDB du client
     ALTER TABLE workout ADD COLUMN client_id_mongodb VARCHAR(24);
+
+ALTER TABLE workout
+ADD COLUMN dureeSeconde_workout INT,
+ADD COLUMN IsTemplate_workout BOOLEAN DEFAULT FALSE;
+ALTER TABLE workout
+ADD COLUMN date_workout DATETIME;
+-- Ajout FK SportID a table Exo
+ALTER TABLE exo
+ADD COLUMN sport_id_sport INT;
+ALTER TABLE exo
+ADD CONSTRAINT exo_sport_fk FOREIGN KEY (sport_id_sport) REFERENCES sport (id_sport);
+-- Preparations changement Exo ID int -> SHA-1
+ALTER TABLE program_exos DROP FOREIGN KEY program_exos_exo_fk;
+ALTER TABLE serie DROP FOREIGN KEY serie_exo_fk;
+ALTER TABLE serie DROP COLUMN exo_id_exo;
+-- Exo ID int -> SHA-1
+ALTER TABLE exo MODIFY id_exo INT NOT NULL;
+ALTER TABLE exo DROP PRIMARY KEY;
+ALTER TABLE exo CHANGE id_exo id_exo VARCHAR(40) NOT NULL;
+ALTER TABLE exo ADD PRIMARY KEY (id_exo);
+-- Ajouts FK Exo ID
+ALTER TABLE program_exos CHANGE exo_id_exo exo_id_exo VARCHAR(40) NOT NULL;
+ALTER TABLE program_exos ADD CONSTRAINT program_exos_exo_fk FOREIGN KEY (exo_id_exo) REFERENCES exo (id_exo);
+ALTER TABLE exo_exec ADD COLUMN exo_id_exo VARCHAR(40) NOT NULL;
+ALTER TABLE exo_exec ADD CONSTRAINT fk_exo_exec_exo FOREIGN KEY (exo_id_exo) REFERENCES exo (id_exo);
+

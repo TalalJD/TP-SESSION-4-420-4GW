@@ -10,47 +10,49 @@
 <body>
     <div class="card-container" id="cardContainer">
         <!-- Card 1 - Gratuit -->
-        <div class="card" id="card1">
-            <h2>GRATUIT</h2>
-            <div class="additional-info">
-                <p>Accès limité aux programmes</p>
-                <p>3 essais pour générer des programmes</p>
-            </div>
-            <% if (user) { %>
-                <button type="button" onclick="showPaymentForm('1')" id="but1" <% if (user.abonnement_id_abonnement === 1) { %>disabled<% } %>>Confirmer</button>
-            <% } else { %>
-                <button id="loginButton1" type="button">Connectez-vous pour s'abonner</button>
-            <% } %>
-        </div>
+        <!-- Card 1 - Gratuit -->
+<div class="card" id="card1">
+    <h2>GRATUIT</h2>
+    <div class="additional-info">
+        <p>Accès limité aux programmes</p>
+        <p>3 essais pour générer des programmes</p>
+    </div>
+    <% if (user) { %>
+        <button type="button" onclick="showPaymentForm('1')" id="but1" <% if (user.idAbonnement === 1) { %>disabled<% } %>>Confirmer</button>
+    <% } else { %>
+        <button id="loginButton1" type="button" onclick="redirectToLogin()">Connectez-vous pour s'abonner</button>
+    <% } %>
+</div>
 
-        <!-- Card 2 - Basic -->
-        <div class="card" id="card2">
-            <h2>BASIC</h2>
-            <div class="additional-info">
-                <p>Accès illimité aux programmes</p>
-                <p>10 essais par mois pour générer des programmes</p>
-            </div>
-            <% if (user) { %>
-                <button type="button" onclick="showPaymentForm('2')" id="but2" <% if (user.abonnement_id_abonnement === 2) { %>disabled<% } %>>Confirmer</button>
-            <% } else { %>
-                <button id="loginButton2" type="button">Connectez-vous pour s'abonner</button>
-            <% } %>
-        </div>
+<!-- Card 2 - Basic -->
+<div class="card" id="card2">
+    <h2>BASIC</h2>
+    <div class="additional-info">
+        <p>Accès illimité aux programmes</p>
+        <p>10 essais par mois pour générer des programmes</p>
+    </div>
+    <% if (user) { %>
+        <button type="button" onclick="showPaymentForm('2')" id="but2" <% if (user.idAbonnement === 2) { %>disabled<% } %>>Confirmer</button>
+    <% } else { %>
+        <button id="loginButton2" type="button" onclick="redirectToLogin()">Connectez-vous pour s'abonner</button>
+    <% } %>
+</div>
 
-        <!-- Card 3 - Premium -->
-        <div class="card" id="card3">
-            <h2>PREMIUM</h2>
-            <div class="additional-info">
-                <p>Accès au coach</p>
-                <p>Accès illimité pour générer des programmes</p>
-                <p>Accès aux plans de nutrition</p>
-            </div>
-            <% if (user) { %>
-                <button type="button" onclick="showPaymentForm('3')" id="but3" <% if (user.abonnement_id_abonnement === 3) { %>disabled<% } %>>Confirmer</button>
-            <% } else { %>
-                <button id="loginButton3" type="button">Connectez-vous pour s'abonner</button>
-            <% } %>
-        </div>
+<!-- Card 3 - Premium -->
+<div class="card" id="card3">
+    <h2>PREMIUM</h2>
+    <div class="additional-info">
+        <p>Accès au coach</p>
+        <p>Accès illimité pour générer des programmes</p>
+        <p>Accès aux plans de nutrition</p>
+    </div>
+    <% if (user) { %>
+        <button type="button" onclick="showPaymentForm('3')" id="but3" <% if (user.idAbonnement === 3) { %>disabled<% } %>>Confirmer</button>
+    <% } else { %>
+        <button id="loginButton3" type="button" onclick="redirectToLogin()">Connectez-vous pour s'abonner</button>
+    <% } %>
+</div>
+
     </div>
 
     <!-- Formulaire de paiement -->
@@ -70,11 +72,40 @@
 
     <script>
         function showPaymentForm(planId) {
+            if (planId === '1') { 
+                fetch('/abonnement/choisir-gratuit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id_abonnement: 1 }),
+                    credentials: 'include' 
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/success-page'; 
+                    } else {
+                        alert('Erreur lors du changement d\'abonnement: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    alert('Erreur de connexion au serveur');
+                    console.error('Error:', error);
+                });
+                return; 
+            }
+    
             document.getElementById('paymentForm').style.display = 'block';
             document.getElementById('planId').value = planId;
             document.getElementById('paymentForm').scrollIntoView({ behavior: 'smooth' });
         }
+    
+        function redirectToLogin() {
+            window.location.href = '/Connexion';
+        }
     </script>
+    
 </body>
 </html>
 <%- include("../partials/footer.ejs") %>

@@ -61,7 +61,11 @@ function displayResults(exercises) {
     }
 }
 
-function appendExerciseToDOM(exercise){
+function ChooseExercise(exercice){
+
+}
+
+async function appendExerciseToDOM(exercise){
     const body = document.body;
     const searchBody = document.createElement('div');
     searchBody.className = 'searchBody';
@@ -73,9 +77,9 @@ function appendExerciseToDOM(exercise){
     // Name section
     const nameFactor = document.createElement('div');
     nameFactor.className = 'searchFactor';
-    const nameTitle = document.createElement('h4');
-    nameTitle.textContent = 'Name:';
-    const nameValue = document.createElement('h4');
+    const nameTitle = document.createElement('p');
+    nameTitle.textContent = 'Name: ';
+    const nameValue = document.createElement('p');
     nameValue.textContent = exercise.name;
     nameFactor.appendChild(nameTitle);
     nameFactor.appendChild(nameValue);
@@ -83,16 +87,57 @@ function appendExerciseToDOM(exercise){
     // Muscle section
     const muscleFactor = document.createElement('div');
     muscleFactor.className = 'searchFactor';
-    const muscleTitle = document.createElement('h4');
-    muscleTitle.textContent = 'Muscle:';
-    const muscleValue = document.createElement('h4');
+    const muscleTitle = document.createElement('p');
+    muscleTitle.textContent = 'Muscle: ';
+    const muscleValue = document.createElement('p');
     muscleValue.textContent = exercise.muscle;
     muscleFactor.appendChild(muscleTitle);
     muscleFactor.appendChild(muscleValue);
 
+    // Equipment section
+    const equipFactor = document.createElement('div');
+    equipFactor.className = 'searchFactor';
+    const equipTitle = document.createElement('p');
+    const equipValue = document.createElement('p');
+    equipTitle.textContent = "Équipement : "
+    equipValue.textContent = exercise.equipment;
+    equipFactor.appendChild(equipTitle);
+    equipFactor.appendChild(equipValue);
+
     // Append to main container
     searchFactors.appendChild(nameFactor);
     searchFactors.appendChild(muscleFactor);
+    searchFactors.appendChild(equipFactor);
     searchBody.appendChild(searchFactors);
     body.appendChild(searchBody);
+    var preHash = exercise.name+'-'+exercise.type+'-'+exercise.equipment;
+    var hashed = await hashSHA1(preHash);
+    console.log("Pre-hash: "+preHash);
+    console.log("Hashed : "+hashed);
+    sendDataToServer(exercise);
+}
+
+function sendDataToServer(exercise){
+    fetch('choisirExercise', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(exercise)
+    })
+    .then(response => response.json())
+    .then(data => console.log('Success:', data))
+    .catch((error) => console.error('Error:', error));
+}
+
+async function hashSHA1(inputString){
+    const encoder = new TextEncoder();
+    const data = encoder.encode(inputString);
+
+    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+
+    return hashHex; // This will be a 40-character hexadecimal string
 }

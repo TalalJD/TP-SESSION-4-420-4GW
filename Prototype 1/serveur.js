@@ -14,6 +14,11 @@ import bodyParser from "body-parser";
 import { config } from 'dotenv';
 import { MongoClient } from 'mongodb';
 
+import Stripe from 'stripe';
+const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
+
+import crypto from 'crypto';
+
 config();
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -24,9 +29,6 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false, maxAge: 86400000 } 
 }));
-
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); 
 /*
 Connexion au serveur
 */
@@ -148,7 +150,7 @@ app.get("/App", async function (req, res) {
       abonnement:abonnement[0]
     });
   } else {
-    res.redirect('/Connexion');
+    res.redirect('/connexion');
   }
 });
 
@@ -189,6 +191,8 @@ app.get("/CreateTemplate", async function (req,res){
   });
 
 });
+
+
 const con = mysql.createConnection({
 
   host: "localhost",
@@ -306,7 +310,8 @@ app.get("/indexSport", function(req,res){
   });
 });
 
-
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
 
 // La route POST pour la soumission du formulaire de connexion
 app.post('/connexion/submit', async (req, res) => {
@@ -424,10 +429,68 @@ app.get('/profile', async function(req, res) {
       abonnement: abonnement[0]
     });
   } else {
-    res.redirect('/Connexion');
+    res.redirect('/connexion');
   }
 });
 
+app.post('/choisirExercise', async (req,res) => {
+  const exercise = req.body;
+  const inputToHashIdString = exercise.name+'-'+exercise.type+'-'+exercise.equipment;
+  const hashedID = await hashSHA1(inputToHashIdString);
+  console.log("Pre-hash: "+inputToHashIdString);
+  console.log("Post hash: "+hashedID);
+  selectExoByID(hashedID)
+    .then(results => {
+      if (results.length > 0) {
+        console.log('Exercise exists in the DB: ' + results[0].nom_exo);
+        res.status(200).json(results[0]);
+      } else {
+        return insertIntoExo(exercise, hashedID);
+      }
+    })
+    .then(insertResults => {
+      if (insertResults) {
+        res.status(201).send({ id_exo: hashedID, message: "Exercise inserted" });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      res.status(500).send("An error occurred");
+    });
+});
+
+
+async function hashSHA1(inputString) {
+  return crypto.createHash('sha1')
+               .update(inputString)
+               .digest('hex');
+}
+
+function insertIntoExo(exercise, sha1ID){
+  return new Promise((resolve,reject) => {
+    const query = 'INSERT INTO exo (id_exo, nom_exo, desc_exo, image_exo) VALUES (?, ?, ?, ?)';
+    con.query(query, [sha1ID, exercise.name, exercise.instructions, null], (error,results,fields) =>{
+      if (error){
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+function selectExoByID(sha1Id){
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM exo WHERE id_exo = ?';
+    con.query(query, [sha1Id], (error, results, fields) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
 
 
 app.post('/auth/google', async (req, res) => {
@@ -450,6 +513,21 @@ app.post('/auth/google', async (req, res) => {
 app.post('/process_payment', async (req, res) => {
   const { cardNumber, expirationDate, cvv, planId } = req.body;
   let mongoClient;
+  let generationsRestantes = 0;
+  
+  switch (parseInt(planId)) {
+    case 1: 
+      generationsRestantes = 3;
+      break;
+    case 2: 
+      generationsRestantes = 10;
+      break;
+    case 3: 
+      generationsRestantes = -1; 
+      break;
+    default:
+      generationsRestantes = 0;
+  }
 
   try {
     mongoClient = await connectToMongo();
@@ -461,7 +539,12 @@ app.post('/process_payment', async (req, res) => {
     if (paymentSuccessful) {
       await clientsCollection.updateOne(
         { _id: new ObjectId(req.session.user._id) },
-        { $set: { idAbonnement: parseInt(planId) } }
+        { 
+          $set: { 
+            idAbonnement: parseInt(planId),
+            gens: generationsRestantes
+          } 
+        }
       );
       await carteClientCollection.insertOne({
         userId: new ObjectId(req.session.user._id),
@@ -469,6 +552,9 @@ app.post('/process_payment', async (req, res) => {
         date_carte: expirationDate, 
         cvv_carte: cvv 
       });
+   
+      req.session.user.idAbonnement = parseInt(planId);
+      req.session.user.gens = generationsRestantes;
       res.redirect('/success-page');
     } else {
       res.redirect('/failure-page');
@@ -582,41 +668,33 @@ app.get('/affichage_workout', async function(req, res){
       }
   );
 
-  
-  /*
-  const { type } = req.params;
-  const isTemplate = type === 'template';
-  
 
-  try {
-    const connection = await mysql.createConnection(mysqlConfig);
-    const [workouts] = await connection.execute(
-      'SELECT * FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = ?',
-      [req.session.user.client_id_mongodb, isTemplate]
-    );
-
-    const workoutsWithExercises = await Promise.all(workouts.map(async (workout) => {
-      const [exo_execs] = await connection.execute(
-        'SELECT * FROM exo_exec WHERE workout_id_workout = ?',
-        [workout.id_workout]
-      );
-      const exercises = await Promise.all(exo_execs.map(async (exec) => {
-        const [series] = await connection.execute(
-          'SELECT * FROM serie WHERE exo_exec_id_exo_exec = ?',
-          [exec.id_exo_exec]
-        );
-        return { ...exec, series };
-      }));
-      return { ...workout, exercises };
-    }));
-
-    await connection.end();
-    res.json(workoutsWithExercises);
-  } catch (error) {
-    console.error('An error occurred while fetching workouts:', error);
-    res.status(500).send('Server error');
-  }*/
 });
+app.post('/abonnement/choisir-gratuit', async function(req, res) {
+  const userId = req.session.user._id;
+  let mongoClient;
+  try {
+    mongoClient = await connectToMongo();
+    const db = mongoClient.db("EnergymizeBD");
+    const collection = db.collection("clients");
+    
+    await UpdateClientById(collection, userId, {
+      idAbonnement: 1, 
+      gens: 3, 
+    });
+
+    req.session.user.idAbonnement = 1;
+    req.session.user.gens = 3;
+    
+    res.json({ success: true, message: "Abonnement gratuit activé." });
+  } catch (error) {
+    console.error('Erreur lors du changement d\'abonnement:', error);
+    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
+  } finally {
+    await mongoClient.close();
+  }
+});
+
 
 
 
@@ -636,4 +714,7 @@ app.get('/failure-page', (req, res) => {
     user: req.session.user 
   });
 });
+
+
+
 

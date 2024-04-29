@@ -33,17 +33,13 @@
     display: flex; /* Use flexbox */
     justify-content: center; /* centrer l'element a l'horizontal */
     align-items: center;
+    cursor: pointer;
 
 }
 .exercice-card i {
-    display: inline-block;
-    width: auto;
-    height: auto; /* Add height property */
-    padding: 30px; /* Add padding for better clickability */
-    cursor: pointer;
+    padding: 10px; 
+    cursor: pointer; 
 }
-
-
 
 
 

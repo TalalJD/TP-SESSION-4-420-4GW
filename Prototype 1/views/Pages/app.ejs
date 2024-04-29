@@ -156,6 +156,26 @@
                 overflow: hidden;
             }
 
+            .creeWorkoutCard {
+                position: absolute;
+                /* Position absolutely */
+                top: 0;
+                /* Align to the top of the container */
+                margin-top: 6%;
+                left: 750px;
+                /* Adjust left position as needed */
+                width: 40%;
+                /* Set width */
+                height: 80%;
+                /* Set height */
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                overflow: hidden;
+                z-index: 1;
+                /* Ensure it's above other elements */
+            }
+
+
             .grid-item img {
                 width: 100%;
                 height: 100%;
@@ -185,12 +205,12 @@
                 color: white;
                 font-family: sans-serif;
                 font-size: 2rem;
-                position:fixed;
+                position: fixed;
                 top: 20px;
                 /* Adjust font size as needed */
-                
+
                 /* Adjust spacing between title and grid */
-                
+
             }
 
             .return-button {
@@ -210,8 +230,8 @@
 
             .search-bar {
                 position: absolute;
-                margin-top: 25px;
-                margin-left: 750px;
+                
+                
                 /* Position 500px to the right of the grid */
                 display: flex;
                 align-items: center;
@@ -232,22 +252,29 @@
                 color: black;
                 cursor: pointer;
             }
-            .vertical-line {
-    position: absolute;
-    top: 0;
-    margin-left: 675px;
-    width: 20px;
-    height: 100%;
-    background-color:#D5C069;
-}
 
+            .vertical-line {
+                position: absolute;
+                top: 0;
+                margin-left: 675px;
+                width: 20px;
+                height: 100%;
+                background-color: #D5C069;
+            }
         </style>
         <h3 class="entrPrefait">Nos entraînements prêts à l'emploi !</h3>
         <h3 class="entrCustom">Créez votre propre entraînement !</h3>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Enter your search term">
-            <button id="searchButton">Search</button>
+        <div class="creeWorkoutCard">
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Enter your search term">
+                <button id="searchButton">Search</button>
+            </div>
+
         </div>
+        
+
+
         <div class="vertical-line"></div>
         <div class="grid-container">
             <div class="grid">
@@ -323,12 +350,13 @@
                 </div>
             </div>
         </div>
+
         <!-- Return button -->
         <button class="return-button" onclick="hideChoisirEntrainement()">Retourner</button>
-        </div>
-    
+    </div>
 
-    
+
+
 
 
 

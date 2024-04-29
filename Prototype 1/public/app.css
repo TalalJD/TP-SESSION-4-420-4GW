@@ -21,10 +21,9 @@
 }
 .exercice-card {
     position: absolute;
-    top: 50%; /* Position the top edge of the card at the vertical center of the parent container */
-    transform: translate(-50%, -50%); /* Move the card back up and to the left by half of its own width and height */
+    top: 50%; 
+    transform: translate(-50%, -50%); /*Déplace la carte vers le haut et vers la gauche de la moitié de sa propre largeur et hauteur*/
     margin-left: 250px;
-    /* Other styles */
     transition: left 0.5s ease; /* Animation de glissement */
     z-index: 0;
     width: 15%;
@@ -32,13 +31,16 @@
     background-color: #D5C069 !important;
     border-radius: 10px;
     display: flex; /* Use flexbox */
-    justify-content: center; /* Center horizontally */
+    justify-content: center; /* centrer l'element a l'horizontal */
     align-items: center;
 
 }
 .exercice-card i {
-    margin-right: 20px; /* Adjust the margin as needed */
+    padding: 10px; 
+    margin-right: 20px; 
+    cursor: pointer; 
 }
+
 
 
 

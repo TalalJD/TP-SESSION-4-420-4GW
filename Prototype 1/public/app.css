@@ -29,7 +29,7 @@
     width: 15%;
     height: 80%;
     background-color: #D5C069 !important;
-    border-radius: 10px;
+    border-radius: 1%;
     display: flex; /* Use flexbox */
     justify-content: center; /* centrer l'element a l'horizontal */
     align-items: center;
@@ -37,7 +37,7 @@
 
 }
 .exercice-card i {
-
+    margin-right:5%;
     cursor: pointer; 
 }
 

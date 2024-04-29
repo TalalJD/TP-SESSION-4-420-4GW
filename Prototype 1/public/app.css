@@ -23,7 +23,7 @@
     position: absolute;
     top: 50%; 
     transform: translate(-50%, -50%); /*Déplace la carte vers le haut et vers la gauche de la moitié de sa propre largeur et hauteur*/
-    margin-left: 250px;
+    margin-left: 17%;
     transition: left 0.5s ease; /* Animation de glissement */
     z-index: 0;
     width: 15%;

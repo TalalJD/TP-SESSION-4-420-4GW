@@ -575,21 +575,16 @@ app.get('/affichage_workout', async function(req, res){
   if (req.session.isLoggedIn) {
     user = req.session.user;
   }
- /*
-  res.render("Pages/affichage_workout", {
-    siteTitle: "Simple Application",
-    pageTitle: "Event List",
-    items: [],
-    user: user,
-  });
-  */
 
   const isTemplate = req.query.type === 'template';
  
     console.log(user._id);
 
     con.query(
-      'SELECT * FROM workout WHERE client_id_mongodb = ?  AND IsTemplate_workout=?',
+      'SELECT id_workout, nom_workout, desc_workout, client_id_mongodb, ' + 
+      'SEC_TO_TIME(dureeSeconde_workout) AS dureeSeconde_workout, IsTemplate_workout,' + 
+      'DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? ' + 
+      ' AND IsTemplate_workout=?',
       [user._id, isTemplate],
       (error, workouts) => {
           if (error) {
@@ -597,7 +592,6 @@ app.get('/affichage_workout', async function(req, res){
               return res.status(500).send('Server Error');
           }
   
-          // Utiliser un compteur pour suivre quand toutes les requêtes imbriquées sont complètes
           let completedWorkouts = 0;
   
           if (workouts.length === 0) {

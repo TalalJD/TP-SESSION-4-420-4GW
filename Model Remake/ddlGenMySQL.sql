@@ -140,6 +140,11 @@ INSERT INTO abonnement (nom_abonnement, nb_generations) VALUES
 ('BASIC', 10),
 ('PREMIUM', -1);
 -- Ajout tables workout
+
+    ALTER TABLE workout DROP COLUMN client_id_client;
+    -- Ajout d'une nouvelle colonne pour stocker l'identifiant MongoDB du client
+    ALTER TABLE workout ADD COLUMN client_id_mongodb VARCHAR(24);
+
 ALTER TABLE workout
 ADD COLUMN dureeSeconde_workout INT,
 ADD COLUMN IsTemplate_workout BOOLEAN DEFAULT FALSE;
@@ -164,3 +169,4 @@ ALTER TABLE program_exos CHANGE exo_id_exo exo_id_exo VARCHAR(40) NOT NULL;
 ALTER TABLE program_exos ADD CONSTRAINT program_exos_exo_fk FOREIGN KEY (exo_id_exo) REFERENCES exo (id_exo);
 ALTER TABLE exo_exec ADD COLUMN exo_id_exo VARCHAR(40) NOT NULL;
 ALTER TABLE exo_exec ADD CONSTRAINT fk_exo_exec_exo FOREIGN KEY (exo_id_exo) REFERENCES exo (id_exo);
+

@@ -26,7 +26,8 @@
     margin-left: 250px;
     transition: left 0.5s ease; /* Animation de glissement */
     z-index: 0;
-    width: 15%;
+    width: 100%;
+    max-width: 200px;
     height: 80%;
     background-color: #D5C069 !important;
     border-radius: 10px;
@@ -37,6 +38,7 @@
 
 }
 .exercice-card i {
+    margin-right: 10px;
     cursor: pointer; 
 }
 

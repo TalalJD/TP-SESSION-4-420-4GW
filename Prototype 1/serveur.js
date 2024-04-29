@@ -13,8 +13,11 @@ import dateFormat from "dateformat";
 import bodyParser from "body-parser";
 import { config } from 'dotenv';
 import { MongoClient } from 'mongodb';
+
 import Stripe from 'stripe';
 const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
+
+import crypto from 'crypto';
 
 config();
 const app = express();
@@ -146,7 +149,7 @@ app.get("/App", async function (req, res) {
       abonnement:abonnement[0]
     });
   } else {
-    res.redirect('/login');
+    res.redirect('/connexion');
   }
 });
 
@@ -425,9 +428,68 @@ app.get('/profile', async function(req, res) {
       abonnement: abonnement[0]
     });
   } else {
-    res.redirect('/login');
+    res.redirect('/connexion');
   }
 });
+
+app.post('/choisirExercise', async (req,res) => {
+  const exercise = req.body;
+  const inputToHashIdString = exercise.name+'-'+exercise.type+'-'+exercise.equipment;
+  const hashedID = await hashSHA1(inputToHashIdString);
+  console.log("Pre-hash: "+inputToHashIdString);
+  console.log("Post hash: "+hashedID);
+  selectExoByID(hashedID)
+    .then(results => {
+      if (results.length > 0) {
+        console.log('Exercise exists in the DB: ' + results[0].nom_exo);
+        res.status(200).json(results[0]);
+      } else {
+        return insertIntoExo(exercise, hashedID);
+      }
+    })
+    .then(insertResults => {
+      if (insertResults) {
+        res.status(201).send({ id_exo: hashedID, message: "Exercise inserted" });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      res.status(500).send("An error occurred");
+    });
+});
+
+
+async function hashSHA1(inputString) {
+  return crypto.createHash('sha1')
+               .update(inputString)
+               .digest('hex');
+}
+
+function insertIntoExo(exercise, sha1ID){
+  return new Promise((resolve,reject) => {
+    const query = 'INSERT INTO exo (id_exo, nom_exo, desc_exo, image_exo) VALUES (?, ?, ?, ?)';
+    con.query(query, [sha1ID, exercise.name, exercise.instructions, null], (error,results,fields) =>{
+      if (error){
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+function selectExoByID(sha1Id){
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM exo WHERE id_exo = ?';
+    con.query(query, [sha1Id], (error, results, fields) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
 
 
 app.post('/auth/google', async (req, res) => {

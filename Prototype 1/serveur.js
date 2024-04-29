@@ -13,7 +13,12 @@ import dateFormat from "dateformat";
 import bodyParser from "body-parser";
 import { config } from 'dotenv';
 import { MongoClient } from 'mongodb';
+
+import Stripe from 'stripe';
+const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
+
 import crypto from 'crypto';
+
 config();
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -24,9 +29,6 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false, maxAge: 86400000 } 
 }));
-
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); 
 /*
 Connexion au serveur
 */
@@ -188,6 +190,8 @@ app.get("/CreateTemplate", async function (req,res){
   });
 
 });
+
+
 const con = mysql.createConnection({
 
   host: "localhost",
@@ -305,7 +309,8 @@ app.get("/indexSport", function(req,res){
   });
 });
 
-
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
 
 // La route POST pour la soumission du formulaire de connexion
 app.post('/connexion/submit', async (req, res) => {
@@ -453,6 +458,7 @@ app.post('/choisirExercise', async (req,res) => {
     });
 });
 
+
 async function hashSHA1(inputString) {
   return crypto.createHash('sha1')
                .update(inputString)
@@ -485,6 +491,7 @@ function selectExoByID(sha1Id){
   });
 }
 
+
 app.post('/auth/google', async (req, res) => {
   const { courriel_client, prenom_client, nom_client, mdp_client } = req.body;
 
@@ -505,6 +512,21 @@ app.post('/auth/google', async (req, res) => {
 app.post('/process_payment', async (req, res) => {
   const { cardNumber, expirationDate, cvv, planId } = req.body;
   let mongoClient;
+  let generationsRestantes = 0;
+  
+  switch (parseInt(planId)) {
+    case 1: 
+      generationsRestantes = 3;
+      break;
+    case 2: 
+      generationsRestantes = 10;
+      break;
+    case 3: 
+      generationsRestantes = -1; 
+      break;
+    default:
+      generationsRestantes = 0;
+  }
 
   try {
     mongoClient = await connectToMongo();
@@ -516,7 +538,12 @@ app.post('/process_payment', async (req, res) => {
     if (paymentSuccessful) {
       await clientsCollection.updateOne(
         { _id: new ObjectId(req.session.user._id) },
-        { $set: { idAbonnement: parseInt(planId) } }
+        { 
+          $set: { 
+            idAbonnement: parseInt(planId),
+            gens: generationsRestantes
+          } 
+        }
       );
       await carteClientCollection.insertOne({
         userId: new ObjectId(req.session.user._id),
@@ -524,6 +551,9 @@ app.post('/process_payment', async (req, res) => {
         date_carte: expirationDate, 
         cvv_carte: cvv 
       });
+   
+      req.session.user.idAbonnement = parseInt(planId);
+      req.session.user.gens = generationsRestantes;
       res.redirect('/success-page');
     } else {
       res.redirect('/failure-page');
@@ -538,6 +568,31 @@ app.post('/process_payment', async (req, res) => {
   }
 });
 
+
+app.post('/abonnement/choisir-gratuit', async function(req, res) {
+  const userId = req.session.user._id;
+  let mongoClient;
+  try {
+    mongoClient = await connectToMongo();
+    const db = mongoClient.db("EnergymizeBD");
+    const collection = db.collection("clients");
+    
+    await UpdateClientById(collection, userId, {
+      idAbonnement: 1, 
+      gens: 3, 
+    });
+
+    req.session.user.idAbonnement = 1;
+    req.session.user.gens = 3;
+    
+    res.json({ success: true, message: "Abonnement gratuit activé." });
+  } catch (error) {
+    console.error('Erreur lors du changement d\'abonnement:', error);
+    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
+  } finally {
+    await mongoClient.close();
+  }
+});
 
 
 
@@ -558,4 +613,7 @@ app.get('/failure-page', (req, res) => {
     user: req.session.user 
   });
 });
+
+
+
 

@@ -16,7 +16,6 @@
     
   }
  
-  
 .exercise {
     background: #f7f7f7;
     margin-top: 10px;
@@ -54,7 +53,7 @@ body{
                 <div class="card">
                     <h2><%= workout.nom_workout %></h2>
                     <p><%= workout.desc_workout %></p>
-                    <p>Durée: <%= workout.dureeSeconde_workout %></p>
+                    <p>Durée: <%= workout.dureeSeconde_workout %> secondes</p>
                     <p>Date: <%= workout.date_workout %></p>
                     <% if (workout.exercises && workout.exercises.length > 0) { %>
                         <% workout.exercises.forEach(function(exercise) { %>

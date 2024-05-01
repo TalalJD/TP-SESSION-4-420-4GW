@@ -173,6 +173,13 @@
                 overflow: hidden;
                 z-index: 1;
                 /* Ensure it's above other elements */
+
+                /*MOMO RAAAAAAAH*/
+                display: flex;
+                flex-direction: column; /* Organize children vertically */
+                align-items: center; /* Center children horizontally */
+                justify-content: flex-start; /* Align children from top down */
+                /*align-items: center;*/ 
             }
 
 
@@ -266,10 +273,24 @@
         <h3 class="entrPrefait">Nos entraînements prêts à l'emploi !</h3>
         <h3 class="entrCustom">Créez votre propre entraînement !</h3>
         <div class="creeWorkoutCard">
-
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Enter your search term">
-                <button id="searchButton">Search</button>
+            <div style="margin-top: 20px; display: flex; flex-direction: column; height: 20%; width: 100%; align-items: center;">
+                <input type="text" id="titleWorkout" placeholder="Nouveau Entrainement" style="height: 50%; width: 80%; font-size: 
+                xx-large; text-align: center; border: none; outline: none; background: transparent; color: wheat;">
+                <textarea id="descWorkout" placeholder="Une description précise et motivante de l'entraînement!" style="
+                margin-top: 7px;
+                height: 50%; 
+                width: 80%;
+                resize: none; /* Disables resizing of the textarea */
+                overflow: auto; /* Adds scrollbars if text overflows */
+                border: none; /* Makes the border invisible */
+                outline: none; /* Removes focus outline */
+                background: transparent; /* Makes background transparent */
+                padding: 0; /* Removes padding */
+                box-sizing: border-box; /* Includes padding and border in width and height */
+                white-space: pre-wrap; /* Ensures whitespace and new lines are preserved */
+                color:white;
+            " wrap="soft">
+            </textarea>
             </div>
 
         </div>

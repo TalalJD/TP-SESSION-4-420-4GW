@@ -6,10 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subscription Plans</title>
     <link rel="stylesheet" href="abonnementCSS.css">
+    <style>
+        #paypal-button-container {
+            display: none;
+            position: absolute;
+            left: 57%;
+            transform: translateX(-50%);
+           width: 1000px;
+          
+        }
+    </style>
 </head>
 <body>
     <div class="card-container" id="cardContainer">
-        <!-- Card 1 - Gratuit -->
         <!-- Card 1 - Gratuit -->
 <div class="card" id="card1">
     <h2>GRATUIT</h2>
@@ -55,22 +64,9 @@
 
     </div>
 
-    <!-- Formulaire de paiement -->
-    <div id="paymentForm" style="display: none;">
-        <div id="paypal-button-container"></div>
-        <h2>Formulaire de paiement</h2>
-        <form action="/process_payment" method="POST">
-            <input type="hidden" id="planId" name="planId" value="">
-            <label for="cardNumber">Numéro de carte :</label>
-            <input type="text" id="cardNumber" name="cardNumber" pattern="\d*" minlength="16" maxlength="16" required><br><br>
-            <label for="expirationDate">Date d'expiration (MMYY) :</label>
-            <input type="text" id="expirationDate" name="expirationDate" pattern="\d*" minlength="4" maxlength="4" placeholder="MMYY" required><br><br>
-            <label for="cvv">CVV :</label>
-            <input type="text" id="cvv" name="cvv" pattern="\d*" minlength="3" maxlength="3" required><br><br>
-            <button type="submit">Payer</button>
-            
-        </form>
-    </div>
+    <!-- PayPal Button Container -->
+    <div id="paypal-button-container" style="display: none;"></div>
+
     <script src="https://www.paypal.com/sdk/js?client-id=AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X&currency=USD"></script>
 
     <script>
@@ -99,10 +95,8 @@
                 return; 
             }
     
-             document.getElementById('paymentForm').style.display = 'block';
-    document.getElementById('paypal-button-container').style.display = 'block'; // Afficher le bouton PayPal
-    document.getElementById('planId').value = planId;
-    document.getElementById('paymentForm').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('paypal-button-container').style.display = 'block';
+            document.getElementById('paypal-button-container').scrollIntoView({ behavior: 'smooth' });
         }
     
         function redirectToLogin() {
@@ -110,28 +104,34 @@
         }
     </script>
     <script>
-        paypal.Buttons({
-          createOrder: function(data, actions) {
-            return actions.order.create({
-              purchase_units: [{
-                amount: {
-                  value: '5.99' // Mettez à jour cette valeur en fonction de l'abonnement choisi
-                }
-              }]
-            });
-          },
-          onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-              // Ici, vous pouvez appeler une route sur votre serveur pour finaliser l'abonnement
-              alert('Transaction completed by ' + details.payer.name.given_name);
-              // Redirection vers une page de succès
-              window.location.href = '/success-page';
-            });
+  let selectedPlan = 'basic'; // Vous pouvez définir cette variable en fonction de la sélection de l'utilisateur
+
+  paypal.Buttons({
+    createOrder: function(data, actions) {
+      let amountValue = '6.99'; // Montant par défaut pour l'abonnement basique
+
+      if (selectedPlan === 'premium') {
+        amountValue = '9.99'; // Montant pour l'abonnement premium
+      }
+
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: amountValue
           }
-        }).render('#paypal-button-container');
-      </script>
+        }]
+      });
+    },
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+        alert('Transaction completed by ' + details.payer.name.given_name);
+        window.location.href = '/success-page';
+      });
+    }
+  }).render('#paypal-button-container');
+</script>
+
       
-    
 </body>
 </html>
 <%- include("../partials/footer.ejs") %>

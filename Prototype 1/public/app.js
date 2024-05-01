@@ -10,6 +10,7 @@ var AfficherSelectExo = document.getElementById('AfficherSelectExo');
 var ChercherExercice = document.querySelector(".Chercher-Exercice");
 var searchButtonMuscle = document.getElementById('searchButtonMuscle'); // Add ID to your button
 var searchButtonName = document.getElementById('searchButtonName');
+var allCurrentExercises = document.getElementById("allExercicesInTemplate");
 function hideAllExcept(element) {
     if (element === profileIcon) {
         profilePage.classList.add("show");
@@ -55,10 +56,12 @@ document.addEventListener("DOMContentLoaded", function() {
     plusIcon.addEventListener("click", function() {
         if (!exerciceCard.classList.contains("show")) {
             hideAllExcept(plusIcon);
+            console.log("Opened PlusIcon1");
         } else {
             exerciceCard.classList.remove("show");
             exerciceCard.classList.add("hidden");
             document.body.style.overflow = "auto";
+            console.log("Opened PlusIcon2");
         }
     });
 
@@ -66,10 +69,12 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!choisirEntrainement.classList.contains("show")) {
             createWorkoutInServer(null);
             hideAllExcept(nouvelEntrainement);
+            console.log("ExerciceCard1");
         } else {
             choisirEntrainement.classList.remove("show");
             choisirEntrainement.classList.add("hidden");
             document.body.style.overflow = "auto";
+            console.log("ExerciceCard2");
         }
     });
     
@@ -152,3 +157,107 @@ function returnFromWorkoutCreation(workoutData){
 
 // PAGE RECHERCHE
 
+function displayResults(exercises) {
+    console.log("Displaying results");
+    var resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = ''; // Clear previous results
+    if (exercises.length > 0) {
+        exercises.forEach(function(exercise) {
+            var exerciceDiv = document.createElement('div');
+            exerciceDiv.style= "display: flex; flex-direction: row; margin-left: 10px;"
+            var p = document.createElement('p');
+            p.textContent = exercise.name + " - " + exercise.difficulty;
+            p.style = "width: 300px";
+            exerciceDiv.append(p);
+
+            var selectExerciseButton = document.createElement('button');
+            selectExerciseButton.innerText = "Selectionner";
+            selectExerciseButton.onclick = function() {
+                appendExerciseToDOM(exercise);
+            };            
+            exerciceDiv.append(selectExerciseButton);
+            resultDiv.appendChild(exerciceDiv);
+        });
+    } else {
+        resultDiv.textContent = "Aucun exercice n'a été trouvé pour cette requete.";
+    }
+}
+
+function ChooseExercise(exercise){
+    fetch('addExerciceNewWorkout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(exercise)
+    })
+    .then(response => response.json())
+    .then(data => console.log('Success:', data))
+    .catch((error) => console.error('Error:', error));
+}
+
+async function appendExerciseToDOM(exercise){
+    await sendDataToServer(exercise);
+    fetch('getExoExecs', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(exercise)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success, found number of exercices: :', data);
+        updateExerciseList(data);
+        hideAllExcept(nouvelEntrainement);
+    })
+    .catch((error) => console.error('Error:', error));
+}
+
+function updateExerciseList(exercises){
+    allCurrentExercises.innerHTML = '';
+
+    exercises.forEach(exercise => {
+        const exerciseDiv = document.createElement('div');
+        exerciseDiv.className = 'exercise-entry';
+        exerciseDiv.textContent = `Exercice: ${exercise.nom_exo || 'Unknown'}, Description: ${exercise.desc_exo || 'Unknown'}`;
+        exerciseDiv.style="color:white;";
+        allCurrentExercises.appendChild(exerciseDiv);
+    });
+}
+
+async function sendDataToServer(exercise){
+    return fetch('choisirExercise', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(exercise)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+        return data; 
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+}
+
+async function hashSHA1(inputString){
+    const encoder = new TextEncoder();
+    const data = encoder.encode(inputString);
+
+    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+
+    return hashHex; // This will be a 40-character hexadecimal string
+}

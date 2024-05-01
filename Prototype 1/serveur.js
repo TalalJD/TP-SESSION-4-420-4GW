@@ -38,7 +38,7 @@ const uri = process.env.DB_URI;
 app.use(session({
   secret: 'your_secret_key', 
   saveUninitialized: true,
-  cookie: { secure: false, maxAge: 86400000 } 
+  cookie: { secure: false, maxAge: 3600000 } 
 }));
 /*
 Connexion au serveur
@@ -795,4 +795,5 @@ app.post('/paypal-transaction-complete', async (req, res) => {
     res.status(500).json({ success: false, message: "Erreur interne du serveur." });
   }
 });
+
 

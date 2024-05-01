@@ -21,21 +21,29 @@
 }
 .exercice-card {
     position: absolute;
-    top: 50%; 
-    transform: translate(-50%, -50%); /*Déplace la carte vers le haut et vers la gauche de la moitié de sa propre largeur et hauteur*/
-    margin-left: 17%;
-    transition: left 0.5s ease; /* Animation de glissement */
-    z-index: 0;
-    width: 17%;
-    height: 80%;
+    margin-left: 10%;
+    top: 80px; /* Adjusted distance from the top of the page */
+    left: 120%; /* Slide to the right */
+    width: 17%; /* Original width */
+    height: 80%; /* Original height */
+    transition: left 0.5s ease; /* Animation of sliding */
     background-color: #D5C069 !important;
     border-radius: 1%;
-    display: flex; /* Use flexbox */
-    justify-content: center; /* centrer l'element a l'horizontal */
+    display: flex;
+    justify-content: center;
     align-items: center;
     cursor: pointer;
-
 }
+
+/* Media Query for Smaller Screens */
+@media screen and (max-width: 768px) {
+    .exercice-card {
+        width: 80%; /* Adjusted width for smaller screens */
+        height: 35%; /* Adjusted height for smaller screens */
+    }
+}
+
+
 .exercice-card i {
     margin-right:5%;
     cursor: pointer; 

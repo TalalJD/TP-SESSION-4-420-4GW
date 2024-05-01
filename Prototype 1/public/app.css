@@ -22,11 +22,11 @@
 .exercice-card {
     position: absolute;
     margin-left: 10%;
-    top: 80px; /* Adjusted distance from the top of the page */
-    left: 120%; /* Slide to the right */
-    width: 17%; /* Original width */
-    height: 80%; /* Original height */
-    transition: left 0.5s ease; /* Animation of sliding */
+    top: 80px; 
+    left: 120%; 
+    width: 17%; 
+    height: 80%; 
+    transition: left 0.5s ease; 
     background-color: #D5C069 !important;
     border-radius: 1%;
     display: flex;
@@ -35,11 +35,11 @@
     cursor: pointer;
 }
 
-/* Media Query for Smaller Screens */
+
 @media screen and (max-width: 768px) {
     .exercice-card {
-        width: 80%; /* Adjusted width for smaller screens */
-        height: 35%; /* Adjusted height for smaller screens */
+        width: 80%; 
+        height: 35%; 
     }
 }
 

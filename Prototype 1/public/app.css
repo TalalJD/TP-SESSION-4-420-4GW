@@ -1,14 +1,21 @@
 .Chercher-Exercice {
     position: absolute;
     top: 0;
-    left: 500%;
-    /*slide la page a droit*/
+    left: 0; /* Adjust to position it correctly */
     width: 100%;
     height: 100%;
     transition: left 0.5s ease;
-    /* Animation de glissement */
     z-index: 0;
 }
+
+.hidden {
+    left: -100%; /* Adjust to fully hide it */
+}
+
+.show {
+    left: 0;
+}
+
 
 .Choisir-Entrainement {
     position: absolute;
@@ -137,12 +144,12 @@
 
 
 .hidden {
-    left: -1500px;
+    left: -100%;
     /* Cache la page à gauche */
 }
 
 .show {
-    left: 90px;
+    left: 6%;
     /* Affiche la page à côté de la sidebar */
 }
 

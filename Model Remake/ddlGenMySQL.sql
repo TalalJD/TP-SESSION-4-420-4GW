@@ -141,9 +141,9 @@ INSERT INTO abonnement (nom_abonnement, nb_generations) VALUES
 ('PREMIUM', -1);
 -- Ajout tables workout
 
-    ALTER TABLE workout DROP COLUMN client_id_client;
-    -- Ajout d'une nouvelle colonne pour stocker l'identifiant MongoDB du client
-    ALTER TABLE workout ADD COLUMN client_id_mongodb VARCHAR(24);
+ALTER TABLE workout DROP COLUMN client_id_client;
+-- Ajout d'une nouvelle colonne pour stocker l'identifiant MongoDB du client
+ALTER TABLE workout ADD COLUMN client_id_mongodb VARCHAR(24);
 
 ALTER TABLE workout
 ADD COLUMN dureeSeconde_workout INT,

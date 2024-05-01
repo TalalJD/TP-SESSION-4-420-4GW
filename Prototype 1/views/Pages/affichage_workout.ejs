@@ -1,119 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include ('../partials/head') %>
-<link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/app.css">
 
+  <style>
+    body {
+      height: 100%;
+      overflow-y: hidden;
+      margin: 0;
+      padding: 0;
+    }
 
-<style>
-    
-    .card {
-    padding: 10px;
-    border: 1px solid #ccc;
-    height: 70%;
-    width: 30%;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-    overflow-y: auto; /* Permet le défilement vertical si nécessaire */
-    
-  }
- 
-.exercise {
-    background: #f7f7f7;
-    margin-top: 10px;
-    padding: 5px;
-    margin-bottom: 5px; /* Ajoute un peu d'espace en bas de chaque exercice */
-}
+    .carde {
+      position: relative;
+      background-image: url('/imgs/Chris-Bumstead-Bio.jpeg');
+      background-size: cover;
+      background-position: center;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 5vh auto;
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+      width: 450px;
+      height: 80vh;
+      overflow-y: auto;
+      border-top: 0.5px solid #D5C069;
+    }
 
-.lesBoutons{
-    display: flex;
-    flex-direction: row;
-}
+    .carde::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 8px;
+    }
 
-.workout-list{
-  color: white;
-}
+    .card-content {
+      position: relative;
+      z-index: 1;
+    }
 
-#workout-list{
-  color: white;;
-}
+    .exercise {
+      background: rgba(255, 255, 255, 0.2);
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border-left: 5px solid #D5C069;
+    }
 
-body{
-  height: 100%;
-}
+    .workout-list,
+    #workout-list {
+      color: white;
+    }
 
-</style>
-<body>
-    <h1>Liste des Workouts</h1>
-    <br><br>
-    <button onclick="location.href='?type=template'">Afficher Templates</button>
-    <button onclick="location.href='?type=regular'">Afficher Réguliers</button>
+    .lesBoutons {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    button {
+      background-color: #D5C069;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.5s;
+    }
+
+    button:hover {
+      background-color: #555;
+      /* Slightly lighter on hover */
+    }
+
+    h1 {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .tempsHeure{
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .titre{
+      color: #D5C069;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .description{
+      font-style: italic;
+      text-align: center;
+      font-size: small;
+    }
+  </style>
+
+  <body>
+    <div class="lesBoutons">
+      <button onclick="location.href='?type=template'">Afficher Templates</button>
+      <button onclick="location.href='?type=regular'">Afficher Réguliers</button>
+    </div>
 
     <div id="workout-list">
-        <% if (workouts.length > 0) { %>
-            <% workouts.forEach(function(workout) { %>
-                <div class="card">
-                    <h2><%= workout.nom_workout %></h2>
-                    <p><%= workout.desc_workout %></p>
-                    <p>Durée: <%= workout.dureeSeconde_workout %> secondes</p>
-                    <p>Date: <%= workout.date_workout %></p>
-                    <% if (workout.exercises && workout.exercises.length > 0) { %>
-                        <% workout.exercises.forEach(function(exercise) { %>
-                            <div class="exercise">
-                                <% if (exercise.series && exercise.series.length > 0) { %>
-                                    <% exercise.series.forEach(function(serie) { %>
-                                        <h3><%= serie.nom_exo %></h3>
-                                        <p><%= serie.reps %> répétitions, RPE: <%= serie.rpe %></p>
-                                    <% }); %>
-                                <% } else { %>
-                                    <p>Aucune série trouvée pour cet exercice.</p>
-                                <% } %>
-                            </div>
-                        <% }); %>
-                    <% } else { %>
-                        <p>Aucun exercice trouvé pour ce workout.</p>
-                    <% } %>
-                </div>
-            <% }); %>
-        <% } else { %>
-            <p>Aucun workout trouvé.</p>
-        <% } %>
-    </div>
-<
-<!--
-<script>
-        document.getElementById('template-button').addEventListener('click', () => {
-          loadWorkouts('template');
-        });
-      
-        document.getElementById('regular-button').addEventListener('click', () => {
-          loadWorkouts('regular');
-        });
-      
-        function loadWorkouts(type) {
-          fetch(`/workouts/${type}`).then(response => {
-            if (!response.ok) {
-              throw new Error('Erreur lors de la récupération des workouts');
-            }
-            return response.json();
-          }).then(workouts => {
-            const workoutList = document.getElementById('workout-list');
-            workoutList.innerHTML = workouts.map(workout => `
-              <div class="card">
-                <h2>${workout.nom_workout}</h2>
-                <p>${workout.desc_workout}</p>
-                ${workout.exercises.map(exo => `
-                  <div class="exercise">
-                    <h4>${exo.nom_exo}</h4>
-                    ${exo.series.map(s => `<p>${s.reps}, RPE ${s.rpe}</p>`).join('')}
-                  </div>
-                `).join('')}
+      <% if (workouts.length> 0) { %>
+        <% workouts.forEach(function(workout) { %>
+          <div class="carde">
+            <div class="card-content">
+              <h2 class="titre">
+                <%= workout.nom_workout %>
+              </h2>
+              <p class="description">
+                <%= workout.desc_workout %>
+              </p>
+              <div class="tempsHeure">
+                <p><%= workout.dureeSeconde_workout %>
+                </p>
+                <p>
+                  <%= workout.date_workout%>
+                </p>
               </div>
-            `).join('');
-          }).catch(error => {
-            console.error('Failed to load workouts:', error);
-          });
-        }
-      </script>
--->
-    
-</body>
+              
+              <% if (workout.exercises && workout.exercises.length> 0) { %>
+                <% workout.exercises.forEach(function(exercise) { %>
+                  <div class="exercise">
+                    <% if (exercise.series && exercise.series.length> 0) { %>
+                      <% exercise.series.forEach(function(serie) { %>
+                        <h3>
+                          <%= serie.nom_exo %>
+                        </h3>
+                        <p>
+                          <%= serie.reps %> répétitions, RPE: <%= serie.rpe %>
+                        </p>
+                        <% }); %>
+                          <% } else { %>
+                            <p>Aucune série trouvée pour cet exercice.</p>
+                            <% } %>
+                  </div>
+                  <% }); %>
+                    <% } else { %>
+                      <p>Aucun exercice trouvé pour ce workout.</p>
+                      <% } %>
+            </div>
+
+          </div>
+          <% }); %>
+            <% } else { %>
+              <p>Aucun workout trouvé.</p>
+              <% } %>
+    </div>
+
+
+  </body>
+
 </html>

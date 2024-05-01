@@ -38,7 +38,7 @@ const uri = process.env.DB_URI;
 app.use(session({
   secret: 'your_secret_key', 
   saveUninitialized: true,
-  cookie: { secure: false, maxAge: 86400000 } 
+  cookie: { secure: false, maxAge: 3600000 } 
 }));
 /*
 Connexion au serveur
@@ -444,6 +444,44 @@ app.get('/profile', async function(req, res) {
   }
 });
 
+app.post('/createEmptyWorkout', async(req,res)=>{
+  let user = req.session.user;
+  console.log("Gens remaining before creation: ",user.gens)
+  try {
+    const workoutId = await createWorkout(user._id, true);
+    user.gens--;
+    req.session.user=user;
+    console.log("Gens remaining: ",user.gens)
+    console.log("Workout created and ID passed as : ",workoutId);
+    req.session.currentWorkoutTemplateCreation = workoutId;
+    res.send('Workout created successfully');
+  } catch (error) {
+    console.error("Failed to create workout: ", error);
+    res.status(500).send('Error creating workout');
+  }
+});
+
+app.post('/deleteEmptyWorkout', async(req,res)=>{
+  if (req.session.currentWorkoutTemplateCreation==-1){
+    console.log("No current active workout creation open");
+  } else {
+    try {
+      const result = await deleteWorkoutTemplate(req.session.currentWorkoutTemplateCreation,true);
+      if (result==1){
+        req.session.user.gens++;
+        console.log("Workout ",req.session.currentWorkoutTemplateCreation," deleted successfully. Generations refunded. Remaining: ",req.session.user.gens);
+        res.send("Workout deleted successfully");
+      } else {
+        res.send("Workout deleted successfully");
+      }
+      req.session.currentWorkoutTemplateCreation=-1;
+    } catch (error){
+      console.error("Failed to delete workout: ",error);
+      res.status(500).send('Error deleting workout');
+    }
+  }
+});
+
 app.post('/choisirExercise', async (req,res) => {
   const exercise = req.body;
   const inputToHashIdString = exercise.name+'-'+exercise.type+'-'+exercise.equipment;
@@ -470,6 +508,29 @@ app.post('/choisirExercise', async (req,res) => {
     });
 });
 
+async function deleteWorkoutTemplate(idWorkout, isReturn) {
+  return new Promise((resolve, reject) => {
+    // SQL statement to delete a workout by ID
+    const query = 'DELETE FROM workout WHERE id_workout = ?';
+    
+    con.query(query, [idWorkout], (error, results) => {
+      if (error) {
+        console.error("Failed to delete workout: ", error);
+        reject(error);  // Reject the Promise if there's an error
+      } else if (results.affectedRows === 0) {
+        console.log("No workout found with the given ID.");
+        reject(new Error("No workout found with the given ID."));  // Reject if no rows affected
+      } else {
+        console.log("Workout deleted successfully.");
+        if (isReturn){
+          resolve(1);
+        } else {
+          resolve(2);
+        }
+      }
+    });
+  });
+}
 
 async function hashSHA1(inputString) {
   return crypto.createHash('sha1')
@@ -503,6 +564,36 @@ function selectExoByID(sha1Id){
   });
 }
 
+function createWorkout(clientIdMongoDB, isTemplate) {
+  return new Promise((resolve, reject) => {
+    const query = `INSERT INTO workout (client_id_mongodb, IsTemplate_workout, nom_workout, desc_workout, dureeSeconde_workout, date_workout) VALUES (?, ?,'Nouveau Workout','', 0, NOW())`;
+    con.query(query, [clientIdMongoDB, isTemplate], (error, results) => {
+      if (error) {
+        console.error("Failed to insert new workout: ", error);
+        reject(error);
+      } else {
+        console.log("Workout created with ID: ", results.insertId);
+        resolve(results.insertId);
+      }
+    });
+  });
+}
+function getWorkoutById(workoutId) {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM workout WHERE id_workout = ?';
+    con.query(query, [workoutId], (error, results) => {
+      if (error) {
+        console.error("Failed to retrieve workout: ", error);
+        reject(error);
+      } else if (results.length > 0) {
+        console.log("Workout retrieved: ", results[0]);
+        resolve(results[0]);
+      } else {
+        reject(new Error("Workout not found"));
+      }
+    });
+  });
+}
 
 app.post('/auth/google', async (req, res) => {
   const { courriel_client, prenom_client, nom_client, mdp_client } = req.body;
@@ -717,6 +808,7 @@ app.post('/paypal-transaction-complete', async (req, res) => {
   }
 });
 
+
 app.post('/process_payment', async (req, res) => {
   const { cardNumber, expirationDate, cvv, planId } = req.body;
   let mongoClient;
@@ -775,3 +867,4 @@ app.post('/process_payment', async (req, res) => {
     }
   }
 });
+

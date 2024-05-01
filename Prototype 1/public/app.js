@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     
     returnButton.addEventListener("click", function(){
+        returnFromWorkoutCreation(null);
         choisirEntrainement.classList.remove('show');
         choisirEntrainement.classList.add('hidden');
         exerciceCard.classList.add("show");
@@ -74,6 +75,19 @@ document.addEventListener("DOMContentLoaded", function() {
 function createWorkoutInServer(workoutData){
     const body = JSON.stringify(workoutData || {});
     fetch('createEmptyWorkout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: body
+    })
+    .then(response => response.json())
+    .then(data => console.log('Success:', data))
+    .catch((error) => console.error('Error:', error));
+}
+function returnFromWorkoutCreation(workoutData){
+    const body = JSON.stringify(workoutData || {});
+    fetch('deleteEmptyWorkout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -446,13 +446,39 @@ app.get('/profile', async function(req, res) {
 
 app.post('/createEmptyWorkout', async(req,res)=>{
   let user = req.session.user;
+  console.log("Gens remaining before creation: ",user.gens)
   try {
-    await createWorkout(user._id, true);
-    console.log("Workout created");
+    const workoutId = await createWorkout(user._id, true);
+    user.gens--;
+    req.session.user=user;
+    console.log("Gens remaining: ",user.gens)
+    console.log("Workout created and ID passed as : ",workoutId);
+    req.session.currentWorkoutTemplateCreation = workoutId;
     res.send('Workout created successfully');
   } catch (error) {
     console.error("Failed to create workout: ", error);
     res.status(500).send('Error creating workout');
+  }
+});
+
+app.post('/deleteEmptyWorkout', async(req,res)=>{
+  if (req.session.currentWorkoutTemplateCreation==-1){
+    console.log("No current active workout creation open");
+  } else {
+    try {
+      const result = await deleteWorkoutTemplate(req.session.currentWorkoutTemplateCreation,true);
+      if (result==1){
+        req.session.user.gens++;
+        console.log("Workout ",req.session.currentWorkoutTemplateCreation," deleted successfully. Generations refunded. Remaining: ",req.session.user.gens);
+        res.send("Workout deleted successfully");
+      } else {
+        res.send("Workout deleted successfully");
+      }
+      req.session.currentWorkoutTemplateCreation=-1;
+    } catch (error){
+      console.error("Failed to delete workout: ",error);
+      res.status(500).send('Error deleting workout');
+    }
   }
 });
 
@@ -482,6 +508,29 @@ app.post('/choisirExercise', async (req,res) => {
     });
 });
 
+async function deleteWorkoutTemplate(idWorkout, isReturn) {
+  return new Promise((resolve, reject) => {
+    // SQL statement to delete a workout by ID
+    const query = 'DELETE FROM workout WHERE id_workout = ?';
+    
+    con.query(query, [idWorkout], (error, results) => {
+      if (error) {
+        console.error("Failed to delete workout: ", error);
+        reject(error);  // Reject the Promise if there's an error
+      } else if (results.affectedRows === 0) {
+        console.log("No workout found with the given ID.");
+        reject(new Error("No workout found with the given ID."));  // Reject if no rows affected
+      } else {
+        console.log("Workout deleted successfully.");
+        if (isReturn){
+          resolve(1);
+        } else {
+          resolve(2);
+        }
+      }
+    });
+  });
+}
 
 async function hashSHA1(inputString) {
   return crypto.createHash('sha1')

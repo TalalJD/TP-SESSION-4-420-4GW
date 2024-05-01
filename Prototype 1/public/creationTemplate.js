@@ -61,8 +61,17 @@ function displayResults(exercises) {
     }
 }
 
-function ChooseExercise(exercice){
-
+function ChooseExercise(exercise){
+    fetch('addExerciceNewWorkout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(exercise)
+    })
+    .then(response => response.json())
+    .then(data => console.log('Success:', data))
+    .catch((error) => console.error('Error:', error));
 }
 
 async function appendExerciseToDOM(exercise){
@@ -114,20 +123,32 @@ async function appendExerciseToDOM(exercise){
     var hashed = await hashSHA1(preHash);
     console.log("Pre-hash: "+preHash);
     console.log("Hashed : "+hashed);
-    sendDataToServer(exercise);
+    await sendDataToServer(exercise);
+
 }
 
-function sendDataToServer(exercise){
-    fetch('choisirExercise', {
+async function sendDataToServer(exercise){
+    return fetch('choisirExercise', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(exercise)
     })
-    .then(response => response.json())
-    .then(data => console.log('Success:', data))
-    .catch((error) => console.error('Error:', error));
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+        return data; 
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
 }
 
 async function hashSHA1(inputString){

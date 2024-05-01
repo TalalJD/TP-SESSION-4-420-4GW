@@ -506,7 +506,28 @@ app.post('/choisirExercise', async (req,res) => {
       console.error('Error:', error);
       res.status(500).send("An error occurred");
     });
+    AddExerciceToWorkout(req.session.currentWorkoutTemplateCreation,hashedID);
 });
+
+app.post('/addExerciceNewWorkout', async (req,res)=>{
+  
+});
+
+async function AddExerciceToWorkout(idWorkout, idExercise){
+  return new Promise((resolve, reject) => {
+    const query = `INSERT INTO exo_exec (workout_id_workout, exo_id_exo) VALUES (?, ?)`;
+    
+    con.query(query, [idWorkout, idExercise], (error, results) => {
+        if (error) {
+            console.error("Failed to insert new exo_exec: ", error);
+            reject(error);
+        } else {
+            console.log("exo_exec created with ID: ", results.insertId);
+            resolve(results.insertId);
+        }
+    });
+});
+}
 
 async function deleteWorkoutTemplate(idWorkout, isReturn) {
   return new Promise((resolve, reject) => {

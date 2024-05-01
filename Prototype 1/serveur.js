@@ -13,11 +13,22 @@ import dateFormat from "dateformat";
 import bodyParser from "body-parser";
 import { config } from 'dotenv';
 import { MongoClient } from 'mongodb';
+import paypal from '@paypal/checkout-server-sdk';
 
-import Stripe from 'stripe';
-const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
 
-import crypto from 'crypto';
+
+
+function environment() {
+  let clientId = "AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X";
+  let clientSecret = "EBNe3MbmLTgNb3xAzkTh0JhgMpeYyGuZRFYzIMlcSOV9xBPdeeWBcV_qYPPU6fm1Gnn7GJUxoyhdfVtJ";
+  return new SandboxEnvironment(clientId, clientSecret);
+}
+
+function client() {
+  return new PayPalHttpClient(environment());
+}
+
+
 
 config();
 const app = express();
@@ -708,7 +719,38 @@ app.get('/failure-page', (req, res) => {
     user: req.session.user 
   });
 });
+app.post('/paypal-transaction-complete', async (req, res) => {
+  const { orderID, planId } = req.body;
+  
+  let request = new paypal.orders.OrdersGetRequest(orderID);
+  
+  try {
+    const response = await client().execute(request);
+    const { result } = response;
+    if (result.status === 'COMPLETED') {
+      let mongoClient = await connectToMongo();
+      const db = mongoClient.db("EnergymizeBD");
+      const clientsCollection = db.collection("clients");
 
-
-
+      await clientsCollection.updateOne(
+        { _id: new ObjectId(req.session.user._id) },
+        { 
+          $set: { 
+            idAbonnement: parseInt(planId),
+            // Mettre à jour d'autres détails au besoin
+          } 
+        }
+      );
+      
+      req.session.user.idAbonnement = parseInt(planId);
+      // Mettre à jour la session ou d'autres détails au besoin
+      res.redirect('/success-page');
+    } else {
+      res.status(500).json({ success: false, message: "Le paiement n'a pas été validé par PayPal." });
+    }
+  } catch (error) {
+    console.error('Erreur lors de la vérification du paiement PayPal:', error);
+    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
+  }
+});
 

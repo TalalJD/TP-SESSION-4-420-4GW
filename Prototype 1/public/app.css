@@ -1,32 +1,47 @@
-.Choisir-Entrainement{
+.Chercher-Exercice {
     position: absolute;
     top: 0;
-    left: 550%; /*slide la page a droit*/
-    width: 100%; 
-    height: 100%; 
-    transition: left 0.5s ease; /* Animation de glissement */
+    left: 500%;
+    /*slide la page a droit*/
+    width: 100%;
+    height: 100%;
+    transition: left 0.5s ease;
+    /* Animation de glissement */
     z-index: 0;
 }
 
-
+.Choisir-Entrainement {
+    position: absolute;
+    top: 0;
+    left: 550%;
+    /*slide la page a droit*/
+    width: 100%;
+    height: 100%;
+    transition: left 0.5s ease;
+    /* Animation de glissement */
+    z-index: 0;
+}
 
 .profile-page {
     position: absolute;
     top: 0;
-    left: 500%; /*slide la page a droit*/
-    width: 100%; 
-    height: 100%; 
-    transition: left 0.5s ease; /* Animation de glissement */
+    left: 500%;
+    /*slide la page a droit*/
+    width: 100%;
+    height: 100%;
+    transition: left 0.5s ease;
+    /* Animation de glissement */
     z-index: 0;
 }
+
 .exercice-card {
     position: absolute;
     margin-left: 10%;
-    top: 80px; 
-    left: 120%; 
-    width: 17%; 
-    height: 80%; 
-    transition: left 0.5s ease; 
+    top: 80px;
+    left: 120%;
+    width: 17%;
+    height: 80%;
+    transition: left 0.5s ease;
     background-color: #D5C069 !important;
     border-radius: 1%;
     display: flex;
@@ -38,23 +53,23 @@
 
 @media screen and (max-width: 768px) {
     .exercice-card {
-        width: 80%; 
-        height: 35%; 
+        width: 80%;
+        height: 35%;
     }
 }
 
 
 .exercice-card i {
-    margin-right:5%;
-    cursor: pointer; 
+    margin-right: 5%;
+    cursor: pointer;
 }
 
 
-
-
 .side-bar {
-    position: relative; /* Fait en sorte d'etre sur que le z index marche */
-    z-index: 1; /*Mettre une valeure Z plus grande que la page profile pour apparaitre au dessus*/
+    position: relative;
+    /* Fait en sorte d'etre sur que le z index marche */
+    z-index: 1;
+    /*Mettre une valeure Z plus grande que la page profile pour apparaitre au dessus*/
 }
 
 .side-bar a {
@@ -64,73 +79,73 @@
     align-items: center;
     text-decoration: none;
     padding: 10px;
-    white-space: nowrap; 
+    white-space: nowrap;
 }
 
 
 
-#profileIcon span{
+#profileIcon span {
     padding-right: 35px;
 }
 
-#exitIcon{
+#exitIcon {
     padding-right: 35px;
 }
 
 
-#calendarIcon span{
+#calendarIcon span {
     padding-right: 19px;
 }
 
 .side-bar a i {
     color: #000000;
-    padding-right: 70px; 
+    padding-right: 70px;
 }
 
 
 .side-bar a span {
-    opacity: 0; /* cacher le text initiallement */
-    color:inherit;
+    opacity: 0;
+    /* cacher le text initiallement */
+    color: inherit;
     font-size: 1.05rem;
-        font-family: sans-serif;
-        font-weight: bold;
+    font-family: sans-serif;
+    font-weight: bold;
 
 
 }
 
 .side-bar:hover a span {
-    opacity: 1; /* faire apparaitre le text quand l'utilisateur passer sa souris sur la side bar */
+    opacity: 1;
+    /* faire apparaitre le text quand l'utilisateur passer sa souris sur la side bar */
 }
 
-/* Media Query for Smaller Screens */
+
 @media screen and (max-width: 768px) {
     .side-bar {
-        width: 150px; /* Adjust width for smaller screens */
-        min-width: 60px; /* Adjust minimum width for smaller screens */
+        width: 150px;
+        min-width: 60px;
     }
 
     .side-bar:hover {
-        width: 200px; /* Keep the width same on hover for smaller screens */
+        width: 200px;
     }
 
     .side-bar a span {
-        margin-left: 8px; /* Adjust margin for smaller screens */
+        margin-left: 8px;
     }
 }
 
 
 .hidden {
-    left: -1500px; /* Cache la page à gauche */
+    left: -1500px;
+    /* Cache la page à gauche */
 }
 
 .show {
-    left: 90px; /* Affiche la page à côté de la sidebar */
+    left: 90px;
+    /* Affiche la page à côté de la sidebar */
 }
 
-/* Card container */
-
-
-/* Individual card */
 .card {
     width: 450px;
     height: 800px !important;
@@ -142,7 +157,3 @@
     flex-shrink: 0;
 }
 
-/* Card content */
-
-
-  

@@ -6,6 +6,9 @@ document.addEventListener("DOMContentLoaded", function() {
     var nouvelEntrainement = document.getElementById("NouvelEntrainement");
     var choisirEntrainement = document.querySelector(".Choisir-Entrainement");
     var returnButton = document.querySelector('.return-button');
+    var AfficherSelectExo = document.getElementById('AfficherSelectExo');
+    var ChercherExercice = document.querySelector(".Chercher-Exercice");
+
 
     function hideAllExcept(element) {
         if (element === profileIcon) {
@@ -15,6 +18,8 @@ document.addEventListener("DOMContentLoaded", function() {
             exerciceCard.classList.add("hidden");
             choisirEntrainement.classList.remove("show");
             choisirEntrainement.classList.add("hidden");
+            ChercherExercice.classList.remove("show");
+            ChercherExercice.classList.add("hidden");
         } else if (element === plusIcon) {
             exerciceCard.classList.add("show");
             exerciceCard.classList.remove("hidden");
@@ -22,6 +27,8 @@ document.addEventListener("DOMContentLoaded", function() {
             profilePage.classList.add("hidden");
             choisirEntrainement.classList.remove("show");
             choisirEntrainement.classList.add("hidden");
+            ChercherExercice.classList.remove("show");
+            ChercherExercice.classList.add("hidden");
         } else if (element === nouvelEntrainement) {
             choisirEntrainement.classList.add("show");
             choisirEntrainement.classList.remove("hidden");
@@ -29,6 +36,8 @@ document.addEventListener("DOMContentLoaded", function() {
             exerciceCard.classList.add("hidden");
             profilePage.classList.remove("show");
             profilePage.classList.add("hidden");
+            ChercherExercice.classList.remove("show");
+            ChercherExercice.classList.add("hidden");
         }
         document.body.style.overflow = "hidden";
     }
@@ -70,7 +79,17 @@ document.addEventListener("DOMContentLoaded", function() {
         choisirEntrainement.classList.add('hidden');
         exerciceCard.classList.add("show");
     });
+
+    AfficherSelectExo.addEventListener("click", function(){
+        choisirEntrainement.classList.remove('show');
+        choisirEntrainement.classList.add('hidden');
+        ChercherExercice.classList.remove("hidden");
+        ChercherExercice.classList.add("show");
+    });
+
 });
+
+
 
 function createWorkoutInServer(workoutData){
     const body = JSON.stringify(workoutData || {});
@@ -98,3 +117,5 @@ function returnFromWorkoutCreation(workoutData){
     .then(data => console.log('Success:', data))
     .catch((error) => console.error('Error:', error));
 }
+
+

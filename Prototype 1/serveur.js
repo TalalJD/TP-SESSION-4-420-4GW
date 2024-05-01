@@ -521,64 +521,7 @@ app.post('/auth/google', async (req, res) => {
     }
 });
 
-app.post('/process_payment', async (req, res) => {
-  const { cardNumber, expirationDate, cvv, planId } = req.body;
-  let mongoClient;
-  let generationsRestantes = 0;
-  
-  switch (parseInt(planId)) {
-    case 1: 
-      generationsRestantes = 3;
-      break;
-    case 2: 
-      generationsRestantes = 10;
-      break;
-    case 3: 
-      generationsRestantes = -1; 
-      break;
-    default:
-      generationsRestantes = 0;
-  }
 
-  try {
-    mongoClient = await connectToMongo();
-    const db = mongoClient.db("EnergymizeBD");
-    const clientsCollection = db.collection("clients");
-    const carteClientCollection = db.collection("carte_client");
-    const paymentSuccessful = true; 
-    
-    if (paymentSuccessful) {
-      await clientsCollection.updateOne(
-        { _id: new ObjectId(req.session.user._id) },
-        { 
-          $set: { 
-            idAbonnement: parseInt(planId),
-            gens: generationsRestantes
-          } 
-        }
-      );
-      await carteClientCollection.insertOne({
-        userId: new ObjectId(req.session.user._id),
-        num_carte: cardNumber, 
-        date_carte: expirationDate, 
-        cvv_carte: cvv 
-      });
-   
-      req.session.user.idAbonnement = parseInt(planId);
-      req.session.user.gens = generationsRestantes;
-      res.redirect('/success-page');
-    } else {
-      res.redirect('/failure-page');
-    }
-  } catch (error) {
-    console.error('Payment processing error:', error);
-    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
-  } finally {
-    if (mongoClient) {
-      await mongoClient.close();
-    }
-  }
-});
 
 app.get('/affichage_workout', async function(req, res){
  
@@ -721,36 +664,114 @@ app.get('/failure-page', (req, res) => {
 });
 app.post('/paypal-transaction-complete', async (req, res) => {
   const { orderID, planId } = req.body;
-  
-  let request = new paypal.orders.OrdersGetRequest(orderID);
-  
+  let mongoClient;
+
   try {
+    let request = new paypal.orders.OrdersGetRequest(orderID);
     const response = await client().execute(request);
     const { result } = response;
+
     if (result.status === 'COMPLETED') {
-      let mongoClient = await connectToMongo();
+      mongoClient = await connectToMongo();
       const db = mongoClient.db("EnergymizeBD");
       const clientsCollection = db.collection("clients");
+
+      let generationsRestantes = 0;
+      switch (parseInt(planId)) {
+        case 1: 
+          generationsRestantes = 3;
+          break;
+        case 2: 
+          generationsRestantes = 10;
+          break;
+        case 3: 
+          generationsRestantes = -1; 
+          break;
+        default:
+          generationsRestantes = 0;
+      }
 
       await clientsCollection.updateOne(
         { _id: new ObjectId(req.session.user._id) },
         { 
           $set: { 
             idAbonnement: parseInt(planId),
-            // Mettre à jour d'autres détails au besoin
+            gens: generationsRestantes
           } 
         }
       );
       
       req.session.user.idAbonnement = parseInt(planId);
-      // Mettre à jour la session ou d'autres détails au besoin
+      req.session.user.gens = generationsRestantes;
       res.redirect('/success-page');
     } else {
-      res.status(500).json({ success: false, message: "Le paiement n'a pas été validé par PayPal." });
+      res.redirect('/failure-page');
     }
   } catch (error) {
     console.error('Erreur lors de la vérification du paiement PayPal:', error);
     res.status(500).json({ success: false, message: "Erreur interne du serveur." });
+  } finally {
+    if (mongoClient) {
+      await mongoClient.close();
+    }
   }
 });
 
+app.post('/process_payment', async (req, res) => {
+  const { cardNumber, expirationDate, cvv, planId } = req.body;
+  let mongoClient;
+  let generationsRestantes = 0;
+  
+  switch (parseInt(planId)) {
+    case 1: 
+      generationsRestantes = 3;
+      break;
+    case 2: 
+      generationsRestantes = 10;
+      break;
+    case 3: 
+      generationsRestantes = -1; 
+      break;
+    default:
+      generationsRestantes = 0;
+  }
+
+  try {
+    mongoClient = await connectToMongo();
+    const db = mongoClient.db("EnergymizeBD");
+    const clientsCollection = db.collection("clients");
+    const carteClientCollection = db.collection("carte_client");
+    const paymentSuccessful = true; 
+    
+    if (paymentSuccessful) {
+      await clientsCollection.updateOne(
+        { _id: new ObjectId(req.session.user._id) },
+        { 
+          $set: { 
+            idAbonnement: parseInt(planId),
+            gens: generationsRestantes
+          } 
+        }
+      );
+      await carteClientCollection.insertOne({
+        userId: new ObjectId(req.session.user._id),
+        num_carte: cardNumber, 
+        date_carte: expirationDate, 
+        cvv_carte: cvv 
+      });
+   
+      req.session.user.idAbonnement = parseInt(planId);
+      req.session.user.gens = generationsRestantes;
+      res.redirect('/success-page');
+    } else {
+      res.redirect('/failure-page');
+    }
+  } catch (error) {
+    console.error('Payment processing error:', error);
+    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
+  } finally {
+    if (mongoClient) {
+      await mongoClient.close();
+    }
+  }
+});

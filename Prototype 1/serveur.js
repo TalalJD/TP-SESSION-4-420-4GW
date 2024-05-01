@@ -13,11 +13,22 @@ import dateFormat from "dateformat";
 import bodyParser from "body-parser";
 import { config } from 'dotenv';
 import { MongoClient } from 'mongodb';
+import paypal from '@paypal/checkout-server-sdk';
 
-import Stripe from 'stripe';
-const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
 
-import crypto from 'crypto';
+
+
+function environment() {
+  let clientId = "AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X";
+  let clientSecret = "EBNe3MbmLTgNb3xAzkTh0JhgMpeYyGuZRFYzIMlcSOV9xBPdeeWBcV_qYPPU6fm1Gnn7GJUxoyhdfVtJ";
+  return new SandboxEnvironment(clientId, clientSecret);
+}
+
+function client() {
+  return new PayPalHttpClient(environment());
+}
+
+
 
 config();
 const app = express();
@@ -575,21 +586,16 @@ app.get('/affichage_workout', async function(req, res){
   if (req.session.isLoggedIn) {
     user = req.session.user;
   }
- /*
-  res.render("Pages/affichage_workout", {
-    siteTitle: "Simple Application",
-    pageTitle: "Event List",
-    items: [],
-    user: user,
-  });
-  */
 
   const isTemplate = req.query.type === 'template';
  
     console.log(user._id);
 
     con.query(
-      'SELECT * FROM workout WHERE client_id_mongodb = ?  AND IsTemplate_workout=?',
+      'SELECT id_workout, nom_workout, desc_workout, client_id_mongodb, ' + 
+      'SEC_TO_TIME(dureeSeconde_workout) AS dureeSeconde_workout, IsTemplate_workout,' + 
+      'DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? ' + 
+      ' AND IsTemplate_workout=?',
       [user._id, isTemplate],
       (error, workouts) => {
           if (error) {
@@ -597,7 +603,6 @@ app.get('/affichage_workout', async function(req, res){
               return res.status(500).send('Server Error');
           }
   
-          // Utiliser un compteur pour suivre quand toutes les requêtes imbriquées sont complètes
           let completedWorkouts = 0;
   
           if (workouts.length === 0) {
@@ -714,7 +719,38 @@ app.get('/failure-page', (req, res) => {
     user: req.session.user 
   });
 });
+app.post('/paypal-transaction-complete', async (req, res) => {
+  const { orderID, planId } = req.body;
+  
+  let request = new paypal.orders.OrdersGetRequest(orderID);
+  
+  try {
+    const response = await client().execute(request);
+    const { result } = response;
+    if (result.status === 'COMPLETED') {
+      let mongoClient = await connectToMongo();
+      const db = mongoClient.db("EnergymizeBD");
+      const clientsCollection = db.collection("clients");
 
-
-
+      await clientsCollection.updateOne(
+        { _id: new ObjectId(req.session.user._id) },
+        { 
+          $set: { 
+            idAbonnement: parseInt(planId),
+            // Mettre à jour d'autres détails au besoin
+          } 
+        }
+      );
+      
+      req.session.user.idAbonnement = parseInt(planId);
+      // Mettre à jour la session ou d'autres détails au besoin
+      res.redirect('/success-page');
+    } else {
+      res.status(500).json({ success: false, message: "Le paiement n'a pas été validé par PayPal." });
+    }
+  } catch (error) {
+    console.error('Erreur lors de la vérification du paiement PayPal:', error);
+    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
+  }
+});
 

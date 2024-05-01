@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     exerciceCard.addEventListener("click", function() {
         if (!choisirEntrainement.classList.contains("show")) {
+            createWorkoutInServer(null);
             hideAllExcept(nouvelEntrainement);
         } else {
             choisirEntrainement.classList.remove("show");
@@ -69,3 +70,17 @@ document.addEventListener("DOMContentLoaded", function() {
         exerciceCard.classList.add("show");
     });
 });
+
+function createWorkoutInServer(workoutData){
+    const body = JSON.stringify(workoutData || {});
+    fetch('createEmptyWorkout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: body
+    })
+    .then(response => response.json())
+    .then(data => console.log('Success:', data))
+    .catch((error) => console.error('Error:', error));
+}

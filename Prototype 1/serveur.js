@@ -444,6 +444,18 @@ app.get('/profile', async function(req, res) {
   }
 });
 
+app.post('/createEmptyWorkout', async(req,res)=>{
+  let user = req.session.user;
+  try {
+    await createWorkout(user._id, true);
+    console.log("Workout created");
+    res.send('Workout created successfully');
+  } catch (error) {
+    console.error("Failed to create workout: ", error);
+    res.status(500).send('Error creating workout');
+  }
+});
+
 app.post('/choisirExercise', async (req,res) => {
   const exercise = req.body;
   const inputToHashIdString = exercise.name+'-'+exercise.type+'-'+exercise.equipment;
@@ -503,6 +515,36 @@ function selectExoByID(sha1Id){
   });
 }
 
+function createWorkout(clientIdMongoDB, isTemplate) {
+  return new Promise((resolve, reject) => {
+    const query = `INSERT INTO workout (client_id_mongodb, IsTemplate_workout, nom_workout, desc_workout, dureeSeconde_workout, date_workout) VALUES (?, ?,'Nouveau Workout','', 0, NOW())`;
+    con.query(query, [clientIdMongoDB, isTemplate], (error, results) => {
+      if (error) {
+        console.error("Failed to insert new workout: ", error);
+        reject(error);
+      } else {
+        console.log("Workout created with ID: ", results.insertId);
+        resolve(results.insertId);
+      }
+    });
+  });
+}
+function getWorkoutById(workoutId) {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM workout WHERE id_workout = ?';
+    con.query(query, [workoutId], (error, results) => {
+      if (error) {
+        console.error("Failed to retrieve workout: ", error);
+        reject(error);
+      } else if (results.length > 0) {
+        console.log("Workout retrieved: ", results[0]);
+        resolve(results[0]);
+      } else {
+        reject(new Error("Workout not found"));
+      }
+    });
+  });
+}
 
 app.post('/auth/google', async (req, res) => {
   const { courriel_client, prenom_client, nom_client, mdp_client } = req.body;

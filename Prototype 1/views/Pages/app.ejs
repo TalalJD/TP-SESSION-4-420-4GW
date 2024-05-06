@@ -235,7 +235,22 @@
                 cursor: pointer;
 
             }
+            .confirmWorkout-button {
+                position: absolute;
+                bottom: 10px;
+                margin-left: 827px;
+                padding: 10px 20px;
+                background-color: #D5C069;
+                color: black;
+                border: none;
+                border-radius: 5px;
+                transition: 0.5s;
+                cursor: pointer;
 
+            }
+            .confirmWorkout-button:hover{
+                background-color: #555;
+            }
             .return-button:hover {
                 background-color: #555;
             }
@@ -380,10 +395,14 @@
         </div>
 
         <!-- Return button -->
-        <button class="return-button" onclick="hideChoisirEntrainement()">Retourner</button>
+        <div class="workoutCompletionSection">
+            <button id="returnButton" class="return-button" onclick="hideChoisirEntrainement()">Retourner</button>
+            <button id="confirmWorkoutCreationButton"class="confirmWorkout-button" onclick="hideChoisirEntrainement()">Confirmer</button>
+        </div>
     </div>
     <div class="Chercher-Exercice hidden">
         <style>
+
             .searchBody {
                 display: flex;
                 flex-direction: row;

@@ -5,7 +5,8 @@ var profilePage = document.querySelector(".profile-page");
 var exerciceCard = document.querySelector(".exercice-card");
 var nouvelEntrainement = document.getElementById("NouvelEntrainement");
 var choisirEntrainement = document.querySelector(".Choisir-Entrainement");
-var returnButton = document.querySelector('.return-button');
+var returnButton = document.getElementById('returnButton');
+var confirmWorkoutButton = document.getElementById('confirmWorkoutCreationButton');
 var AfficherSelectExo = document.getElementById('AfficherSelectExo');
 var ChercherExercice = document.querySelector(".Chercher-Exercice");
 var searchButtonMuscle = document.getElementById('searchButtonMuscle'); // Add ID to your button
@@ -80,6 +81,12 @@ document.addEventListener("DOMContentLoaded", function() {
     
     returnButton.addEventListener("click", function(){
         returnFromWorkoutCreation(null);
+        choisirEntrainement.classList.remove('show');
+        choisirEntrainement.classList.add('hidden');
+        exerciceCard.classList.add("show");
+    });
+
+    confirmWorkoutButton.addEventListener("click", function(){
         choisirEntrainement.classList.remove('show');
         choisirEntrainement.classList.add('hidden');
         exerciceCard.classList.add("show");

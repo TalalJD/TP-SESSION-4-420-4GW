@@ -259,5 +259,23 @@ body {
     }
 
 
+    .button-style {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        background-color: #D5C069; /* Bleu par défaut des boutons Bootstrap, par exemple */
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      
+      .button-style:hover {
+        background-color: #555; /* Une teinte plus foncée pour l'effet hover */
+      }
+
     
       

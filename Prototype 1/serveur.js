@@ -14,6 +14,11 @@ import bodyParser from "body-parser";
 import { config } from 'dotenv';
 import { MongoClient } from 'mongodb';
 import paypal from '@paypal/checkout-server-sdk';
+import bcrypt from 'bcrypt';
+
+import Stripe from 'stripe';
+const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
+
 import crypto from 'crypto';
 
 
@@ -243,11 +248,15 @@ export async function InscrireUtilisateur(nom_client, prenom_client, courriel_cl
       console.log("Matching email: "+emailCheck[0].courriel);
       return 0;
     }
+
+    const saltRounds = 10;
+    const mdp_hashee = await bcrypt.hash(mdp_client, saltRounds);
+
     const clientDocument = {
       nom : nom_client,
       prenom : prenom_client,
       courriel : courriel_client,
-      mdp : mdp_client,
+      mdp : mdp_hashee,
       gens : 3,
       idAbonnement : 1
     };
@@ -268,7 +277,9 @@ export async function ConnectionUtilisateur(courriel_client, mdp_client){
       console.log("No users matching email: "+courriel_client);
       return 0;
     }
-    if (emailCheck[0].mdp==mdp_client){
+
+    const isMatch = await bcrypt.compare(mdp_client, emailCheck[0].mdp);
+    if (isMatch){
       return emailCheck[0];
     } else {
       console.log("Password written: "+mdp_client+" does not match actual password: "+emailCheck[0].mdp);
@@ -332,6 +343,7 @@ app.post('/connexion/submit', async (req, res) => {
   // Verifier si ces derniers ne sont pas vides
   if (user_email_address && mdp) {
     let FoundUser = await ConnectionUtilisateur(user_email_address, mdp);
+    
     if (FoundUser===0){
       res.json({ success: false, message: 'Adresse e-mail incorrecte' });
     } else if (FoundUser===1){
@@ -787,7 +799,7 @@ app.get('/affichage_workout', async function(req, res){
                           } else {
                               exercises.forEach((exercise, exIndex) => {
                                   con.query(
-                                      'SELECT s.*, e.nom_exo FROM serie s JOIN exo e ON s.exo_id_exo = e.id_exo  WHERE exo_exec_id_exo_exec = ?',
+                                      'SELECT s.*, e.nom_exo, e.desc_exo FROM serie s JOIN exo e ON s.exo_id_exo = e.id_exo  WHERE exo_exec_id_exo_exec = ?',
                                       [exercise.id_exo_exec],
                                       (error, series) => {
                                           if (error) {
@@ -857,6 +869,8 @@ app.get('/success-page', function(req, res) {
     user: req.session.user 
   });
 });
+
+
 
 app.get('/failure-page', (req, res) => {
   res.render('Pages/failure', { 

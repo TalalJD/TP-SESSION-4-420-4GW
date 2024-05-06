@@ -9,7 +9,11 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+<<<<<<< Updated upstream
     "@paypal/checkout-server-sdk": "^1.0.3",
+=======
+    "bcrypt": "^5.1.1",
+>>>>>>> Stashed changes
     "bootstrap": "^5.3.3",
     "dateformat": "^5.0.3",
     "dotenv": "^16.4.5",

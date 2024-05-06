@@ -13,31 +13,20 @@
 
     .carde {
       position: relative;
-      background-image: url('/imgs/Chris-Bumstead-Bio.jpeg');
-      background-size: cover;
-      background-position: center;
-      padding: 20px;
-      border-radius: 8px;
-      margin: 5vh auto;
-      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-      width: 450px;
-      height: 80vh;
-      overflow-y: auto;
-      border-top: 0.5px solid #D5C069;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/imgs/Chris-Bumstead-Bio.jpeg');
+  background-size: cover;
+  background-position: center;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 5vh auto;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+  width: 450px;
+  height: 80vh;
+  overflow-y: auto;
+  border-top: 0.5px solid #D5C069;
     }
 
-    .carde::after {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 8px;
-    }
-
+   
     .card-content {
       position: relative;
       z-index: 1;
@@ -49,6 +38,7 @@
       padding: 10px;
       border-radius: 5px;
       border-left: 5px solid #D5C069;
+      cursor: pointer;
     }
 
     .workout-list,
@@ -76,7 +66,7 @@
 
     button:hover {
       background-color: #555;
-      /* Slightly lighter on hover */
+    
     }
 
     h1 {
@@ -99,6 +89,15 @@
       text-align: center;
       font-size: small;
     }
+
+    .description-panel {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
   </style>
 
   <body>
@@ -134,9 +133,13 @@
                         <h3>
                           <%= serie.nom_exo %>
                         </h3>
+                                                
                         <p>
                           <%= serie.reps %> répétitions, RPE: <%= serie.rpe %>
                         </p>
+                        <div class="description-panel" style="display: none;">
+                          <p class="description"><%= serie.desc_exo %></p>
+                        </div>
                         <% }); %>
                           <% } else { %>
                             <p>Aucune série trouvée pour cet exercice.</p>
@@ -158,4 +161,20 @@
 
   </body>
 
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var exercises = document.querySelectorAll('.exercise');
+    exercises.forEach(function(exercise) {
+      exercise.addEventListener('click', function() {
+        var descriptionPanel = exercise.querySelector('.description-panel');
+        if (descriptionPanel.style.display === 'none') {
+          descriptionPanel.style.display = 'block';
+        } else {
+          descriptionPanel.style.display = 'none';
+        }
+      });
+    });
+  });
+  </script>
 </html>

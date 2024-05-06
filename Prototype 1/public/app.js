@@ -128,6 +128,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 function createWorkoutInServer(workoutData){
+    clearExercises();
     const body = JSON.stringify(workoutData || {});
     fetch('createEmptyWorkout', {
         method: 'POST',
@@ -150,7 +151,9 @@ function returnFromWorkoutCreation(workoutData){
         body: body
     })
     .then(response => response.json())
-    .then(data => console.log('Success:', data))
+    .then(data => {
+        console.log('Success:', data);
+    })
     .catch((error) => console.error('Error:', error));
 }
 
@@ -215,7 +218,7 @@ async function appendExerciseToDOM(exercise){
 }
 
 function updateExerciseList(exercises){
-    allCurrentExercises.innerHTML = '';
+    clearExercises();
 
     exercises.forEach(exercise => {
         const exerciseDiv = document.createElement('div');
@@ -224,6 +227,10 @@ function updateExerciseList(exercises){
         exerciseDiv.style="color:white;";
         allCurrentExercises.appendChild(exerciseDiv);
     });
+}
+function clearExercises(){
+    console.log("Clearing exercise div...");
+    allCurrentExercises.innerHTML = '';
 }
 
 async function sendDataToServer(exercise){

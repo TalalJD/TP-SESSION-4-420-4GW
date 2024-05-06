@@ -466,17 +466,25 @@ app.post('/deleteEmptyWorkout', async(req,res)=>{
     console.log("No current active workout creation open");
   } else {
     try {
-      const result = await deleteWorkoutTemplate(req.session.currentWorkoutTemplateCreation,true);
-      if (result==1){
-        req.session.user.gens++;
-        console.log("Workout ",req.session.currentWorkoutTemplateCreation," deleted successfully. Generations refunded. Remaining: ",req.session.user.gens);
-        res.send("Workout deleted successfully");
-      } else {
-        res.send("Workout deleted successfully");
+      const resultDeleteExo = await deleteAllAssociatedExercises(req.session.currentWorkoutTemplateCreation,true);
+      if (resultDeleteExo==1){
+        try {
+          const result = await deleteWorkoutTemplate(req.session.currentWorkoutTemplateCreation,true);
+          if (result==1){
+            req.session.user.gens++;
+            console.log("Workout ",req.session.currentWorkoutTemplateCreation," deleted successfully. Generations refunded. Remaining: ",req.session.user.gens);
+            res.send("Workout deleted successfully");
+          } else {
+            res.send("Workout deleted successfully");
+          }
+          req.session.currentWorkoutTemplateCreation=-1;
+        } catch (error){
+          console.error("Failed to delete workout: ",error);
+          res.status(500).send('Error deleting workout');
+        }
       }
-      req.session.currentWorkoutTemplateCreation=-1;
     } catch (error){
-      console.error("Failed to delete workout: ",error);
+      console.error("Failed to delete workout associated exercises: ",error);
       res.status(500).send('Error deleting workout');
     }
   }
@@ -519,14 +527,24 @@ app.post('/choisirExercise', async (req, res) => {
     });
 });
 
-app.post('/getExoExecs', (req, res) => {
+app.post('/getExoExecs', async (req, res) => {
   const workoutId = req.session.currentWorkoutTemplateCreation;
 
-  if (workoutId == -1 || !workoutId) {
+  if (workoutId === -1 || !workoutId) {
     return res.status(400).send({ message: "Workout ID is required" });
   }
 
-  // Updated query to include JOIN and fetch exercise details
+  try {
+    await getExoExecs(workoutId, res);
+  } catch (error) {
+    console.error("Failed to process request: ", error);
+    if (!res.headersSent) {
+      res.status(500).send({ message: "An error occurred while processing your request" });
+    }
+  }
+});
+
+function getExoExecs(idWorkout, res) {
   const query = `
     SELECT exo_exec.id_exo_exec, exo_exec.workout_id_workout, exo_exec.exo_id_exo, exo.nom_exo, exo.desc_exo
     FROM exo_exec
@@ -534,14 +552,37 @@ app.post('/getExoExecs', (req, res) => {
     WHERE exo_exec.workout_id_workout = ?
   `;
 
-  con.query(query, [workoutId], (error, results) => {
-    if (error) {
-      console.error("Failed to retrieve exo_exec records: ", error);
-      return res.status(500).send({ message: "An error occurred while fetching exo_exec records" });
-    }
-    res.status(200).json(results);
+  return new Promise((resolve, reject) => {
+    con.query(query, [idWorkout], (error, results) => {
+      if (error) {
+        console.error("Failed to retrieve exo_exec records: ", error);
+        if (res) {
+          res.status(500).send({ message: "An error occurred while fetching exo_exec records" });
+        }
+        reject(error);
+      } else {
+        if (res) {
+          res.status(200).json(results);
+        }
+        resolve(results);
+      }
+    });
   });
-});
+}
+
+// Usage within an async function
+async function handleRequest(req, res) {
+  try {
+    const idWorkout = req.params.id;
+    await getExoExecs(idWorkout, res);
+  } catch (error) {
+    console.error("Error handling request: ", error);
+    if (!res.headersSent) {
+      res.status(500).send({ message: "Server error" });
+    }
+  }
+}
+
 
 async function AddExerciceToWorkout(idWorkout, idExercise){
   return new Promise((resolve, reject) => {
@@ -579,6 +620,27 @@ async function deleteWorkoutTemplate(idWorkout, isReturn) {
           resolve(2);
         }
       }
+    });
+  });
+}
+async function deleteAllAssociatedExercises(idWorkout, isReturn){
+  return new Promise((resolve, reject)=>{
+      const query = `
+      DELETE FROM exo_exec
+      WHERE workout_id_workout = ?
+    `;
+    con.query(query, [idWorkout], (error, results) => {
+        if (error) {
+          console.error("Failed to delete exo_exec records: ", error);
+          reject(error);
+        } else {
+          console.log("Workout exercises supprimées. Nombre d'éléments supprimés: "+results.affectedRows);
+          if (isReturn){
+            resolve(1);
+          } else {
+            resolve(2);
+          }
+        }
     });
   });
 }

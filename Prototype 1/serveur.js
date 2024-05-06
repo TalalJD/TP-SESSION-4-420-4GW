@@ -482,31 +482,82 @@ app.post('/deleteEmptyWorkout', async(req,res)=>{
   }
 });
 
-app.post('/choisirExercise', async (req,res) => {
+app.post('/choisirExercise', async (req, res) => {
   const exercise = req.body;
-  const inputToHashIdString = exercise.name+'-'+exercise.type+'-'+exercise.equipment;
+  const inputToHashIdString = `${exercise.name}-${exercise.type}-${exercise.equipment}`;
   const hashedID = await hashSHA1(inputToHashIdString);
-  console.log("Pre-hash: "+inputToHashIdString);
-  console.log("Post hash: "+hashedID);
+
+  console.log("Pre-hash: " + inputToHashIdString);
+  console.log("Post hash: " + hashedID);
+
   selectExoByID(hashedID)
     .then(results => {
       if (results.length > 0) {
         console.log('Exercise exists in the DB: ' + results[0].nom_exo);
         res.status(200).json(results[0]);
+        return hashedID; // Continue to the next step with the hashedID
       } else {
-        return insertIntoExo(exercise, hashedID);
+        return insertIntoExo(exercise, hashedID)
+          .then(insertResults => {
+            if (insertResults) {
+              res.status(201).send({ id_exo: hashedID, message: "Exercise inserted" });
+            }
+            return hashedID; // Continue to the next step with the hashedID
+          });
       }
     })
-    .then(insertResults => {
-      if (insertResults) {
-        res.status(201).send({ id_exo: hashedID, message: "Exercise inserted" });
+    .then(hashedID => {
+      if (hashedID) {
+        AddExerciceToWorkout(req.session.currentWorkoutTemplateCreation, hashedID);
       }
     })
     .catch(error => {
       console.error('Error:', error);
-      res.status(500).send("An error occurred");
+      if (!res.headersSent) {
+        res.status(500).send("An error occurred");
+      }
     });
 });
+
+app.post('/getExoExecs', (req, res) => {
+  const workoutId = req.session.currentWorkoutTemplateCreation;
+
+  if (workoutId == -1 || !workoutId) {
+    return res.status(400).send({ message: "Workout ID is required" });
+  }
+
+  // Updated query to include JOIN and fetch exercise details
+  const query = `
+    SELECT exo_exec.id_exo_exec, exo_exec.workout_id_workout, exo_exec.exo_id_exo, exo.nom_exo, exo.desc_exo
+    FROM exo_exec
+    JOIN exo ON exo_exec.exo_id_exo = exo.id_exo
+    WHERE exo_exec.workout_id_workout = ?
+  `;
+
+  con.query(query, [workoutId], (error, results) => {
+    if (error) {
+      console.error("Failed to retrieve exo_exec records: ", error);
+      return res.status(500).send({ message: "An error occurred while fetching exo_exec records" });
+    }
+    res.status(200).json(results);
+  });
+});
+
+async function AddExerciceToWorkout(idWorkout, idExercise){
+  return new Promise((resolve, reject) => {
+    const query = `INSERT INTO exo_exec (workout_id_workout, exo_id_exo) VALUES (?, ?)`;
+    
+    con.query(query, [idWorkout, idExercise], (error, results) => {
+        if (error) {
+            console.error("Failed to insert new exo_exec: ", error);
+            reject(error);
+        } else {
+            console.log("exo_exec created with ID: ", results.insertId);
+            resolve(results.insertId);
+        }
+    });
+});
+}
 
 async function deleteWorkoutTemplate(idWorkout, isReturn) {
   return new Promise((resolve, reject) => {

@@ -268,3 +268,44 @@ async function hashSHA1(inputString){
 
     return hashHex; // This will be a 40-character hexadecimal string
 }
+
+// Fetch workouts for the current user
+// Fetch workouts for the current user
+fetch(`/fetchWorkouts`)
+  .then(response => response.json())
+  .then(data => {
+    if (data && data.workouts && Array.isArray(data.workouts)) {
+      // Process the fetched workouts
+      const exerciceCard = document.querySelector('.exercice-card');
+      if (exerciceCard) {
+        data.workouts.forEach(workout => {
+          // Create a card element for each workout
+          const card = document.createElement('div');
+          card.classList.add('card'); // Add a CSS class to style the card
+          
+          // Create elements for workout details
+          const title = document.createElement('h3');
+          title.textContent = workout.name; // Assuming 'name' is a property of the workout object
+          const description = document.createElement('p');
+          description.textContent = workout.description; // Assuming 'description' is a property of the workout object
+          
+          // Append elements to the card
+          card.appendChild(title);
+          card.appendChild(description);
+          
+          // Append the card to the exercice-card container
+          exerciceCard.appendChild(card);
+        });
+      } else {
+        console.error('Exercice card element not found');
+      }
+    } else {
+      console.log('No workouts found for the user.');
+    }
+  })
+  .catch(error => {
+    console.error('Error fetching workouts:', error);
+  });
+
+
+

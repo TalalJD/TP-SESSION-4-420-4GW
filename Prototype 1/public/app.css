@@ -9,7 +9,7 @@
 }
 
 .hidden {
-    left: -100%; /* Adjust to fully hide it */
+    left: -100%; 
 }
 
 .show {
@@ -142,6 +142,10 @@
     }
 }
 
+.exercice-card .card {
+    position: absolute;
+    left: 200%
+}
 
 .hidden {
     left: -100%;

@@ -720,6 +720,43 @@ function getWorkoutById(workoutId) {
   });
 }
 
+function getAllWorkoutsByUserId(userId) {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM workout WHERE client_id_mongodb = ?';
+    con.query(query, [userId], (error, results) => {
+      if (error) {
+        console.error("Failed to retrieve workouts: ", error);
+        reject(error);
+      } else {
+        console.log("Workouts retrieved: ", results);
+        resolve(results);
+      }
+    });
+  });
+}
+
+// Assuming you're using Express.js
+// Modify your Express.js route to handle fetching workouts for a user by their ID
+app.get('/fetchWorkouts', (req, res) => {
+  const userId = req.session.user._id;
+  // Call the function to fetch workouts by user ID
+  getAllWorkoutsByUserId(userId)
+    .then(workouts => {
+      // Send the fetched workouts back as a response
+      res.json({ workouts: workouts });
+      console.log("Fetched workouts for user:", userId);
+    })
+    .catch(error => {
+      // Handle errors
+      console.error('Failed to fetch workouts:', error);
+      res.status(500).json({ error: 'Failed to fetch workouts' });
+    });
+});
+
+
+
+
+
 app.post('/auth/google', async (req, res) => {
   const { courriel_client, prenom_client, nom_client, mdp_client } = req.body;
 

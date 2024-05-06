@@ -9,7 +9,7 @@
 }
 
 .hidden {
-    left: -100%; /* Adjust to fully hide it */
+    left: -100%; 
 }
 
 .show {
@@ -143,15 +143,7 @@
 }
 
 
-.hidden {
-    left: -100%;
-    /* Cache la page à gauche */
-}
 
-.show {
-    left: 6%;
-    /* Affiche la page à côté de la sidebar */
-}
 
 .card {
     width: 450px;

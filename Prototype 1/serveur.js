@@ -143,12 +143,32 @@ app.get("/Connexion", function (req, res) {
 
 });
 
+app.get("/executeWorkout",async function (req,res){
+  let user = null;
+  let workouts;
+  if (req.session.isLoggedIn){
+    user = req.session.user;
+    workouts = await GetWorkouts(true,user);
+  }
+  res.render("Pages/executionWorkout", {
+
+    siteTitle: "Simple Application",
+
+    pageTitle: "Event List",
+
+    items: [], 
+    user:user,
+    workout:workouts[0],
+  });
+});
+
 app.get("/App", async function (req, res) {
   let user = null;
   let abonnement;
   if (req.session.isLoggedIn) {
     user = req.session.user;
     let workouts = await GetWorkouts(true,user);
+    console.log("First workout found name: ",workouts[0].nom_workout);
     let mongoClient;
     try {
       mongoClient = await connectToMongo();

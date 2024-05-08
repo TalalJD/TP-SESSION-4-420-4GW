@@ -877,6 +877,16 @@ app.get('/affichage_workout', async function(req, res){
   }
 
   const isTemplate = req.query.type === 'template';
+
+  let requeteExo;
+  if(isTemplate){
+    requeteExo = 'SELECT e.nom_exo, e.desc_exo FROM exo_exec ee JOIN exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?'
+  }else{
+    requeteExo = 'SELECT e.nom_exo, e.desc_exo, s.reps, s.rpe FROM exo_exec ee JOIN ' + 
+    'serie s ON ee.id_exo_exec = s.exo_exec_id_exo_exec JOIN ' +
+    'exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?;';
+  }
+  
  
     console.log(user._id);
 
@@ -929,7 +939,7 @@ app.get('/affichage_workout', async function(req, res){
                           } else {
                               exercises.forEach((exercise, exIndex) => {
                                   con.query(
-                                      'SELECT s.*, e.nom_exo, e.desc_exo FROM serie s JOIN exo e ON s.exo_id_exo = e.id_exo  WHERE exo_exec_id_exo_exec = ?',
+                                      requeteExo,
                                       [exercise.id_exo_exec],
                                       (error, series) => {
                                           if (error) {

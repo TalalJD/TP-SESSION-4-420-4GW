@@ -17,6 +17,14 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import paypal from '@paypal/checkout-server-sdk';
 
+import Stripe from 'stripe';
+const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
+
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
+
+
+
 function environment() {
   const clientId = "AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X";
   const clientSecret = "EBNe3MbmLTgNb3xAzkTh0JhgMpeYyGuZRFYzIMlcSOV9xBPdeeWBcV_qYPPU6fm1Gnn7GJUxoyhdfVtJ";
@@ -26,6 +34,8 @@ function environment() {
 function client() {
   return new paypal.core.PayPalHttpClient(environment());
 }
+
+
 
 
 config();
@@ -884,6 +894,10 @@ app.get('/affichage_workout', async function(req, res){
   //const isTemplate = req.query.type === 'template';
   const isTemplate = true;
  
+
+  //const isTemplate = req.query.type === 'template';
+  isTemplate = true;
+
   let requeteExo;
   if(isTemplate){
     requeteExo = 'SELECT e.nom_exo, e.desc_exo FROM exo_exec ee JOIN exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?'
@@ -1180,3 +1194,64 @@ app.post('/process_payment', async (req, res) => {
   }
 });
 
+app.get('/Reset', function(req, res) {
+  res.render('Pages/resetMdp', { 
+    siteTitle: 'Payment Success',
+    pageTitle: 'Reinitialisation',
+    user: req.session.user 
+  });
+});
+
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Exemple avec Gmail, modifiez selon votre fournisseur
+  auth: {
+    user: 'energymize@gmail.com',  // Remplacez par votre email
+    pass: 'admin123)'        // Remplacez par votre mot de passe
+  }
+});
+
+app.post('/submit-reset', async (req, res) => {
+  const { email } = req.body;
+  let client;
+
+  try {
+    client = await connectToMongo();
+    const db = client.db("EnergymizeBD");
+    const users = db.collection("clients");
+
+    const user = await users.findOne({ email });
+    if (!user) {
+      return res.status(404).send("Aucun utilisateur trouvé avec cet e-mail.");
+    }
+
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    const resetPasswordExpires = Date.now() + 3600000; // Le token expire après 1 heure
+
+    await users.updateOne({ email }, {
+      $set: {
+        resetPasswordToken: resetToken,
+        resetPasswordExpires
+      }
+    });
+
+    const resetUrl = `http://127.0.0.1/reset/${resetToken}`;
+
+    const mailOptions = {
+      to: email,
+      from: process.env.EMAIL_USER,
+      subject: 'Réinitialisation du mot de passe',
+      text: `Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien suivant ou copiez-le dans votre navigateur pour procéder à la réinitialisation :\n\n${resetUrl}`
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.send('Un email de réinitialisation a été envoyé à ' + email + '.');
+  } catch (error) {
+    console.error('Erreur lors de l\'opération:', error);
+    res.status(500).send('Erreur lors de l\'envoi de l\'email ou de la connexion à la base de données.');
+  } finally {
+    if (client) {
+      await client.close();
+    }
+  }
+});

@@ -142,7 +142,6 @@ app.get("/Connexion", function (req, res) {
 app.get("/App", async function (req, res) {
   let user = null;
   let abonnement;
-  
   if (req.session.isLoggedIn) {
     user = req.session.user;
     let workouts = await GetWorkouts(true,user);
@@ -803,21 +802,33 @@ app.post('/auth/google', async (req, res) => {
 
 function GetWorkouts(isTemplate, user){
   return new Promise((resolve, reject)=>{
+    let requeteExo;
+  if(isTemplate){
+    requeteExo = 'SELECT e.nom_exo, e.desc_exo FROM exo_exec ee JOIN exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?'
+  }else{
+    requeteExo = 'SELECT e.nom_exo, e.desc_exo, s.reps, s.rpe FROM exo_exec ee JOIN ' +
+    'serie s ON ee.id_exo_exec = s.exo_exec_id_exo_exec JOIN ' +
+    'exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?;';
+  }
+ 
+ 
+    console.log(user._id);
+ 
     con.query(
-      'SELECT id_workout, nom_workout, desc_workout, client_id_mongodb, ' + 
-      'SEC_TO_TIME(dureeSeconde_workout) AS dureeSeconde_workout, IsTemplate_workout,' + 
-      'DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? ' + 
+      'SELECT id_workout, nom_workout, desc_workout, client_id_mongodb, ' +
+      'SEC_TO_TIME(dureeSeconde_workout) AS dureeSeconde_workout, IsTemplate_workout,' +
+      'DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? ' +
       ' AND IsTemplate_workout=?',
       [user._id, isTemplate],
       (error, workouts) => {
           if (error) {
-            reject(error);
+              reject(error);
           }
-  
+ 
           let completedWorkouts = 0;
-  
+ 
           if (workouts.length === 0) {
-            resolve([]);
+              resolve([]);
           } else {
               workouts.forEach((workout, index) => {
                   con.query(
@@ -825,13 +836,13 @@ function GetWorkouts(isTemplate, user){
                       [workout.id_workout],
                       (error, exercises) => {
                           if (error) {
-                            reject(error);
+                              reject(error);
                           }
-  
+ 
                           workouts[index].exercises = exercises;
-  
+ 
                           let completedExercises = 0;
-  
+ 
                           if (exercises.length === 0) {
                               completedWorkouts++;
                               if (completedWorkouts === workouts.length) {
@@ -840,16 +851,16 @@ function GetWorkouts(isTemplate, user){
                           } else {
                               exercises.forEach((exercise, exIndex) => {
                                   con.query(
-                                      'SELECT s.*, e.nom_exo, e.desc_exo FROM serie s JOIN exo e ON s.exo_id_exo = e.id_exo  WHERE exo_exec_id_exo_exec = ?',
+                                      requeteExo,
                                       [exercise.id_exo_exec],
                                       (error, series) => {
                                           if (error) {
                                             reject(error);
                                           }
-  
+ 
                                           workouts[index].exercises[exIndex].series = series;
                                           completedExercises++;
-  
+ 
                                           if (completedExercises === exercises.length) {
                                               completedWorkouts++;
                                               if (completedWorkouts === workouts.length) {
@@ -875,25 +886,26 @@ app.get('/affichage_workout', async function(req, res){
   if (req.session.isLoggedIn) {
     user = req.session.user;
   }
-
-  const isTemplate = req.query.type === 'template';
-
+ 
+  //const isTemplate = req.query.type === 'template';
+  const isTemplate = true;
+ 
   let requeteExo;
   if(isTemplate){
     requeteExo = 'SELECT e.nom_exo, e.desc_exo FROM exo_exec ee JOIN exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?'
   }else{
-    requeteExo = 'SELECT e.nom_exo, e.desc_exo, s.reps, s.rpe FROM exo_exec ee JOIN ' + 
+    requeteExo = 'SELECT e.nom_exo, e.desc_exo, s.reps, s.rpe FROM exo_exec ee JOIN ' +
     'serie s ON ee.id_exo_exec = s.exo_exec_id_exo_exec JOIN ' +
     'exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?;';
   }
-  
+ 
  
     console.log(user._id);
-
+ 
     con.query(
-      'SELECT id_workout, nom_workout, desc_workout, client_id_mongodb, ' + 
-      'SEC_TO_TIME(dureeSeconde_workout) AS dureeSeconde_workout, IsTemplate_workout,' + 
-      'DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? ' + 
+      'SELECT id_workout, nom_workout, desc_workout, client_id_mongodb, ' +
+      'SEC_TO_TIME(dureeSeconde_workout) AS dureeSeconde_workout, IsTemplate_workout,' +
+      'DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? ' +
       ' AND IsTemplate_workout=?',
       [user._id, isTemplate],
       (error, workouts) => {
@@ -901,9 +913,9 @@ app.get('/affichage_workout', async function(req, res){
               console.error('Error fetching workouts:', error);
               return res.status(500).send('Server Error');
           }
-  
+ 
           let completedWorkouts = 0;
-  
+ 
           if (workouts.length === 0) {
               res.render("Pages/affichage_workout", {
                   siteTitle: "Simple Application",
@@ -921,11 +933,11 @@ app.get('/affichage_workout', async function(req, res){
                               console.error('Error fetching exercises:', error);
                               return res.status(500).send('Server Error');
                           }
-  
+ 
                           workouts[index].exercises = exercises;
-  
+ 
                           let completedExercises = 0;
-  
+ 
                           if (exercises.length === 0) {
                               completedWorkouts++;
                               if (completedWorkouts === workouts.length) {
@@ -946,10 +958,10 @@ app.get('/affichage_workout', async function(req, res){
                                               console.error('Error fetching series:', error);
                                               return res.status(500).send('Server Error');
                                           }
-  
+ 
                                           workouts[index].exercises[exIndex].series = series;
                                           completedExercises++;
-  
+ 
                                           if (completedExercises === exercises.length) {
                                               completedWorkouts++;
                                               if (completedWorkouts === workouts.length) {

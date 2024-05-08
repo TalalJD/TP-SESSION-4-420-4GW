@@ -472,6 +472,30 @@ app.post('/createEmptyWorkout', async(req,res)=>{
     res.status(500).send('Error creating workout');
   }
 });
+app.post('/confirmWorkoutTemplate',async (req,res)=>{
+  const workoutID = req.session.currentWorkoutTemplateCreation;
+  const {title} = req.body;
+  const {description} = req.body;
+  try {
+    let results = await updateWorkout(workoutID, title,description);
+    req.session.currentWorkoutTemplateCreation = null;
+    res.send('Workout confirmed successfully');
+  } catch (error){
+    console.error("Failed to confirm workout: ", error);
+  }
+});
+function updateWorkout(id, newName, newDesc){
+  const query = `UPDATE workout SET nom_workout = ?, desc_workout = ? WHERE id_workout = ?`;
+  return new Promise((resolve,reject)=>{
+    con.query(query, [newName,newDesc,id], (error,results,fields) => {
+      if (error){
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
 
 app.post('/deleteEmptyWorkout', async(req,res)=>{
   if (req.session.currentWorkoutTemplateCreation==-1){

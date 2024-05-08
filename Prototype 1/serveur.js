@@ -1032,3 +1032,10 @@ app.post('/process_payment', async (req, res) => {
   }
 });
 
+app.get('/Reset', function(req, res) {
+  res.render('Pages/resetMdp', { 
+    siteTitle: 'Payment Success',
+    pageTitle: 'Reinitialisation',
+    user: req.session.user 
+  });
+});

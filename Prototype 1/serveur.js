@@ -13,26 +13,19 @@ import dateFormat from "dateformat";
 import bodyParser from "body-parser";
 import { config } from 'dotenv';
 import { MongoClient } from 'mongodb';
-import paypal from '@paypal/checkout-server-sdk';
 import bcrypt from 'bcrypt';
-
-import Stripe from 'stripe';
-const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
-
-import crypto from 'crypto';
-
-
+import dotenv from 'dotenv';
+import paypal from '@paypal/checkout-server-sdk';
 
 function environment() {
-  let clientId = "AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X";
-  let clientSecret = "EBNe3MbmLTgNb3xAzkTh0JhgMpeYyGuZRFYzIMlcSOV9xBPdeeWBcV_qYPPU6fm1Gnn7GJUxoyhdfVtJ";
-  return new SandboxEnvironment(clientId, clientSecret);
+  const clientId = "AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X";
+  const clientSecret = "EBNe3MbmLTgNb3xAzkTh0JhgMpeYyGuZRFYzIMlcSOV9xBPdeeWBcV_qYPPU6fm1Gnn7GJUxoyhdfVtJ";
+  return new paypal.core.SandboxEnvironment(clientId, clientSecret);
 }
 
 function client() {
-  return new PayPalHttpClient(environment());
+  return new paypal.core.PayPalHttpClient(environment());
 }
-
 
 
 config();
@@ -41,7 +34,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uri = process.env.DB_URI;
 app.use(session({
-  secret: 'your_secret_key', 
+  secret: 'EBNe3MbmLTgNb3xAzkTh0JhgMpeYyGuZRFYzIMlcSOV9xBPdeeWBcV_qYPPU6fm1Gnn7GJUxoyhdfVtJ', 
   saveUninitialized: true,
   cookie: { secure: false, maxAge: 3600000 } 
 }));
@@ -80,6 +73,7 @@ export async function FindAbonnement(collection, findParam){
   return collection.find({id_Abonnement : findParam}).toArray();
 }
 import { ObjectId } from 'mongodb';
+import { debug } from "console";
 
 export async function UpdateClientById(collection, clientId, updatedFields){
   await collection.updateMany({_id: new ObjectId(clientId)}, {$set: updatedFields});
@@ -917,59 +911,98 @@ app.get('/failure-page', (req, res) => {
     user: req.session.user 
   });
 });
+
+async function createOrder(amount) {
+  const request = new paypal.orders.OrdersCreateRequest();
+  request.prefer("return=representation");
+  request.requestBody({
+      intent: 'CAPTURE',
+      purchase_units: [{
+          amount: {
+              currency_code: 'USD',
+              value: amount
+          }
+      }]
+  });
+  try {
+      const response = await client().execute(request);
+      return response.result.id; // Renvoie l'ID de l'ordre pour le capturer plus tard
+  } catch (err) {
+      console.error(err);
+      return null;
+  }
+}
+
+// Fonction pour capturer un ordre
+async function captureOrder(orderId) {
+  const request = new paypal.orders.OrdersCaptureRequest(orderId);
+  request.requestBody({});
+  try {
+      const capture = await client().execute(request);
+      const captureId = capture.result.purchase_units[0].payments.captures[0].id;
+      console.log('Capture ID:', captureId);
+      return captureId; // ID de la capture, indique que le paiement a été réussi
+  } catch (err) {
+      console.error(err);
+      return null;
+  }
+}
 app.post('/paypal-transaction-complete', async (req, res) => {
   const { orderID, planId } = req.body;
-  let mongoClient;
+  const paypalClient = client();
+  const request = new paypal.orders.OrdersGetRequest(orderID);
 
   try {
-    let request = new paypal.orders.OrdersGetRequest(orderID);
-    const response = await client().execute(request);
-    const { result } = response;
+      const response = await paypalClient.execute(request);
+      const { result } = response;
+      console.log("resultat du payment : ",result.status);
+      if (result.status == 'COMPLETED') {
+        console.log("Rentrer dans zone complete");
+          // Connect to MongoDB using the MongoDB connection string
+          const mongoClient = await MongoClient.connect(process.env.DB_URI);
+          const db = mongoClient.db("energymizeBD");
+          const clientsCollection = db.collection("clients");
 
-    if (result.status === 'COMPLETED') {
-      mongoClient = await connectToMongo();
-      const db = mongoClient.db("EnergymizeBD");
-      const clientsCollection = db.collection("clients");
+          let generationsRestantes;
+          switch (parseInt(planId)) {
+              case 1:
+                  generationsRestantes = 3;
+                  break;
+              case 2:
+                  generationsRestantes = 10;
+                  break;
+              case 3:
+                  generationsRestantes = -1; // Unlimited
+                  break;
+              default:
+                  generationsRestantes = 0;
+          }
 
-      let generationsRestantes = 0;
-      switch (parseInt(planId)) {
-        case 1: 
-          generationsRestantes = 3;
-          break;
-        case 2: 
-          generationsRestantes = 10;
-          break;
-        case 3: 
-          generationsRestantes = -1; 
-          break;
-        default:
-          generationsRestantes = 0;
+          await clientsCollection.updateOne(
+              { _id: new ObjectId(req.session.user._id) },
+              {
+                  $set: {
+                      idAbonnement: parseInt(planId),
+                      gens: generationsRestantes
+                  }
+              }
+          );
+
+          await mongoClient.close();
+          res.redirect('/success-page');
+      } else {
+          res.redirect('/failure-page');
       }
-
-      await clientsCollection.updateOne(
-        { _id: new ObjectId(req.session.user._id) },
-        { 
-          $set: { 
-            idAbonnement: parseInt(planId),
-            gens: generationsRestantes
-          } 
-        }
-      );
-      
-      req.session.user.idAbonnement = parseInt(planId);
-      req.session.user.gens = generationsRestantes;
-      res.redirect('/success-page');
-    } else {
-      res.redirect('/failure-page');
-    }
   } catch (error) {
-    console.error('Erreur lors de la vérification du paiement PayPal:', error);
-    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
-  } finally {
-    if (mongoClient) {
-      await mongoClient.close();
-    }
+      console.error('Error during PayPal transaction verification:', error);
+      res.status(500).json({ success: false, message: "Internal server error during transaction verification." });
   }
+});
+
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 
 
@@ -1032,10 +1065,3 @@ app.post('/process_payment', async (req, res) => {
   }
 });
 
-app.get('/Reset', function(req, res) {
-  res.render('Pages/resetMdp', { 
-    siteTitle: 'Payment Success',
-    pageTitle: 'Reinitialisation',
-    user: req.session.user 
-  });
-});

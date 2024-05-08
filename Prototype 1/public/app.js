@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     confirmWorkoutButton.addEventListener("click", function(){
+        confirmWorkoutCreation();
         choisirEntrainement.classList.remove('show');
         choisirEntrainement.classList.add('hidden');
         exerciceCard.classList.add("show");
@@ -163,7 +164,25 @@ function returnFromWorkoutCreation(workoutData){
     })
     .catch((error) => console.error('Error:', error));
 }
-
+function confirmWorkoutCreation(){
+    const workoutTitle = document.getElementById("titleWorkout").value;
+    const workoutDescription = document.getElementById("descWorkout").value;
+    const requestBody = {
+        title: workoutTitle,
+        description: workoutDescription
+    };
+    fetch('confirmWorkoutTemplate',{
+        method: 'POST',
+        headers: {
+            'Content-Type':'application/json',
+        },
+        body: JSON.stringify(requestBody)
+    }).then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => console.error('Error:', error));
+}
 
 // PAGE RECHERCHE
 

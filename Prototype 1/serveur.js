@@ -138,6 +138,7 @@ app.get("/App", async function (req, res) {
   let abonnement;
   if (req.session.isLoggedIn) {
     user = req.session.user;
+    let workouts = await GetWorkouts(true,user);
     let mongoClient;
     try {
       mongoClient = await connectToMongo();
@@ -157,6 +158,7 @@ app.get("/App", async function (req, res) {
   
       items: [], 
       user:user,
+      workouts:workouts,
       abonnement:abonnement[0]
     });
   } else {
@@ -466,6 +468,30 @@ app.post('/createEmptyWorkout', async(req,res)=>{
     res.status(500).send('Error creating workout');
   }
 });
+app.post('/confirmWorkoutTemplate',async (req,res)=>{
+  const workoutID = req.session.currentWorkoutTemplateCreation;
+  const {title} = req.body;
+  const {description} = req.body;
+  try {
+    let results = await updateWorkout(workoutID, title,description);
+    req.session.currentWorkoutTemplateCreation = null;
+    res.send('Workout confirmed successfully');
+  } catch (error){
+    console.error("Failed to confirm workout: ", error);
+  }
+});
+function updateWorkout(id, newName, newDesc){
+  const query = `UPDATE workout SET nom_workout = ?, desc_workout = ? WHERE id_workout = ?`;
+  return new Promise((resolve,reject)=>{
+    con.query(query, [newName,newDesc,id], (error,results,fields) => {
+      if (error){
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
 
 app.post('/deleteEmptyWorkout', async(req,res)=>{
   if (req.session.currentWorkoutTemplateCreation==-1){
@@ -768,7 +794,85 @@ app.post('/auth/google', async (req, res) => {
     }
 });
 
-
+function GetWorkouts(isTemplate, user){
+  return new Promise((resolve, reject)=>{
+    let requeteExo;
+  if(isTemplate){
+    requeteExo = 'SELECT e.nom_exo, e.desc_exo FROM exo_exec ee JOIN exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?'
+  }else{
+    requeteExo = 'SELECT e.nom_exo, e.desc_exo, s.reps, s.rpe FROM exo_exec ee JOIN ' +
+    'serie s ON ee.id_exo_exec = s.exo_exec_id_exo_exec JOIN ' +
+    'exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?;';
+  }
+ 
+ 
+    console.log(user._id);
+ 
+    con.query(
+      'SELECT id_workout, nom_workout, desc_workout, client_id_mongodb, ' +
+      'SEC_TO_TIME(dureeSeconde_workout) AS dureeSeconde_workout, IsTemplate_workout,' +
+      'DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? ' +
+      ' AND IsTemplate_workout=?',
+      [user._id, isTemplate],
+      (error, workouts) => {
+          if (error) {
+              reject(error);
+          }
+ 
+          let completedWorkouts = 0;
+ 
+          if (workouts.length === 0) {
+              resolve([]);
+          } else {
+              workouts.forEach((workout, index) => {
+                  con.query(
+                      'SELECT * FROM exo_exec WHERE workout_id_workout = ?',
+                      [workout.id_workout],
+                      (error, exercises) => {
+                          if (error) {
+                              reject(error);
+                          }
+ 
+                          workouts[index].exercises = exercises;
+ 
+                          let completedExercises = 0;
+ 
+                          if (exercises.length === 0) {
+                              completedWorkouts++;
+                              if (completedWorkouts === workouts.length) {
+                                resolve(workouts);
+                              }
+                          } else {
+                              exercises.forEach((exercise, exIndex) => {
+                                  con.query(
+                                      requeteExo,
+                                      [exercise.id_exo_exec],
+                                      (error, series) => {
+                                          if (error) {
+                                            reject(error);
+                                          }
+ 
+                                          workouts[index].exercises[exIndex].series = series;
+                                          completedExercises++;
+ 
+                                          if (completedExercises === exercises.length) {
+                                              completedWorkouts++;
+                                              if (completedWorkouts === workouts.length) {
+                                                resolve(workouts);
+                                              }
+                                          }
+                                      }
+                                  );
+                              });
+                          }
+                      }
+                  );
+              });
+          }
+      }
+  );
+  });
+}
 
 app.get('/affichage_workout', async function(req, res){
  
@@ -776,15 +880,26 @@ app.get('/affichage_workout', async function(req, res){
   if (req.session.isLoggedIn) {
     user = req.session.user;
   }
-
-  const isTemplate = req.query.type === 'template';
+ 
+  //const isTemplate = req.query.type === 'template';
+  const isTemplate = true;
+ 
+  let requeteExo;
+  if(isTemplate){
+    requeteExo = 'SELECT e.nom_exo, e.desc_exo FROM exo_exec ee JOIN exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?'
+  }else{
+    requeteExo = 'SELECT e.nom_exo, e.desc_exo, s.reps, s.rpe FROM exo_exec ee JOIN ' +
+    'serie s ON ee.id_exo_exec = s.exo_exec_id_exo_exec JOIN ' +
+    'exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?;';
+  }
+ 
  
     console.log(user._id);
-
+ 
     con.query(
-      'SELECT id_workout, nom_workout, desc_workout, client_id_mongodb, ' + 
-      'SEC_TO_TIME(dureeSeconde_workout) AS dureeSeconde_workout, IsTemplate_workout,' + 
-      'DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? ' + 
+      'SELECT id_workout, nom_workout, desc_workout, client_id_mongodb, ' +
+      'SEC_TO_TIME(dureeSeconde_workout) AS dureeSeconde_workout, IsTemplate_workout,' +
+      'DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? ' +
       ' AND IsTemplate_workout=?',
       [user._id, isTemplate],
       (error, workouts) => {
@@ -792,9 +907,9 @@ app.get('/affichage_workout', async function(req, res){
               console.error('Error fetching workouts:', error);
               return res.status(500).send('Server Error');
           }
-  
+ 
           let completedWorkouts = 0;
-  
+ 
           if (workouts.length === 0) {
               res.render("Pages/affichage_workout", {
                   siteTitle: "Simple Application",
@@ -812,11 +927,11 @@ app.get('/affichage_workout', async function(req, res){
                               console.error('Error fetching exercises:', error);
                               return res.status(500).send('Server Error');
                           }
-  
+ 
                           workouts[index].exercises = exercises;
-  
+ 
                           let completedExercises = 0;
-  
+ 
                           if (exercises.length === 0) {
                               completedWorkouts++;
                               if (completedWorkouts === workouts.length) {
@@ -830,17 +945,17 @@ app.get('/affichage_workout', async function(req, res){
                           } else {
                               exercises.forEach((exercise, exIndex) => {
                                   con.query(
-                                      'SELECT s.*, e.nom_exo, e.desc_exo FROM serie s JOIN exo e ON s.exo_id_exo = e.id_exo  WHERE exo_exec_id_exo_exec = ?',
+                                      requeteExo,
                                       [exercise.id_exo_exec],
                                       (error, series) => {
                                           if (error) {
                                               console.error('Error fetching series:', error);
                                               return res.status(500).send('Server Error');
                                           }
-  
+ 
                                           workouts[index].exercises[exIndex].series = series;
                                           completedExercises++;
-  
+ 
                                           if (completedExercises === exercises.length) {
                                               completedWorkouts++;
                                               if (completedWorkouts === workouts.length) {

@@ -477,7 +477,175 @@
         </div>
     </div>
 
-    <div><%include("affichage_workout.ejs")%></div>
+    <div class="affichage hidden">
+       
+         
+          <style>
+            body {
+              height: 100%;
+              overflow-y: scroll;
+              margin: 0;
+              padding: 0;
+            }
+         
+            .carde {
+              position: relative;
+              background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/imgs/Chris-Bumstead-Bio.jpeg');
+              background-size: cover;
+              background-position: center;
+              padding: 20px;
+              border-radius: 8px;
+              margin: 5vh auto;
+              box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+              width: 450px;
+              height: 80vh;
+              overflow-y: auto;
+              border-top: 0.5px solid #D5C069;
+            }
+         
+           
+            .card-content {
+              position: relative;
+              z-index: 1;
+            }
+         
+            .exercise {
+              background: rgba(255, 255, 255, 0.2);
+              margin-top: 10px;
+              padding: 10px;
+              border-radius: 5px;
+              border-left: 5px solid #D5C069;
+              cursor: pointer;
+            }
+         
+            .workout-list,
+            #workout-list {
+                
+              color: white;
+            }
+         
+            .lesBoutons {
+              display: flex;
+              flex-direction: row;
+              justify-content: center;
+              margin-top: 20px;
+            }
+         
+            button {
+              background-color: #D5C069;
+              color: black;
+              border: none;
+              padding: 10px 20px;
+              margin: 0 10px;
+              border-radius: 5px;
+              cursor: pointer;
+              transition: 0.5s;
+            }
+         
+            button:hover {
+              background-color: #555;
+           
+            }
+         
+            h1 {
+              text-align: center;
+              padding: 20px 0;
+            }
+         
+            .tempsHeure{
+              display: flex;
+              justify-content: space-between;
+            }
+         
+            .titre{
+              color: #D5C069;
+              font-family: 'Courier New', Courier, monospace;
+            }
+         
+            .description{
+              font-style: italic;
+              text-align: center;
+              font-size: small;
+            }
+         
+            .description-panel {
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 10px;
+          border-radius: 5px;
+          margin-top: 5px;
+        }
+
+        .scrollable-workout-list {
+  overflow-x: auto;
+  white-space: nowrap;
+  
+}
+
+
+         
+          </style>
+         
+           
+         <div class="scrollable-workout-list" id="scrollableWorkoutList"></div>
+            <div id="workout-list">
+              <% if (workouts.length > 0) { %>
+                  <% workouts.forEach(function(workout) { %>
+                      <div class="carde">
+                          <div class="card-content">
+                              <h2 class="titre"><%= workout.nom_workout %></h2>
+                              <p class="description"><%= workout.desc_workout %></p>
+         
+                              <% if (!workout.IsTemplate_workout) { %>
+                                  <div class="tempsHeure">
+                                      <p><%= workout.dureeSeconde_workout %></p>
+                                      <p><%= workout.date_workout %></p>
+                                  </div>
+                              <% } %>
+         
+                              <% if (workout.exercises && workout.exercises.length > 0) { %>
+                                  <% workout.exercises.forEach(function(exercise) { %>
+                                      <div class="exercise">
+                                          <% if (exercise.series && exercise.series.length > 0) { %>
+                                              <% exercise.series.forEach(function(serie) { %>
+                                                  <% if (workout.IsTemplate_workout) { %>
+                                                      <!-- Display for templates without series details -->
+                                                      <h3><%= serie.nom_exo %></h3>
+                                                      <div class="description-panel">
+                                                          <p class="description"><%= serie.desc_exo %></p>
+                                                      </div>
+                                                  <% } else { %>
+                                                      <!-- Display for normal workouts with series details -->
+                                                      <h3><%= serie.nom_exo %></h3>
+                                                      <p><%= serie.reps %> repetitions, RPE: <%= serie.rpe %></p>
+                                                      <div class="description-panel" style="display: none;">
+                                                          <p class="description"><%= serie.desc_exo %></p>
+                                                      </div>
+                                                  <% } %>
+                                              <% }); %>
+                                          <% } else { %>
+                                              <p>No series found for this exercise.</p>
+                                          <% } %>
+                                      </div>
+                                  <% }); %>
+                              <% } else { %>
+                                  <p>No exercises found for this workout.</p>
+                              <% } %>
+                          </div>
+                      </div>
+                  <% }); %>
+              <% } else { %>
+                  <p>No workouts found.</p>
+              <% } %>
+          </div>
+         </div>
+           
+           
+         
+         
+         
+         
+        </div>
 
 
 

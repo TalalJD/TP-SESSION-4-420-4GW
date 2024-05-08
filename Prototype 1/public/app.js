@@ -12,6 +12,7 @@ var ChercherExercice = document.querySelector(".Chercher-Exercice");
 var searchButtonMuscle = document.getElementById('searchButtonMuscle'); // Add ID to your button
 var searchButtonName = document.getElementById('searchButtonName');
 var allCurrentExercises = document.getElementById("allExercicesInTemplate");
+var affichage = document.querySelector('.affichage');
 function hideAllExcept(element) {
     if (element === profileIcon) {
         profilePage.classList.add("show");
@@ -22,6 +23,8 @@ function hideAllExcept(element) {
         choisirEntrainement.classList.add("hidden");
         ChercherExercice.classList.remove("show");
         ChercherExercice.classList.add("hidden");
+        affichage.classList.remove("show");
+        affichage.classList.add("hidden");
     } else if (element === plusIcon) {
         exerciceCard.classList.add("show");
         exerciceCard.classList.remove("hidden");
@@ -40,6 +43,8 @@ function hideAllExcept(element) {
         profilePage.classList.add("hidden");
         ChercherExercice.classList.remove("show");
         ChercherExercice.classList.add("hidden");
+        affichage.classList.remove("show");
+        affichage.classList.add("hide");
     }
     document.body.style.overflow = "hidden";
 }
@@ -57,12 +62,16 @@ document.addEventListener("DOMContentLoaded", function() {
     plusIcon.addEventListener("click", function() {
         if (!exerciceCard.classList.contains("show")) {
             hideAllExcept(plusIcon);
+            affichage.classList.remove("hidden");
+            affichage.classList.add("show");
             console.log("Opened PlusIcon1");
         } else {
             exerciceCard.classList.remove("show");
             exerciceCard.classList.add("hidden");
+            affichage.classList.remove("show");
+            affichage.classList.add("hidden");
             document.body.style.overflow = "auto";
-            console.log("Opened PlusIcon2");
+            console.log("closed PlusIcon2");
         }
     });
 
@@ -83,6 +92,8 @@ document.addEventListener("DOMContentLoaded", function() {
         returnFromWorkoutCreation(null);
         choisirEntrainement.classList.remove('show');
         choisirEntrainement.classList.add('hidden');
+        affichage.classList.remove("hidden");
+        affichage.classList.add("show");
         exerciceCard.classList.add("show");
     });
 
@@ -90,6 +101,8 @@ document.addEventListener("DOMContentLoaded", function() {
         confirmWorkoutCreation();
         choisirEntrainement.classList.remove('show');
         choisirEntrainement.classList.add('hidden');
+        affichage.classList.remove("hidden");
+        affichage.classList.add("show");
         exerciceCard.classList.add("show");
     });
 
@@ -295,43 +308,20 @@ async function hashSHA1(inputString){
     return hashHex; // This will be a 40-character hexadecimal string
 }
 
-// Fetch workouts for the current user
-// Fetch workouts for the current user
-fetch(`/fetchWorkouts`)
-  .then(response => response.json())
-  .then(data => {
-    if (data && data.workouts && Array.isArray(data.workouts)) {
-      // Process the fetched workouts
-      const exerciceCard = document.querySelector('.exercice-card');
-      if (exerciceCard) {
-        data.workouts.forEach(workout => {
-          // Create a card element for each workout
-          const card = document.createElement('div');
-          card.classList.add('card'); // Add a CSS class to style the card
-          
-          // Create elements for workout details
-          const title = document.createElement('h3');
-          title.textContent = workout.name; // Assuming 'name' is a property of the workout object
-          const description = document.createElement('p');
-          description.textContent = workout.description; // Assuming 'description' is a property of the workout object
-          
-          // Append elements to the card
-          card.appendChild(title);
-          card.appendChild(description);
-          
-          // Append the card to the exercice-card container
-          exerciceCard.appendChild(card);
+document.addEventListener('DOMContentLoaded', function() {
+    var exercises = document.querySelectorAll('.exercise');
+    exercises.forEach(function(exercise) {
+        var descriptionPanel = exercise.querySelector('.description-panel');
+        descriptionPanel.style.display = 'none'; // Hide description panel initially
+        exercise.addEventListener('click', function() {
+            if (descriptionPanel.style.display === 'none') {
+                descriptionPanel.style.display = 'block';
+            } else {
+                descriptionPanel.style.display = 'none';
+            }
         });
-      } else {
-        console.error('Exercice card element not found');
-      }
-    } else {
-      console.log('No workouts found for the user.');
-    }
-  })
-  .catch(error => {
-    console.error('Error fetching workouts:', error);
-  });
+    });
+});
 
 
 

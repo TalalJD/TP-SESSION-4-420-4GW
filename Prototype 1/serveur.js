@@ -142,9 +142,10 @@ app.get("/Connexion", function (req, res) {
 app.get("/App", async function (req, res) {
   let user = null;
   let abonnement;
-  let workouts = await GetWorkouts(true, user);
+  
   if (req.session.isLoggedIn) {
     user = req.session.user;
+    let workouts = await GetWorkouts(true,user);
     let mongoClient;
     try {
       mongoClient = await connectToMongo();

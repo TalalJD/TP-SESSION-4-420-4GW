@@ -142,7 +142,7 @@ app.get("/Connexion", function (req, res) {
 app.get("/App", async function (req, res) {
   let user = null;
   let abonnement;
-  let workouts = await GetWorkouts(true);
+  let workouts = await GetWorkouts(true, user);
   if (req.session.isLoggedIn) {
     user = req.session.user;
     let mongoClient;
@@ -800,8 +800,7 @@ app.post('/auth/google', async (req, res) => {
     }
 });
 
-function GetWorkouts(isTemplate){
-  let user = req.session.user;
+function GetWorkouts(isTemplate, user){
   return new Promise((resolve, reject)=>{
     con.query(
       'SELECT id_workout, nom_workout, desc_workout, client_id_mongodb, ' + 

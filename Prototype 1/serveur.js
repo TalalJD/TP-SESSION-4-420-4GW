@@ -13,25 +13,28 @@ import dateFormat from "dateformat";
 import bodyParser from "body-parser";
 import { config } from 'dotenv';
 import { MongoClient } from 'mongodb';
-import paypal from '@paypal/checkout-server-sdk';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+import paypal from '@paypal/checkout-server-sdk';
 
 import Stripe from 'stripe';
 const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
 
 import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 
 
 
 function environment() {
-  let clientId = "AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X";
-  let clientSecret = "EBNe3MbmLTgNb3xAzkTh0JhgMpeYyGuZRFYzIMlcSOV9xBPdeeWBcV_qYPPU6fm1Gnn7GJUxoyhdfVtJ";
-  return new SandboxEnvironment(clientId, clientSecret);
+  const clientId = "AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X";
+  const clientSecret = "EBNe3MbmLTgNb3xAzkTh0JhgMpeYyGuZRFYzIMlcSOV9xBPdeeWBcV_qYPPU6fm1Gnn7GJUxoyhdfVtJ";
+  return new paypal.core.SandboxEnvironment(clientId, clientSecret);
 }
 
 function client() {
-  return new PayPalHttpClient(environment());
+  return new paypal.core.PayPalHttpClient(environment());
 }
+
 
 
 
@@ -41,7 +44,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uri = process.env.DB_URI;
 app.use(session({
-  secret: 'your_secret_key', 
+  secret: 'EBNe3MbmLTgNb3xAzkTh0JhgMpeYyGuZRFYzIMlcSOV9xBPdeeWBcV_qYPPU6fm1Gnn7GJUxoyhdfVtJ', 
   saveUninitialized: true,
   cookie: { secure: false, maxAge: 3600000 } 
 }));
@@ -80,6 +83,7 @@ export async function FindAbonnement(collection, findParam){
   return collection.find({id_Abonnement : findParam}).toArray();
 }
 import { ObjectId } from 'mongodb';
+import { debug } from "console";
 
 export async function UpdateClientById(collection, clientId, updatedFields){
   await collection.updateMany({_id: new ObjectId(clientId)}, {$set: updatedFields});
@@ -139,12 +143,32 @@ app.get("/Connexion", function (req, res) {
 
 });
 
+app.get("/executeWorkout",async function (req,res){
+  let user = null;
+  let workouts;
+  if (req.session.isLoggedIn){
+    user = req.session.user;
+    workouts = await GetWorkouts(true,user);
+  }
+  res.render("Pages/executionWorkout", {
+
+    siteTitle: "Simple Application",
+
+    pageTitle: "Event List",
+
+    items: [], 
+    user:user,
+    workout:workouts[0],
+  });
+});
+
 app.get("/App", async function (req, res) {
   let user = null;
   let abonnement;
   if (req.session.isLoggedIn) {
     user = req.session.user;
     let workouts = await GetWorkouts(true,user);
+    console.log("First workout found name: ",workouts[0].nom_workout);
     let mongoClient;
     try {
       mongoClient = await connectToMongo();
@@ -890,6 +914,10 @@ app.get('/affichage_workout', async function(req, res){
   //const isTemplate = req.query.type === 'template';
   const isTemplate = true;
  
+
+  //const isTemplate = req.query.type === 'template';
+  isTemplate = true;
+
   let requeteExo;
   if(isTemplate){
     requeteExo = 'SELECT e.nom_exo, e.desc_exo FROM exo_exec ee JOIN exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?'
@@ -1032,59 +1060,98 @@ app.get('/failure-page', (req, res) => {
     user: req.session.user 
   });
 });
+
+async function createOrder(amount) {
+  const request = new paypal.orders.OrdersCreateRequest();
+  request.prefer("return=representation");
+  request.requestBody({
+      intent: 'CAPTURE',
+      purchase_units: [{
+          amount: {
+              currency_code: 'USD',
+              value: amount
+          }
+      }]
+  });
+  try {
+      const response = await client().execute(request);
+      return response.result.id; // Renvoie l'ID de l'ordre pour le capturer plus tard
+  } catch (err) {
+      console.error(err);
+      return null;
+  }
+}
+
+// Fonction pour capturer un ordre
+async function captureOrder(orderId) {
+  const request = new paypal.orders.OrdersCaptureRequest(orderId);
+  request.requestBody({});
+  try {
+      const capture = await client().execute(request);
+      const captureId = capture.result.purchase_units[0].payments.captures[0].id;
+      console.log('Capture ID:', captureId);
+      return captureId; // ID de la capture, indique que le paiement a été réussi
+  } catch (err) {
+      console.error(err);
+      return null;
+  }
+}
 app.post('/paypal-transaction-complete', async (req, res) => {
   const { orderID, planId } = req.body;
-  let mongoClient;
+  const paypalClient = client();
+  const request = new paypal.orders.OrdersGetRequest(orderID);
 
   try {
-    let request = new paypal.orders.OrdersGetRequest(orderID);
-    const response = await client().execute(request);
-    const { result } = response;
+      const response = await paypalClient.execute(request);
+      const { result } = response;
+      console.log("resultat du payment : ",result.status);
+      if (result.status == 'COMPLETED') {
+        console.log("Rentrer dans zone complete");
+          // Connect to MongoDB using the MongoDB connection string
+          const mongoClient = await MongoClient.connect(process.env.DB_URI);
+          const db = mongoClient.db("energymizeBD");
+          const clientsCollection = db.collection("clients");
 
-    if (result.status === 'COMPLETED') {
-      mongoClient = await connectToMongo();
-      const db = mongoClient.db("EnergymizeBD");
-      const clientsCollection = db.collection("clients");
+          let generationsRestantes;
+          switch (parseInt(planId)) {
+              case 1:
+                  generationsRestantes = 3;
+                  break;
+              case 2:
+                  generationsRestantes = 10;
+                  break;
+              case 3:
+                  generationsRestantes = -1; // Unlimited
+                  break;
+              default:
+                  generationsRestantes = 0;
+          }
 
-      let generationsRestantes = 0;
-      switch (parseInt(planId)) {
-        case 1: 
-          generationsRestantes = 3;
-          break;
-        case 2: 
-          generationsRestantes = 10;
-          break;
-        case 3: 
-          generationsRestantes = -1; 
-          break;
-        default:
-          generationsRestantes = 0;
+          await clientsCollection.updateOne(
+              { _id: new ObjectId(req.session.user._id) },
+              {
+                  $set: {
+                      idAbonnement: parseInt(planId),
+                      gens: generationsRestantes
+                  }
+              }
+          );
+
+          await mongoClient.close();
+          res.redirect('/success-page');
+      } else {
+          res.redirect('/failure-page');
       }
-
-      await clientsCollection.updateOne(
-        { _id: new ObjectId(req.session.user._id) },
-        { 
-          $set: { 
-            idAbonnement: parseInt(planId),
-            gens: generationsRestantes
-          } 
-        }
-      );
-      
-      req.session.user.idAbonnement = parseInt(planId);
-      req.session.user.gens = generationsRestantes;
-      res.redirect('/success-page');
-    } else {
-      res.redirect('/failure-page');
-    }
   } catch (error) {
-    console.error('Erreur lors de la vérification du paiement PayPal:', error);
-    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
-  } finally {
-    if (mongoClient) {
-      await mongoClient.close();
-    }
+      console.error('Error during PayPal transaction verification:', error);
+      res.status(500).json({ success: false, message: "Internal server error during transaction verification." });
   }
+});
+
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 
 
@@ -1153,4 +1220,58 @@ app.get('/Reset', function(req, res) {
     pageTitle: 'Reinitialisation',
     user: req.session.user 
   });
+});
+
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Exemple avec Gmail, modifiez selon votre fournisseur
+  auth: {
+    user: 'energymize@gmail.com',  // Remplacez par votre email
+    pass: 'admin123)'        // Remplacez par votre mot de passe
+  }
+});
+
+app.post('/submit-reset', async (req, res) => {
+  const { email } = req.body;
+  let client;
+
+  try {
+    client = await connectToMongo();
+    const db = client.db("EnergymizeBD");
+    const users = db.collection("clients");
+
+    const user = await users.findOne({ email });
+    if (!user) {
+      return res.status(404).send("Aucun utilisateur trouvé avec cet e-mail.");
+    }
+
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    const resetPasswordExpires = Date.now() + 3600000; // Le token expire après 1 heure
+
+    await users.updateOne({ email }, {
+      $set: {
+        resetPasswordToken: resetToken,
+        resetPasswordExpires
+      }
+    });
+
+    const resetUrl = `http://127.0.0.1/reset/${resetToken}`;
+
+    const mailOptions = {
+      to: email,
+      from: process.env.EMAIL_USER,
+      subject: 'Réinitialisation du mot de passe',
+      text: `Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien suivant ou copiez-le dans votre navigateur pour procéder à la réinitialisation :\n\n${resetUrl}`
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.send('Un email de réinitialisation a été envoyé à ' + email + '.');
+  } catch (error) {
+    console.error('Erreur lors de l\'opération:', error);
+    res.status(500).send('Erreur lors de l\'envoi de l\'email ou de la connexion à la base de données.');
+  } finally {
+    if (client) {
+      await client.close();
+    }
+  }
 });

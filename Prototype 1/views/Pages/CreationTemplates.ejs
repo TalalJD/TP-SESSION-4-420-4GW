@@ -18,5 +18,19 @@
         <div class="result" id="result" style="color:white"></div>
     </div>
 </div>
-<script src="/creationTemplate.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var exercises = document.querySelectorAll('.exercise');
+    exercises.forEach(function(exercise) {
+      exercise.addEventListener('click', function() {
+        var descriptionPanel = exercise.querySelector('.description-panel');
+        if (descriptionPanel.style.display === 'none') {
+          descriptionPanel.style.display = 'block';
+        } else {
+          descriptionPanel.style.display = 'none';
+        }
+      });
+    });
+  });
+  </script>
 <%- include ("../partials/footer.ejs") %>

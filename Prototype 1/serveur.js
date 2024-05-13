@@ -1287,3 +1287,40 @@ app.post('/submit-reset', async (req, res) => {
     }
   }
 });
+
+app.get('/get-workout-dates', async function(req, res){
+  let user = null;
+  if (req.session.isLoggedIn) {
+      user = req.session.user;
+  }
+
+  // Fetch workout dates with template status 0 for the user
+  con.query(
+      'SELECT DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = 0',
+      [user._id],
+      (error, workouts) => {
+          if (error) {
+              console.error('Error fetching workout dates:', error);
+              return res.status(500).json({ error: 'Server Error' });
+          }
+
+          // Extract the workout dates from the query result
+          const workoutDates = workouts.map(workout => workout.date_workout);
+
+          // Send the workout dates as JSON response
+          
+      }
+  );
+  res.render('Pages/historique')[
+    pageTitle : 
+    workoutDates: workoutDates;
+  ]
+
+});
+
+
+
+
+app.get('/historique', (req, res) => {
+  // Assuming historique.ejs is located in your views folder
+});

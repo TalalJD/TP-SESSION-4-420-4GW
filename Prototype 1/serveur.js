@@ -48,6 +48,9 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false, maxAge: 3600000 } 
 }));
+app.use(express.json());  // For parsing application/json
+app.use(express.urlencoded({ extended: true }));  // For parsing application/x-www-form-urlencoded
+
 /*
 Connexion au serveur
 */
@@ -1014,28 +1017,28 @@ app.get('/affichage_workout', async function(req, res){
 
 
 });
-app.post('/abonnement/choisir-gratuit', async function(req, res) {
+app.post('/abonnement/choisir-gratuit', async (req, res) => {
   const userId = req.session.user._id;
   let mongoClient;
   try {
-    mongoClient = await connectToMongo();
-    const db = mongoClient.db("EnergymizeBD");
-    const collection = db.collection("clients");
-    
-    await UpdateClientById(collection, userId, {
-      idAbonnement: 1, 
-      gens: 3, 
-    });
+      mongoClient = await connectToMongo();
+      const db = mongoClient.db("EnergymizeBD");
+      const collection = db.collection("clients");
+      
+      await UpdateClientById(collection, userId, {
+          idAbonnement: 1, 
+          gens: 3, 
+      });
 
-    req.session.user.idAbonnement = 1;
-    req.session.user.gens = 3;
-    
-    res.json({ success: true, message: "Abonnement gratuit activé." });
+      req.session.user.idAbonnement = 1;
+      req.session.user.gens = 3;
+      
+      res.json({ success: true, message: "Abonnement gratuit activé." });
   } catch (error) {
-    console.error('Erreur lors du changement d\'abonnement:', error);
-    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
+      console.error('Error:', error);
+      res.status(500).json({ success: false, message: "Internal Server Error" });
   } finally {
-    await mongoClient.close();
+      if (mongoClient) await mongoClient.close();
   }
 });
 
@@ -1096,36 +1099,35 @@ async function captureOrder(orderId) {
       return null;
   }
 }
+
+function determineGenerationsRestantes(planId) {
+  switch (parseInt(planId)) {
+      case 1:
+          return 3;  // 3 générations pour le plan Gratuit
+      case 2:
+          return 10; // 10 générations pour le plan Basic
+      case 3:
+          return -1; // Illimité pour le plan Premium
+      default:
+          return 0;  // Aucune génération par défaut
+  }
+}
+
 app.post('/paypal-transaction-complete', async (req, res) => {
   const { orderID, planId } = req.body;
   const paypalClient = client();
-  const request = new paypal.orders.OrdersGetRequest(orderID);
 
   try {
-      const response = await paypalClient.execute(request);
-      const { result } = response;
-      console.log("resultat du payment : ",result.status);
-      if (result.status == 'COMPLETED') {
-        console.log("Rentrer dans zone complete");
-          // Connect to MongoDB using the MongoDB connection string
-          const mongoClient = await MongoClient.connect(process.env.DB_URI);
-          const db = mongoClient.db("energymizeBD");
-          const clientsCollection = db.collection("clients");
+      const orderDetails = new paypal.orders.OrdersGetRequest(orderID);
+      const orderResponse = await paypalClient.execute(orderDetails);
+      console.log('Transaction status:', orderResponse.result.status);
 
-          let generationsRestantes;
-          switch (parseInt(planId)) {
-              case 1:
-                  generationsRestantes = 3;
-                  break;
-              case 2:
-                  generationsRestantes = 10;
-                  break;
-              case 3:
-                  generationsRestantes = -1; // Unlimited
-                  break;
-              default:
-                  generationsRestantes = 0;
-          }
+      if (orderResponse.result.status === 'COMPLETED') {
+          let mongoClient = await MongoClient.connect(process.env.DB_URI);
+          let db = mongoClient.db("EnergymizeBD");
+          let clientsCollection = db.collection("clients");
+
+          let generationsRestantes = determineGenerationsRestantes(planId);
 
           await clientsCollection.updateOne(
               { _id: new ObjectId(req.session.user._id) },
@@ -1137,16 +1139,23 @@ app.post('/paypal-transaction-complete', async (req, res) => {
               }
           );
 
-          await mongoClient.close();
+          req.session.user.idAbonnement = parseInt(planId);
+          req.session.user.gens = generationsRestantes;
           res.redirect('/success-page');
       } else {
+          console.error('PayPal transaction not completed: ', orderResponse.result);
+          console.log('LENA3');
           res.redirect('/failure-page');
+          console.log('LENA7');
       }
   } catch (error) {
       console.error('Error during PayPal transaction verification:', error);
       res.status(500).json({ success: false, message: "Internal server error during transaction verification." });
   }
 });
+
+
+
 
 
 const PORT = process.env.PORT || 3000;
@@ -1202,7 +1211,10 @@ app.post('/process_payment', async (req, res) => {
       req.session.user.gens = generationsRestantes;
       res.redirect('/success-page');
     } else {
+      console.log('LENA0');
       res.redirect('/failure-page');
+      console.log('LENA4');
+
     }
   } catch (error) {
     console.error('Payment processing error:', error);

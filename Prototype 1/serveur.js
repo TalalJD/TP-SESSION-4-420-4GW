@@ -17,8 +17,6 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import paypal from '@paypal/checkout-server-sdk';
 
-import Stripe from 'stripe';
-const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
 
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
@@ -1144,9 +1142,7 @@ app.post('/paypal-transaction-complete', async (req, res) => {
           res.redirect('/success-page');
       } else {
           console.error('PayPal transaction not completed: ', orderResponse.result);
-          console.log('LENA3');
           res.redirect('/failure-page');
-          console.log('LENA7');
       }
   } catch (error) {
       console.error('Error during PayPal transaction verification:', error);
@@ -1164,67 +1160,7 @@ app.listen(PORT, () => {
 });
 
 
-app.post('/process_payment', async (req, res) => {
-  const { cardNumber, expirationDate, cvv, planId } = req.body;
-  let mongoClient;
-  let generationsRestantes = 0;
-  
-  switch (parseInt(planId)) {
-    case 1: 
-      generationsRestantes = 3;
-      break;
-    case 2: 
-      generationsRestantes = 10;
-      break;
-    case 3: 
-      generationsRestantes = -1; 
-      break;
-    default:
-      generationsRestantes = 0;
-  }
 
-  try {
-    mongoClient = await connectToMongo();
-    const db = mongoClient.db("EnergymizeBD");
-    const clientsCollection = db.collection("clients");
-    const carteClientCollection = db.collection("carte_client");
-    const paymentSuccessful = true; 
-    
-    if (paymentSuccessful) {
-      await clientsCollection.updateOne(
-        { _id: new ObjectId(req.session.user._id) },
-        { 
-          $set: { 
-            idAbonnement: parseInt(planId),
-            gens: generationsRestantes
-          } 
-        }
-      );
-      await carteClientCollection.insertOne({
-        userId: new ObjectId(req.session.user._id),
-        num_carte: cardNumber, 
-        date_carte: expirationDate, 
-        cvv_carte: cvv 
-      });
-   
-      req.session.user.idAbonnement = parseInt(planId);
-      req.session.user.gens = generationsRestantes;
-      res.redirect('/success-page');
-    } else {
-      console.log('LENA0');
-      res.redirect('/failure-page');
-      console.log('LENA4');
-
-    }
-  } catch (error) {
-    console.error('Payment processing error:', error);
-    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
-  } finally {
-    if (mongoClient) {
-      await mongoClient.close();
-    }
-  }
-});
 
 app.get('/Reset', function(req, res) {
   res.render('Pages/resetMdp', { 
@@ -1287,3 +1223,22 @@ app.post('/submit-reset', async (req, res) => {
     }
   }
 });
+
+
+
+
+async function sendSubscriptionEmail(userEmail, subscriptionName, price) {
+  const mailOptions = {
+    from: 'energymize@gmail.com',
+    to: userEmail,
+    subject: 'Confirmation d\'abonnement',
+    text: `Merci pour votre abonnement. \n\nNom de l'abonnement: ${subscriptionName}\nPrix payé: ${price}\n\nMerci pour votre abonnement !`
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Email envoyé avec succès');
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email:', error);
+  }
+}

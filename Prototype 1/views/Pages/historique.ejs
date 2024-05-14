@@ -1,0 +1,141 @@
+<%- include ("../partials/header.ejs") %>
+<title>Workout Calendar</title>
+<style>
+/* Styles for the calendar table */
+#calendar {
+  border-collapse: collapse;
+  width: 60vw; /* 60% of viewport width */
+  height: 60vh; /* 60% of viewport height */
+  max-width: 600px; /* Maximum width */
+  max-height: 600px; /* Maximum height */
+  background-color: rgb(32, 32, 28);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+
+
+
+
+#calendar th {
+  background-color: #D5C069; /* Yellow */
+  color: black;
+  padding: 0; /* Adjusted padding */
+  width: calc(100% / 7); /* Equal width for each day */
+}
+
+#calendar th:first-child {
+  border-top-left-radius: 10px;
+}
+
+#calendar th:last-child {
+  border-top-right-radius: 10px;
+}
+
+#calendar th,
+#calendar td {
+  border: 1px solid black;
+  padding: 5px;
+  text-align: center;
+  font-family: sans-serif;
+  color: white;
+  font-size: 14px; /* Adjust font size as needed */
+}
+
+/* Styles for the current day */
+.current-day {
+  background-color: #07c9ff; /* Yellow */
+  color: black;
+}
+
+/* Styles for the workout days */
+.workout-day {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+
+</style>
+</head>
+<body>
+
+<h2>Workout Calendar</h2>
+
+<table id="calendar">
+    <thead>
+        <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Calendar dates will be populated dynamically here -->
+    </tbody>
+</table>
+
+<script>
+    // Function to fetch workout dates from the server
+    function fetchWorkoutDates() {
+        return fetch('/workout-dates')
+            .then(response => response.json())
+            .then(data => data.workoutDates)
+            .catch(error => {
+                console.error('Error fetching workout dates:', error);
+                return [];
+            });
+    }
+
+    // Function to generate the calendar
+    function generateCalendar(year, month, workoutDates) {
+        const calendarBody = document.querySelector('#calendar tbody');
+        calendarBody.innerHTML = '';
+
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDay = new Date(year, month, 1).getDay();
+
+        let date = 1;
+        for (let i = 0; i < 6; i++) {
+            const row = document.createElement('tr');
+            for (let j = 0; j < 7; j++) {
+                const cell = document.createElement('td');
+                if (i === 0 && j < firstDay) {
+                    cell.textContent = '';
+                } else if (date > daysInMonth) {
+                    break;
+                } else {
+                    cell.textContent = date;
+                    const currentDate = new Date(year, month, date).toISOString().split('T')[0];
+                    if (workoutDates.includes(currentDate)) {
+                        cell.classList.add('workout-day');
+                    }
+                    if (currentDate === new Date().toISOString().split('T')[0]) {
+                        cell.classList.add('current-day');
+                    }
+                    date++;
+                }
+                row.appendChild(cell);
+            }
+            calendarBody.appendChild(row);
+        }
+    }
+
+    // Function to initialize the calendar
+    function initCalendar() {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+
+        fetchWorkoutDates().then(workoutDates => {
+            generateCalendar(year, month, workoutDates);
+        });
+    }
+
+    initCalendar();
+</script>
+</body>
+<%- include ("../partials/footer.ejs") %>

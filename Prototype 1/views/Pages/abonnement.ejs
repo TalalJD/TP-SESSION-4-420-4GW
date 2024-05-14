@@ -7,155 +7,196 @@
     <title>Subscription Plans</title>
     <link rel="stylesheet" href="abonnementCSS.css">
     <style>
+        body {
+            overflow-x: hidden; /* Pour éviter le défilement horizontal */
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: space-around;
+            transition: transform 1s ease-in-out;
+            position: relative;
+        }
+
+        .card {
+            width: 500px;
+            border: 1px solid #ccc;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 1s ease-in-out;
+        }
+
+        @keyframes slideOutLeft {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-100vw);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100vw);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
         #paypal-button-container {
             display: none;
             position: absolute;
-            left: 57%;
-            transform: translateX(-50%);
-           width: 1000px;
-          
+            top: 50%;
+            left: 30%;
+            transform: translate(-50%, -50%);
+            width: 750px;
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="card-container" id="cardContainer">
         <!-- Card 1 - Gratuit -->
-<div class="card" id="card1">
-    <h2>GRATUIT</h2>
-    <div class="additional-info">
-        <p>Accès limité aux programmes</p>
-        <p>3 essais pour générer des programmes</p>
-    </div>
-    <% if (user) { %>
-        <button type="button" onclick="showPaymentForm('1')" id="but1" <% if (user.idAbonnement === 1) { %>disabled<% } %>>Confirmer</button>
-    <% } else { %>
-        <button id="loginButton1" type="button" onclick="redirectToLogin()">Connectez-vous pour s'abonner</button>
-    <% } %>
-</div>
+        <div class="card" id="card1">
+            <h2>GRATUIT</h2>
+            <div class="additional-info">
+                <p>Accès limité aux programmes</p>
+                <p>3 essais pour générer des programmes</p>
+            </div>
+            <% if (user) { %>
+                <button type="button" onclick="showPaymentForm('1')" id="but1" <% if (user.idAbonnement === 1) { %>disabled<% } %>>Confirmer</button>
+            <% } else { %>
+                <button id="loginButton1" type="button" onclick="redirectToLogin()">Connectez-vous pour s'abonner</button>
+            <% } %>
+        </div>
 
-<!-- Card 2 - Basic -->
-<div class="card" id="card2">
-    <h2>BASIC</h2>
-    <div class="additional-info">
-        <p>Accès illimité aux programmes</p>
-        <p>10 essais par mois pour générer des programmes</p>
-    </div>
-    <% if (user) { %>
-        <button type="button" onclick="showPaymentForm('2')" id="but2" <% if (user.idAbonnement === 2) { %>disabled<% } %>>Confirmer</button>
-    <% } else { %>
-        <button id="loginButton2" type="button" onclick="redirectToLogin()">Connectez-vous pour s'abonner</button>
-    <% } %>
-</div>
+        <!-- Card 2 - Basic -->
+        <div class="card" id="card2">
+            <h2>BASIC</h2>
+            <div class="additional-info">
+                <p>Accès illimité aux programmes</p>
+                <p>10 essais par mois pour générer des programmes</p>
+            </div>
+            <% if (user) { %>
+                <button type="button" onclick="showPaymentForm('2')" id="but2" <% if (user.idAbonnement === 2) { %>disabled<% } %>>Confirmer</button>
+            <% } else { %>
+                <button id="loginButton2" type="button" onclick="redirectToLogin()">Connectez-vous pour s'abonner</button>
+            <% } %>
+        </div>
 
-<!-- Card 3 - Premium -->
-<div class="card" id="card3">
-    <h2>PREMIUM</h2>
-    <div class="additional-info">
-        <p>Accès au coach</p>
-        <p>Accès illimité pour générer des programmes</p>
-        <p>Accès aux plans de nutrition</p>
+        <!-- Card 3 - Premium -->
+        <div class="card" id="card3">
+            <h2>PREMIUM</h2>
+            <div class="additional-info">
+                <p>Accès au coach</p>
+                <p>Accès illimité pour générer des programmes</p>
+                <p>Accès aux plans de nutrition</p>
+            </div>
+            <% if (user) { %>
+                <button type="button" onclick="showPaymentForm('3')" id="but3" <% if (user.idAbonnement === 3) { %>disabled<% } %>>Confirmer</button>
+            <% } else { %>
+                <button id="loginButton3" type="button" onclick="redirectToLogin()">Connectez-vous pour s'abonner</button>
+            <% } %>
+        </div>
     </div>
-    <% if (user) { %>
-        <button type="button" onclick="showPaymentForm('3')" id="but3" <% if (user.idAbonnement === 3) { %>disabled<% } %>>Confirmer</button>
-    <% } else { %>
-        <button id="loginButton3" type="button" onclick="redirectToLogin()">Connectez-vous pour s'abonner</button>
-    <% } %>
-</div>
 
-    </div>
-
-    <!-- PayPal Button Container -->
-    <div id="paypal-button-container" style="display: none;"></div>
-    <script src="https://www.paypal.com/sdk/js?client-id=AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X&currency=USD"></script>
     <script>
+        function redirectToLogin() {
+            window.location.href = '/connexion'; // Remplacez '/login-page' par l'URL de votre page de connexion
+        }
+
         function showPaymentForm(planId) {
+            var cardContainer = document.getElementById('cardContainer');
+            var paypalButtonContainer = document.getElementById('paypal-button-container');
+
             if (planId === '1') {
-                // Request to server to handle free subscription
+                // Gestion du plan gratuit
                 fetch('/abonnement/choisir-gratuit', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ id_abonnement: 1 }),
-                    credentials: 'include' 
+                    credentials: 'include'
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        window.location.href = '/success-page'; 
+                        window.location.href = '/success-page';
                     } else {
                         alert('Erreur lors du changement d\'abonnement: ' + data.message);
                     }
                 })
                 .catch(error => {
-                    alert('Erreur de connexion au serveur');
                     console.error('Error:', error);
+                    alert('Erreur de connexion au serveur: ' + error.message);
                 });
-                return;
+            } else {
+                // Animation des cartes
+                cardContainer.style.animation = 'slideOutLeft 1s forwards';
+
+                // Affichage du bouton PayPal après l'animation
+                setTimeout(() => {
+                    paypalButtonContainer.style.display = 'block';
+                    paypalButtonContainer.style.animation = 'slideInRight 1s forwards';
+                }, 1000);
+
+                // Dynamically load and render the PayPal button
+                paypal.Buttons({
+                    createOrder: function(data, actions) {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: planId === '3' ? '9.99' : '6.99' // 9.99 for Premium, 6.99 for Basic
+                                },
+                                description: 'Abonnement ' + (planId === '2' ? 'Basic' : 'Premium')
+                            }]
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(details) {
+                            return fetch('/paypal-transaction-complete', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    orderID: data.orderID,
+                                    planId: planId
+                                }),
+                                credentials: 'include'
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    window.location.href = '/success-page';
+                                } else {
+                                    alert('Error: ' + data.message);
+                                    window.location.href = '/failure-page';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error processing payment:', error);
+                                window.location.href = '/success-page';
+                            });
+                        });
+                    }
+                }).render('#paypal-button-container');
             }
-        
-            // Display and scroll to PayPal buttons
-            var paypalButtonContainer = document.getElementById('paypal-button-container');
-            paypalButtonContainer.style.display = 'block';
-            paypalButtonContainer.scrollIntoView({ behavior: 'smooth' });
-        }
-    
-        function redirectToLogin() {
-            window.location.href = '/Connexion';
         }
     </script>
-    <script>
-        let selectedPlan = 'basic'; // Set based on user selection
-    
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                let amountValue = selectedPlan === '3' ? '9.99' : '6.99'; // Amount for Premium or Basic
-                if (selectedPlan === '1') {
-                    amountValue = '0.00'; // Free might not actually go through PayPal
-                }
-    
-                // Create PayPal order
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: amountValue
-                        },
-                        description: selectedPlan // Pass plan ID as description
-                    }]
-                });
-            },
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
-                    // Post to your server to handle the subscription logic
-                    fetch('/paypal-transaction-complete', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            orderID: data.orderID,
-                            planId: selectedPlan
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            window.location.href = '/success-page';
-                        } else {
-                            alert('Error: ' + data.message);
-                            window.location.href = '/failure-page';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error processing payment');
-                        window.location.href = '/failure-page';
-                    });
-                });
-            }
-        }).render('#paypal-button-container');
-    </script>
-      
+
+    <!-- PayPal Button Container -->
+    <div id="paypal-button-container"></div>
+
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X&currency=CAD"></script>
+
 </body>
 </html>
 <%- include("../partials/footer.ejs") %>

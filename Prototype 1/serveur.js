@@ -17,8 +17,6 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import paypal from '@paypal/checkout-server-sdk';
 
-import Stripe from 'stripe';
-const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
 
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
@@ -48,6 +46,9 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false, maxAge: 3600000 } 
 }));
+app.use(express.json());  // For parsing application/json
+app.use(express.urlencoded({ extended: true }));  // For parsing application/x-www-form-urlencoded
+
 /*
 Connexion au serveur
 */
@@ -1000,12 +1001,49 @@ function GetWorkouts(isTemplate, user){
   });
 }
 
+// Route for fetching workout dates
+app.get('/workout-dates', async function(req, res) {
+  let user = null;
+  let userId = null;
+  if (req.session.isLoggedIn) {
+      user = req.session.user;
+      userId = user._id;
+  }
+
+  con.query('SELECT DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = 0', [userId], (error, workouts) => {
+      if (error) {
+          console.error('Error fetching workout dates:', error);
+          return res.status(500).json({ error: 'Server Error' });
+      }
+
+      // Extract the workout dates from the query result
+      const workoutDates = workouts.map(workout => workout.date_workout);
+
+      // Send the workout dates as JSON response
+      res.json({ workoutDates });
+  });
+});
+
+// Route for rendering the historique page
+app.get('/historique', function(req, res) {
+  let user = req.session.user;
+  res.render("Pages/historique", {
+    items: [], 
+    user: user
+  });
+});
+
+
+
+
 
 app.get('/affichage_workout', async function(req, res){
  
   let user = null;
+ 
   if (req.session.isLoggedIn) {
     user = req.session.user;
+   
   }
  
   //const isTemplate = req.query.type === 'template';
@@ -1107,28 +1145,28 @@ app.get('/affichage_workout', async function(req, res){
 
 
 });
-app.post('/abonnement/choisir-gratuit', async function(req, res) {
+app.post('/abonnement/choisir-gratuit', async (req, res) => {
   const userId = req.session.user._id;
   let mongoClient;
   try {
-    mongoClient = await connectToMongo();
-    const db = mongoClient.db("EnergymizeBD");
-    const collection = db.collection("clients");
-    
-    await UpdateClientById(collection, userId, {
-      idAbonnement: 1, 
-      gens: 3, 
-    });
+      mongoClient = await connectToMongo();
+      const db = mongoClient.db("EnergymizeBD");
+      const collection = db.collection("clients");
+      
+      await UpdateClientById(collection, userId, {
+          idAbonnement: 1, 
+          gens: 3, 
+      });
 
-    req.session.user.idAbonnement = 1;
-    req.session.user.gens = 3;
-    
-    res.json({ success: true, message: "Abonnement gratuit activé." });
+      req.session.user.idAbonnement = 1;
+      req.session.user.gens = 3;
+      
+      res.json({ success: true, message: "Abonnement gratuit activé." });
   } catch (error) {
-    console.error('Erreur lors du changement d\'abonnement:', error);
-    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
+      console.error('Error:', error);
+      res.status(500).json({ success: false, message: "Internal Server Error" });
   } finally {
-    await mongoClient.close();
+      if (mongoClient) await mongoClient.close();
   }
 });
 
@@ -1189,36 +1227,35 @@ async function captureOrder(orderId) {
       return null;
   }
 }
+
+function determineGenerationsRestantes(planId) {
+  switch (parseInt(planId)) {
+      case 1:
+          return 3;  // 3 générations pour le plan Gratuit
+      case 2:
+          return 10; // 10 générations pour le plan Basic
+      case 3:
+          return -1; // Illimité pour le plan Premium
+      default:
+          return 0;  // Aucune génération par défaut
+  }
+}
+
 app.post('/paypal-transaction-complete', async (req, res) => {
   const { orderID, planId } = req.body;
   const paypalClient = client();
-  const request = new paypal.orders.OrdersGetRequest(orderID);
 
   try {
-      const response = await paypalClient.execute(request);
-      const { result } = response;
-      console.log("resultat du payment : ",result.status);
-      if (result.status == 'COMPLETED') {
-        console.log("Rentrer dans zone complete");
-          // Connect to MongoDB using the MongoDB connection string
-          const mongoClient = await MongoClient.connect(process.env.DB_URI);
-          const db = mongoClient.db("energymizeBD");
-          const clientsCollection = db.collection("clients");
+      const orderDetails = new paypal.orders.OrdersGetRequest(orderID);
+      const orderResponse = await paypalClient.execute(orderDetails);
+      console.log('Transaction status:', orderResponse.result.status);
 
-          let generationsRestantes;
-          switch (parseInt(planId)) {
-              case 1:
-                  generationsRestantes = 3;
-                  break;
-              case 2:
-                  generationsRestantes = 10;
-                  break;
-              case 3:
-                  generationsRestantes = -1; // Unlimited
-                  break;
-              default:
-                  generationsRestantes = 0;
-          }
+      if (orderResponse.result.status === 'COMPLETED') {
+          let mongoClient = await MongoClient.connect(process.env.DB_URI);
+          let db = mongoClient.db("EnergymizeBD");
+          let clientsCollection = db.collection("clients");
+
+          let generationsRestantes = determineGenerationsRestantes(planId);
 
           await clientsCollection.updateOne(
               { _id: new ObjectId(req.session.user._id) },
@@ -1230,9 +1267,11 @@ app.post('/paypal-transaction-complete', async (req, res) => {
               }
           );
 
-          await mongoClient.close();
+          req.session.user.idAbonnement = parseInt(planId);
+          req.session.user.gens = generationsRestantes;
           res.redirect('/success-page');
       } else {
+          console.error('PayPal transaction not completed: ', orderResponse.result);
           res.redirect('/failure-page');
       }
   } catch (error) {
@@ -1242,70 +1281,16 @@ app.post('/paypal-transaction-complete', async (req, res) => {
 });
 
 
+
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
 
-app.post('/process_payment', async (req, res) => {
-  const { cardNumber, expirationDate, cvv, planId } = req.body;
-  let mongoClient;
-  let generationsRestantes = 0;
-  
-  switch (parseInt(planId)) {
-    case 1: 
-      generationsRestantes = 3;
-      break;
-    case 2: 
-      generationsRestantes = 10;
-      break;
-    case 3: 
-      generationsRestantes = -1; 
-      break;
-    default:
-      generationsRestantes = 0;
-  }
 
-  try {
-    mongoClient = await connectToMongo();
-    const db = mongoClient.db("EnergymizeBD");
-    const clientsCollection = db.collection("clients");
-    const carteClientCollection = db.collection("carte_client");
-    const paymentSuccessful = true; 
-    
-    if (paymentSuccessful) {
-      await clientsCollection.updateOne(
-        { _id: new ObjectId(req.session.user._id) },
-        { 
-          $set: { 
-            idAbonnement: parseInt(planId),
-            gens: generationsRestantes
-          } 
-        }
-      );
-      await carteClientCollection.insertOne({
-        userId: new ObjectId(req.session.user._id),
-        num_carte: cardNumber, 
-        date_carte: expirationDate, 
-        cvv_carte: cvv 
-      });
-   
-      req.session.user.idAbonnement = parseInt(planId);
-      req.session.user.gens = generationsRestantes;
-      res.redirect('/success-page');
-    } else {
-      res.redirect('/failure-page');
-    }
-  } catch (error) {
-    console.error('Payment processing error:', error);
-    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
-  } finally {
-    if (mongoClient) {
-      await mongoClient.close();
-    }
-  }
-});
 
 app.get('/Reset', function(req, res) {
   res.render('Pages/resetMdp', { 
@@ -1368,3 +1353,26 @@ app.post('/submit-reset', async (req, res) => {
     }
   }
 });
+
+
+
+
+
+async function sendSubscriptionEmail(userEmail, subscriptionName, price) {
+  const mailOptions = {
+    from: 'energymize@gmail.com',
+    to: userEmail,
+    subject: 'Confirmation d\'abonnement',
+    text: `Merci pour votre abonnement. \n\nNom de l'abonnement: ${subscriptionName}\nPrix payé: ${price}\n\nMerci pour votre abonnement !`
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Email envoyé avec succès');
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email:', error);
+  }
+}
+
+
+

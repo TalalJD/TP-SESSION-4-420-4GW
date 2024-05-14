@@ -170,4 +170,7 @@ ALTER TABLE program_exos CHANGE exo_id_exo exo_id_exo VARCHAR(40) NOT NULL;
 ALTER TABLE program_exos ADD CONSTRAINT program_exos_exo_fk FOREIGN KEY (exo_id_exo) REFERENCES exo (id_exo);
 ALTER TABLE exo_exec ADD COLUMN exo_id_exo VARCHAR(40) NOT NULL;
 ALTER TABLE exo_exec ADD CONSTRAINT fk_exo_exec_exo FOREIGN KEY (exo_id_exo) REFERENCES exo (id_exo);
+-- Ajout de poids a serie
+ALTER TABLE serie
+ADD COLUMN poids int NOT NULL;
 

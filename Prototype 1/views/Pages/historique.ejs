@@ -1,37 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<%- include ("../partials/header.ejs") %>
 <title>Workout Calendar</title>
 <style>
-    
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
+/* Styles for the calendar table */
+#calendar {
+  border-collapse: collapse;
+  width: 60vw; /* 60% of viewport width */
+  height: 60vh; /* 60% of viewport height */
+  max-width: 600px; /* Maximum width */
+  max-height: 600px; /* Maximum height */
+  background-color: rgb(32, 32, 28);
+  border-radius: 10px;
+  overflow: hidden;
+}
 
-    th, td {
-        border: 1px solid #ddd;
-        text-align: center;
-        padding: 8px;
-    }
 
-    th {
-        background-color: #f2f2f2;
-    }
 
-    td {
-        cursor: pointer;
-    }
 
-    .current-day {
-        background-color: lightgreen;
-    }
 
-    .workout-day {
-        background-color: lightblue;
-    }
+#calendar th {
+  background-color: #D5C069; /* Yellow */
+  color: black;
+  padding: 0; /* Adjusted padding */
+  width: calc(100% / 7); /* Equal width for each day */
+}
+
+#calendar th:first-child {
+  border-top-left-radius: 10px;
+}
+
+#calendar th:last-child {
+  border-top-right-radius: 10px;
+}
+
+#calendar th,
+#calendar td {
+  border: 1px solid black;
+  padding: 5px;
+  text-align: center;
+  font-family: sans-serif;
+  color: white;
+  font-size: 14px; /* Adjust font size as needed */
+}
+
+/* Styles for the current day */
+.current-day {
+  background-color: #07c9ff; /* Yellow */
+  color: black;
+}
+
+/* Styles for the workout days */
+.workout-day {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+
 </style>
 </head>
 <body>
@@ -58,7 +81,7 @@
 <script>
     // Function to fetch workout dates from the server
     function fetchWorkoutDates() {
-        return fetch('/get-workout-dates')
+        return fetch('/workout-dates')
             .then(response => response.json())
             .then(data => data.workoutDates)
             .catch(error => {
@@ -114,6 +137,5 @@
 
     initCalendar();
 </script>
-
 </body>
-</html>
+<%- include ("../partials/footer.ejs") %>

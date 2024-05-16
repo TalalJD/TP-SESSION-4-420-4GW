@@ -14,9 +14,6 @@
 }
 
 
-
-
-
 #calendar th {
   background-color: #D5C069; /* Yellow */
   color: black;
@@ -61,8 +58,17 @@
 
 <h2>Workout Calendar</h2>
 
+<div class="month-navigation">
+    <button id="prevMonth">&lt;</button>
+    <h3 id="currentMonth"></h3>
+    <button id="nextMonth">&gt;</button>
+  </div>
+
 <table id="calendar">
     <thead>
+        <tr>
+            <th colspan="7" id="currentMonth"></th> <!-- Added month name here -->
+        </tr>
         <tr>
             <th>Sun</th>
             <th>Mon</th>
@@ -77,6 +83,7 @@
         <!-- Calendar dates will be populated dynamically here -->
     </tbody>
 </table>
+
 
 <script>
     // Function to fetch workout dates from the server
@@ -122,6 +129,9 @@
             }
             calendarBody.appendChild(row);
         }
+
+        // Update current month name
+        document.getElementById('currentMonth').textContent = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
     }
 
     // Function to initialize the calendar
@@ -132,6 +142,25 @@
 
         fetchWorkoutDates().then(workoutDates => {
             generateCalendar(year, month, workoutDates);
+        });
+
+        // Add event listeners to navigation buttons
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            const newYear = currentDate.getFullYear();
+            const newMonth = currentDate.getMonth();
+            fetchWorkoutDates().then(workoutDates => {
+                generateCalendar(newYear, newMonth, workoutDates);
+            });
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            const newYear = currentDate.getFullYear();
+            const newMonth = currentDate.getMonth();
+            fetchWorkoutDates().then(workoutDates => {
+                generateCalendar(newYear, newMonth, workoutDates);
+            });
         });
     }
 

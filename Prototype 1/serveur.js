@@ -17,13 +17,9 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import paypal from '@paypal/checkout-server-sdk';
 
-import Stripe from 'stripe';
-const stripe = new Stripe('sk_test_51P9CKV2LEuc9sd2Z8LnsGSH1qJo7DIyJdssmKJN65fu7MEE0uIPrUgfqQomFlNJPQQaxZHxFKTnAZ7vYEU8D1Yjm00sY8Hej8m');
 
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
-
-
 
 function environment() {
   const clientId = "AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X";
@@ -34,9 +30,6 @@ function environment() {
 function client() {
   return new paypal.core.PayPalHttpClient(environment());
 }
-
-
-
 
 config();
 const app = express();
@@ -59,7 +52,7 @@ app.set("view engine", "ejs");
 app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
 
-// MongoDB Trials
+// // MongoDB Trials
 
 export async function connectToMongo() {
   let mongoClient;
@@ -165,13 +158,47 @@ app.get("/executeWorkout",async function (req,res){
   });
 });
 
+
+app.get('/workout-dates', async function(req, res) {
+  let user = null;
+  let userId = null;
+
+    // Vérifie si l'utilisateur est connecté
+  if (req.session.isLoggedIn) {
+      user = req.session.user;
+      userId = user._id;
+  }
+    //requete sql qui verifie si il y a une erreur et la gere et  et recupere les donnees
+  con.query('SELECT DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = 0', [userId], (error, workouts) => {
+      if (error) {
+          console.error('Error fetching workout dates:', error);
+          return res.status(500).json({ error: 'Server Error' });
+      }
+
+      //extrait et inserre les donnes dans une variable constante
+      const workoutDates = workouts.map(workout => workout.date_workout);
+
+      // Envoie les dates des entraînements en tant que réponse JSON
+      res.json({ workoutDates });
+  });
+});
+
+
+app.get('/historique', function(req, res) {
+  let user = req.session.user;
+  res.render("Pages/historique", {
+    items: [], 
+    user: user
+  });
+});
+
+
 app.get("/App", async function (req, res) {
   let user = null;
   let abonnement;
   if (req.session.isLoggedIn) {
     user = req.session.user;
     let workouts = await GetWorkouts(true,user);
-    console.log("First workout found name: ",workouts[0].nom_workout);
     let mongoClient;
     try {
       mongoClient = await connectToMongo();
@@ -498,6 +525,103 @@ app.post('/createEmptyWorkout', async(req,res)=>{
     res.status(500).send('Error creating workout');
   }
 });
+app.post('/createNewWorkout', async (req, res) => {
+  let user = req.session.user;
+  let { listeSerie } = req.body;
+  let workoutId;
+
+  try {
+    workoutId = await createWorkout(user._id, false);
+  } catch (error) {
+    console.error("Failed to create workout: ", error);
+    return res.status(500).send('Error creating workout');
+  }
+
+  try {
+    await RemplirWorkoutExoExecs(workoutId,listeSerie);
+    await RemplirWorkoutSeries(workoutId, listeSerie);
+    console.log('All series inserted successfully');
+    res.status(200).send('Workout created and series inserted successfully');
+  } catch (error) {
+    console.error('Error inserting series', error);
+    res.status(500).send('Error inserting series');
+  }
+});
+async function RemplirWorkoutExoExecs(workoutId, listeSerie) {
+  for (let serie of listeSerie) {
+    try {
+      let serieExoId = await GetExoIdByExoExecId(serie.exo_exec_id_exo_exec);
+      let idExoExec = await insertExoExec(workoutId, serieExoId);
+      serie.exo_exec_id_exo_exec = idExoExec;
+    } catch (error) {
+      console.error('Error processing series:', error);
+    }
+  }
+}
+
+function GetExoIdByExoExecId(exoExecId) {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT exo_id_exo
+      FROM exo_exec
+      WHERE id_exo_exec = ?
+    `;
+
+    con.query(query, [exoExecId], (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      if (results.length === 0) {
+        return reject(new Error('No exo_id_exo found for the given exo_exec_id'));
+      }
+      resolve(results[0].exo_id_exo);
+    });
+  });
+}
+function insertExoExec(workoutId, exoIdExo) {
+  return new Promise((resolve, reject) => {
+    const query = `
+      INSERT INTO exo_exec (workout_id_workout, exo_id_exo)
+      VALUES (?, ?)
+    `;
+
+    const values = [workoutId, exoIdExo];
+
+    con.query(query, values, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results.insertId); 
+    });
+  });
+}
+function RemplirWorkoutSeries(workoutId, listeSerie){
+  const querySerie = `
+        INSERT INTO serie (reps, rpe, exo_exec_id_exo_exec, poids)
+        VALUES (?, ?, ?, ?)
+      `;
+  return new Promise((resolve,reject)=>{
+    let promises = [];
+    
+    for(let serie of listeSerie){
+      let values = [serie.reps, serie.rpe, serie.exo_exec_id_exo_exec, serie.poids];
+      let promise = new Promise((resolve, reject) => {
+        con.query(querySerie, values, (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        });
+      });
+      promises.push(promise);
+    }
+
+    Promise.all(promises)
+      .then(results => resolve(results))
+      .catch(error => reject(error));
+  });
+}
 app.post('/confirmWorkoutTemplate',async (req,res)=>{
   const workoutID = req.session.currentWorkoutTemplateCreation;
   const {title} = req.body;
@@ -827,17 +951,16 @@ app.post('/auth/google', async (req, res) => {
 function GetWorkouts(isTemplate, user){
   return new Promise((resolve, reject)=>{
     let requeteExo;
-  if(isTemplate){
-    requeteExo = 'SELECT e.nom_exo, e.desc_exo FROM exo_exec ee JOIN exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?'
-  }else{
-    requeteExo = 'SELECT e.nom_exo, e.desc_exo, s.reps, s.rpe FROM exo_exec ee JOIN ' +
-    'serie s ON ee.id_exo_exec = s.exo_exec_id_exo_exec JOIN ' +
-    'exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?;';
-  }
- 
- 
+    if(isTemplate){
+      requeteExo = 'SELECT e.nom_exo, e.desc_exo, ee.id_exo_exec FROM exo_exec ee JOIN exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?';
+    } else {
+      requeteExo = 'SELECT e.nom_exo, e.desc_exo, s.reps, s.rpe, ee.id_exo_exec, ee.exo_id_exo FROM exo_exec ee JOIN ' +
+      'serie s ON ee.id_exo_exec = s.exo_exec_id_exo_exec JOIN ' +
+      'exo e ON ee.exo_id_exo = e.id_exo WHERE ee.id_exo_exec=?;';
+    }
+
     console.log(user._id);
- 
+
     con.query(
       'SELECT id_workout, nom_workout, desc_workout, client_id_mongodb, ' +
       'SEC_TO_TIME(dureeSeconde_workout) AS dureeSeconde_workout, IsTemplate_workout,' +
@@ -848,9 +971,9 @@ function GetWorkouts(isTemplate, user){
           if (error) {
               reject(error);
           }
- 
+
           let completedWorkouts = 0;
- 
+
           if (workouts.length === 0) {
               resolve([]);
           } else {
@@ -862,11 +985,11 @@ function GetWorkouts(isTemplate, user){
                           if (error) {
                               reject(error);
                           }
- 
+
                           workouts[index].exercises = exercises;
- 
+
                           let completedExercises = 0;
- 
+
                           if (exercises.length === 0) {
                               completedWorkouts++;
                               if (completedWorkouts === workouts.length) {
@@ -881,10 +1004,10 @@ function GetWorkouts(isTemplate, user){
                                           if (error) {
                                             reject(error);
                                           }
- 
+
                                           workouts[index].exercises[exIndex].series = series;
                                           completedExercises++;
- 
+
                                           if (completedExercises === exercises.length) {
                                               completedWorkouts++;
                                               if (completedWorkouts === workouts.length) {
@@ -904,19 +1027,24 @@ function GetWorkouts(isTemplate, user){
   });
 }
 
-app.get('/affichage_workout', async function(req, res){
+
+
+
+
+
+
+
+app.get('/affichage_workout', async function(req, res) {
  
   let user = null;
+ 
   if (req.session.isLoggedIn) {
     user = req.session.user;
+   
   }
  
   //const isTemplate = req.query.type === 'template';
   const isTemplate = true;
- 
-
-  //const isTemplate = req.query.type === 'template';
-  isTemplate = true;
 
   let requeteExo;
   if(isTemplate){
@@ -1040,8 +1168,6 @@ app.post('/abonnement/choisir-gratuit', async (req, res) => {
 });
 
 
-
-
 app.get('/success-page', function(req, res) {
   res.render('Pages/success', { 
     siteTitle: 'Payment Success',
@@ -1141,9 +1267,7 @@ app.post('/paypal-transaction-complete', async (req, res) => {
           res.redirect('/success-page');
       } else {
           console.error('PayPal transaction not completed: ', orderResponse.result);
-          console.log('LENA3');
           res.redirect('/failure-page');
-          console.log('LENA7');
       }
   } catch (error) {
       console.error('Error during PayPal transaction verification:', error);
@@ -1172,49 +1296,8 @@ app.post('/process_payment', async (req, res) => {
     default:
       generationsRestantes = 0;
   }
+})
 
-  try {
-    mongoClient = await connectToMongo();
-    const db = mongoClient.db("EnergymizeBD");
-    const clientsCollection = db.collection("clients");
-    const carteClientCollection = db.collection("carte_client");
-    const paymentSuccessful = true; 
-    
-    if (paymentSuccessful) {
-      await clientsCollection.updateOne(
-        { _id: new ObjectId(req.session.user._id) },
-        { 
-          $set: { 
-            idAbonnement: parseInt(planId),
-            gens: generationsRestantes
-          } 
-        }
-      );
-      await carteClientCollection.insertOne({
-        userId: new ObjectId(req.session.user._id),
-        num_carte: cardNumber, 
-        date_carte: expirationDate, 
-        cvv_carte: cvv 
-      });
-   
-      req.session.user.idAbonnement = parseInt(planId);
-      req.session.user.gens = generationsRestantes;
-      res.redirect('/success-page');
-    } else {
-      console.log('LENA0');
-      res.redirect('/failure-page');
-      console.log('LENA4');
-
-    }
-  } catch (error) {
-    console.error('Payment processing error:', error);
-    res.status(500).json({ success: false, message: "Erreur interne du serveur." });
-  } finally {
-    if (mongoClient) {
-      await mongoClient.close();
-    }
-  }
-});
 
 app.get('/Reset', function(req, res) {
   res.render('Pages/resetMdp', { 
@@ -1313,5 +1396,18 @@ app.get('/get-workout-dates', async (req, res) => {
   }
 });
 
+async function sendSubscriptionEmail(userEmail, subscriptionName, price) {
+  const mailOptions = {
+    from: 'energymize@gmail.com',
+    to: userEmail,
+    subject: 'Confirmation d\'abonnement',
+    text: `Merci pour votre abonnement. \n\nNom de l'abonnement: ${subscriptionName}\nPrix payé: ${price}\n\nMerci pour votre abonnement !`
+  };
 
-
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Email envoyé avec succès');
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email:', error);
+  }
+}

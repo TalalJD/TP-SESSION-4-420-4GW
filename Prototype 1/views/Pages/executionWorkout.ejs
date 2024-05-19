@@ -13,9 +13,6 @@
       background-size: cover;
       background-position: center;
       padding: 20px;
-      margin-left: 2vw;
-      margin-top: 3vh;
-      margin-bottom: 3vh;
       border-radius: 8px;
       box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
       width: 450px;
@@ -110,6 +107,12 @@
     border: 1px solid wheat;
     border-radius: 4px;
  }
+ .workoutDetails > * {
+            margin-left: 2vw;
+            margin-top: 3vh;
+            margin-bottom: 3vh;
+            color:white;
+        }
  .workoutExecHeader{
     width: 90%;
     display: flex;
@@ -134,6 +137,52 @@ h1 {
     margin: 0; 
     white-space: nowrap; 
 }
+.creationSerie{
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  border: 2px solid whitesmoke;
+  border-radius: 12px;
+  padding: 6px;
+  margin-bottom: 0.5vh;
+}
+.creationSerie > * {
+  margin-left: 0.5vw;
+}
+.unclickable {
+        pointer-events: none; /* Prevents click events */
+        opacity: 0.5; /* Makes it appear grayed out */
+    }
+    .numericalSetInput {
+            width: 75px;
+            color: white; /* Text color */
+            background-color: transparent; /* Background color */
+            border: none; /* No border */
+            outline: none; /* No outline */
+            text-align: center; /* Center the text */
+        }
+.serieGroupe{
+  display: flex;
+  flex-direction: column;
+}
+.seriesAffichage{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 0.5vw;
+}
+.terminerEntrainementButton {
+  align-self: center; /* Center the button horizontally */
+  margin-top: auto; /* Push the button to the bottom */
+  height: 5vh;
+  background-color: rgb(37, 102, 37);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.5s;
+}
   </style>
   <div class="workoutExecution">
     <div class="workoutExecHeader">
@@ -146,14 +195,6 @@ h1 {
     <div class="workoutDetails">
            <div class="carde">
         <div class="card-content">
-    
-            <% if (!workout.IsTemplate_workout) { %>
-                <div class="tempsHeure">
-                    <p><%= workout.dureeSeconde_workout %></p>
-                    <p><%= workout.date_workout %></p>
-                </div>
-            <% } %>
-    
             <% if (workout.exercises && workout.exercises.length > 0) { %>
                 <% workout.exercises.forEach(function(exercise) { %>
                     <div class="exercise">
@@ -161,17 +202,19 @@ h1 {
                             <% exercise.series.forEach(function(serie) { %>
                                 <% if (workout.IsTemplate_workout) { %>
                                     <!-- Display for templates without series details -->
-                                    <h3><%= serie.nom_exo %></h3>
-                                    <div class="description-panel">
+                                    <h3 class="nom_exo"><%= serie.nom_exo %></h3>
+                                    <div class="description-panel" style="display: none;">
                                         <p class="description"><%= serie.desc_exo %></p>
                                     </div>
+                                    <input type="hidden" value="<%= serie.id_exo_exec %>" name="exo_exec_id">
                                 <% } else { %>
                                     <!-- Display for normal workouts with series details -->
-                                    <h3><%= serie.nom_exo %></h3>
+                                    <h3 class="nom_exo"><%= serie.nom_exo %></h3>
                                     <p><%= serie.reps %> repetitions, RPE: <%= serie.rpe %></p>
                                     <div class="description-panel" style="display: none;">
                                         <p class="description"><%= serie.desc_exo %></p>
                                     </div>
+                                    <input type="hidden" value="<%= serie.id_exo_exec %>" name="exo_exec_id">
                                 <% } %>
                             <% }); %>
                         <% } else { %>
@@ -184,28 +227,177 @@ h1 {
             <% } %>
         </div>
         </div> 
+        <div class="sectionSeries">
+          <h2 id="titreExoSelectionne"></h2>
+          <div class="serieGroupe" id="serieGroupe">
+          </div>
+          <div class="creationSerie" id="creationSerie">
+            <p>Repetitions:</p>
+            <input class="numericalSetInput" id="repetitionsInput" type="number" min="1" max="100" step="1" value="5" width: 50px;>
+            <p>RPE:</p>
+            <input class="numericalSetInput" id="RPEInput" type="number" min="1" max="10" step="1" value="5" style="width: 50px;">
+            <p>Poids (lbs): </p>
+            <input class="numericalSetInput" id="PoidInput" type="number" min="2.5" max="1250" step="2.5" value="2.5" style="width: 50px;">
+            <button id="confirmerSerie">Confirmer Serie</button>
+          </div>
+          <button id="ajouterSerieBouton">Selectionnez un exercice!</button>
+
+        </div>
+        <button id="terminerEntrainementButton" class="terminerEntrainementButton" style="height: 5vh; background-color: rgb(37, 102, 37);">Terminer Entrainement</button>
     </div>
   </div>
+  <div id="workoutData" style="display: none;"><%= JSON.stringify(workout) %></div>
+
+  
 <script>
+  var workoutData = document.getElementById('workoutData').textContent;
+  var workout = JSON.parse(workoutData);
+  let listeSerie = [];
+  let selectedExoExec;
+  var elapsedTime;
+  class Serie {
+    constructor(reps, rpe, exo_exec_id_exo_exec, poids){
+      this.reps = reps;
+      this.rpe = rpe;
+      this.exo_exec_id_exo_exec = exo_exec_id_exo_exec;
+      this.poids = poids;
+    }
+    describe() {
+    return `Exo Exec ID: ${this.exo_exec_id_exo_exec}; REPS: ${this.reps}; RPE: ${this.rpe}; Poids: ${this.poids}`;
+  }
+  }
     document.addEventListener('DOMContentLoaded', function() {
     var exercises = document.querySelectorAll('.exercise');
     exercises.forEach(function(exercise) {
       exercise.addEventListener('click', function() {
-        var descriptionPanel = exercise.querySelector('.description-panel');
-        if (descriptionPanel.style.display === 'none') {
-          descriptionPanel.style.display = 'block';
-        } else {
-          descriptionPanel.style.display = 'none';
-        }
+        var titre = document.getElementById('titreExoSelectionne');
+        var titreInput = exercise.querySelector('.nom_exo');
+        titre.innerHTML=titreInput.innerHTML;
+        selectedExoExec = exercise;
+        MarkExerciseAsSelected(exercise);
+        boutonAjoutSerie.classList.remove('unclickable');
+        boutonAjoutSerie.innerHTML='Nouvelle serie';
+        var exoExecInput = exercise.querySelector('input[name="exo_exec_id"]');
+            if (exoExecInput) {
+                selectedExoExec = exoExecInput.value;
+                console.log(selectedExoExec);
+            }
+        MettreAJourListeSerie();
       });
     });
+    var boutonAjoutSerie = document.getElementById('ajouterSerieBouton');
+    boutonAjoutSerie.classList.add('unclickable');
+    boutonAjoutSerie.addEventListener('click',function(){
+      MontrerCreationSerie();
+    });
+    var boutonConfirmerSerie = document.getElementById('confirmerSerie');
+    boutonConfirmerSerie.addEventListener('click',function(){
+      CreerSerie();
+    });
+    var boutonTerminer = document.getElementById('terminerEntrainementButton');
+    boutonTerminer.onclick=FinaliserWorkout;
   });
+  function MarkExerciseAsSelected(selectedExercise){
+    var exercises = document.querySelectorAll('.exercise');
+    exercises.forEach(function(exercise){
+      exercise.style.borderLeft = '5px solid #D5C069';
+      if (exercise==selectedExercise){
+        exercise.style.borderLeft = '5px solid #f1492b';
+      }
+    });
+  }
+ 
+  function MontrerCreationSerie(){
+    var creationSerieDiv = document.getElementById('creationSerie');
+    if (creationSerieDiv.style.display=='flex'){
+      creationSerieDiv.style.display='none';
+    } else {
+      creationSerieDiv.style.display='flex';
+    }
+  }
+
+  function CreerSerie(){
+    var repetitions = document.getElementById('repetitionsInput');
+    var rpe = document.getElementById('RPEInput');
+    var poids = document.getElementById('PoidInput');
+    serie = new Serie(repetitions.value,rpe.value,selectedExoExec, poids.value);
+    rpe.value=5;
+    repetitions.value=5;
+    poids.value=2.5;
+    listeSerie.push(serie);
+    console.log(serie.describe());
+    MontrerCreationSerie();
+    MettreAJourListeSerie();
+  }
+  function MettreAJourListeSerie(){
+    let serieAffichageDiv = document.getElementById('serieGroupe');
+    serieAffichageDiv.innerHTML='';
+    serieNombre=0;
+    for (let serie of listeSerie){
+      if (serie.exo_exec_id_exo_exec==selectedExoExec){
+        serieNombre++;
+        AddSerieToDiv(serie,serieAffichageDiv,serieNombre);
+      }
+    }
+  }
+  function AddSerieToDiv(serie,div, nombreSerie){
+    let serieDiv = document.createElement('div');
+    serieDiv.classList.add('seriesAffichage');
+    let deleteButton = document.createElement('button');
+    let titleDiv = document.createElement('h4');
+    let repsDiv = document.createElement('h5');
+    let rpeDiv = document.createElement('h5');
+    let poidsDiv = document.createElement('h5');
+    titleDiv.innerHTML = 'Serie '+nombreSerie+':    ';
+    poidsDiv.innerHTML = serie.poids + 'lbs';
+    repsDiv.innerHTML = serie.reps + ' Reps';
+    rpeDiv.innerHTML = serie.rpe + ' RPE';
+    serieDiv.appendChild(titleDiv);
+    serieDiv.appendChild(poidsDiv);
+    serieDiv.appendChild(repsDiv);
+    serieDiv.appendChild(rpeDiv);
+    deleteButton.textContent='X';
+    deleteButton.style.backgroundColor='red';
+    deleteButton.onclick = function() {
+      DeleteSerie(serie);
+    };
+    serieDiv.append(deleteButton);
+    div.appendChild(serieDiv);
+  }
+  function DeleteSerie(serie){
+    const indexSerie = listeSerie.indexOf(serie);
+    listeSerie.splice(indexSerie,1);
+    MettreAJourListeSerie();
+  }
+  function FinaliserWorkout(){
+    return fetch('createNewWorkout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({listeSerie})
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+        return data; 
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+  }
   document.addEventListener('DOMContentLoaded', function() {
     var startTime = Date.now();
     var timerElement = document.querySelector('.timer');
 
     function updateTimer() {
-        var elapsedTime = Date.now() - startTime;
+        elapsedTime = Date.now() - startTime;
         var seconds = Math.floor((elapsedTime / 1000) % 60);
         var minutes = Math.floor((elapsedTime / (1000 * 60)) % 60);
         var hours = Math.floor((elapsedTime / (1000 * 60 * 60)) % 24);

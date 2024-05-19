@@ -7,7 +7,7 @@
     <div class="side-bar">
         <a id="calendarIcon">
             <i class="fa-solid fa-calendar-days icons" style="color: #000000;" name="calendarIcon"></i>
-            <span>Calendrier</span>
+            <span>Historique</span>
         </a>
 
         <a id="profileIcon">
@@ -124,9 +124,9 @@
             </div>
         </div>
     </div>
-        <div class="exercice-card hidden">
-            <i class="fa-sharp fa-solid fa-plus icons" style="color: #000000;" name="plusIcon" id="NouvelEntrainement"></i>
-        </div>
+    <div class="exercice-card hidden">
+        <i class="fa-sharp fa-solid fa-plus icons" style="color: #000000;" name="plusIcon" id="NouvelEntrainement"></i>
+    </div>
     <div class="Choisir-Entrainement hidden">
         <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--ligne de code prise de
           https://www.w3schools.com/css/css_rwd_viewport.asp-->
@@ -235,6 +235,7 @@
                 cursor: pointer;
 
             }
+
             .confirmWorkout-button {
                 position: absolute;
                 bottom: 10px;
@@ -248,9 +249,11 @@
                 cursor: pointer;
 
             }
-            .confirmWorkout-button:hover{
+
+            .confirmWorkout-button:hover {
                 background-color: #555;
             }
+
             .return-button:hover {
                 background-color: #555;
             }
@@ -397,12 +400,11 @@
         <!-- Return button -->
         <div class="workoutCompletionSection">
             <button id="returnButton" class="return-button">Retourner</button>
-            <button id="confirmWorkoutCreationButton"class="confirmWorkout-button">Confirmer</button>
+            <button id="confirmWorkoutCreationButton" class="confirmWorkout-button">Confirmer</button>
         </div>
     </div>
     <div class="Chercher-Exercice hidden">
         <style>
-
             .searchBody {
                 display: flex;
                 flex-direction: row;
@@ -420,7 +422,7 @@
                 /* Rounded corners */
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 /* Subtle shado5w for better visibility */
-               
+
                 margin: auto;
                 /* Center the searchBody horizontally and vertically if inside another flex container or full page */
             }
@@ -476,176 +478,326 @@
             </div>
         </div>
     </div>
-
     <div class="affichage hidden">
-       
-         
-          <style>
+
+
+        <style>
             body {
-              height: 100%;
-              overflow-y: scroll;
-              margin: 0;
-              padding: 0;
+                height: 100%;
+                overflow-y: scroll;
+                margin: 0;
+                padding: 0;
             }
-         
+
             .carde {
-              position: relative;
-              background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/imgs/Chris-Bumstead-Bio.jpeg');
-              background-size: cover;
-              background-position: center;
-              padding: 20px;
-              border-radius: 8px;
-              margin: 5vh auto;
-              box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-              width: 450px;
-              height: 80vh;
-              overflow-y: auto;
-              border-top: 0.5px solid #D5C069;
+                position: relative;
+                background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/imgs/Chris-Bumstead-Bio.jpeg');
+                background-size: cover;
+                background-position: center;
+                padding: 20px;
+                border-radius: 8px;
+                margin: 5vh auto;
+                box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+                width: 450px;
+                height: 80vh;
+                overflow-y: auto;
+                border-top: 0.5px solid #D5C069;
             }
-         
-           
+
+
             .card-content {
-              position: relative;
-              z-index: 1;
+                position: relative;
+                z-index: 1;
             }
-         
+
             .exercise {
-              background: rgba(255, 255, 255, 0.2);
-              margin-top: 10px;
-              padding: 10px;
-              border-radius: 5px;
-              border-left: 5px solid #D5C069;
-              cursor: pointer;
+                background: rgba(255, 255, 255, 0.2);
+                margin-top: 10px;
+                padding: 10px;
+                border-radius: 5px;
+                border-left: 5px solid #D5C069;
+                cursor: pointer;
             }
-         
+
             .workout-list,
             #workout-list {
-                
-              color: white;
+
+                color: white;
             }
-         
+
             .lesBoutons {
-              display: flex;
-              flex-direction: row;
-              justify-content: center;
-              margin-top: 20px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                margin-top: 20px;
             }
-         
+
             button {
-              background-color: #D5C069;
-              color: black;
-              border: none;
-              padding: 10px 20px;
-              margin: 0 10px;
-              border-radius: 5px;
-              cursor: pointer;
-              transition: 0.5s;
+                background-color: #D5C069;
+                color: black;
+                border: none;
+                padding: 10px 20px;
+                margin: 0 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: 0.5s;
             }
-         
+
             button:hover {
-              background-color: #555;
-           
+                background-color: #555;
+
             }
-         
+
             h1 {
-              text-align: center;
-              padding: 20px 0;
+                text-align: center;
+                padding: 20px 0;
             }
-         
-            .tempsHeure{
-              display: flex;
-              justify-content: space-between;
+
+            .tempsHeure {
+                display: flex;
+                justify-content: space-between;
             }
-         
-            .titre{
-              color: #D5C069;
-              font-family: 'Courier New', Courier, monospace;
+
+            .titre {
+                color: #D5C069;
+                font-family: 'Courier New', Courier, monospace;
             }
-         
-            .description{
-              font-style: italic;
-              text-align: center;
-              font-size: small;
+
+            .description {
+                font-style: italic;
+                text-align: center;
+                font-size: small;
             }
-         
+
             .description-panel {
-          background: rgba(0, 0, 0, 0.8);
-          color: white;
-          padding: 10px;
-          border-radius: 5px;
-          margin-top: 5px;
-        }
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                margin-top: 5px;
+            }
 
-        .scrollable-workout-list {
-  overflow-x: auto;
-  white-space: nowrap;
-  
-}
+            .scrollable-workout-list {
+                overflow-x: auto;
+                white-space: nowrap;
+
+            }
+        </style>
 
 
-         
-          </style>
-         
-           
-         <div class="scrollable-workout-list" id="scrollableWorkoutList"></div>
-            <div id="workout-list">
-              <% if (workouts.length > 0) { %>
-                  <% workouts.forEach(function(workout) { %>
-                      <div class="carde">
-                          <div class="card-content">
-                              <h2 class="titre"><%= workout.nom_workout %></h2>
-                              <p class="description"><%= workout.desc_workout %></p>
-         
-                              <% if (!workout.IsTemplate_workout) { %>
-                                  <div class="tempsHeure">
-                                      <p><%= workout.dureeSeconde_workout %></p>
-                                      <p><%= workout.date_workout %></p>
-                                  </div>
-                              <% } %>
-         
-                              <% if (workout.exercises && workout.exercises.length > 0) { %>
-                                  <% workout.exercises.forEach(function(exercise) { %>
-                                      <div class="exercise">
-                                          <% if (exercise.series && exercise.series.length > 0) { %>
-                                              <% exercise.series.forEach(function(serie) { %>
-                                                  <% if (workout.IsTemplate_workout) { %>
-                                                      <!-- Display for templates without series details -->
-                                                      <h3><%= serie.nom_exo %></h3>
-                                                      <div class="description-panel">
-                                                          <p class="description"><%= serie.desc_exo %></p>
-                                                      </div>
-                                                  <% } else { %>
-                                                      <!-- Display for normal workouts with series details -->
-                                                      <h3><%= serie.nom_exo %></h3>
-                                                      <p><%= serie.reps %> repetitions, RPE: <%= serie.rpe %></p>
-                                                      <div class="description-panel" style="display: none;">
-                                                          <p class="description"><%= serie.desc_exo %></p>
-                                                      </div>
-                                                  <% } %>
-                                              <% }); %>
-                                          <% } else { %>
-                                              <p>No series found for this exercise.</p>
-                                          <% } %>
-                                      </div>
-                                  <% }); %>
-                              <% } else { %>
-                                  <p>No exercises found for this workout.</p>
-                              <% } %>
-                          </div>
-                      </div>
-                  <% }); %>
-              <% } else { %>
-                  <p>No workouts found.</p>
-              <% } %>
-          </div>
-         </div>
-           
-           
-         
-         
-         
-         
+        <div class="scrollable-workout-list" id="scrollableWorkoutList"></div>
+        <div id="workout-list">
+            <% if (workouts.length> 0) { %>
+                <% workouts.forEach(function(workout) { %>
+                    <div class="carde">
+                        <div class="card-content">
+                            <h2 class="titre">
+                                <%= workout.nom_workout %>
+                            </h2>
+                            <p class="description">
+                                <%= workout.desc_workout %>
+                            </p>
+
+                            <% if (!workout.IsTemplate_workout) { %>
+                                <div class="tempsHeure">
+                                    <p>
+                                        <%= workout.dureeSeconde_workout %>
+                                    </p>
+                                    <p>
+                                        <%= workout.date_workout %>
+                                    </p>
+                                </div>
+                                <% } %>
+
+                                    <% if (workout.exercises && workout.exercises.length> 0) { %>
+                                        <% workout.exercises.forEach(function(exercise) { %>
+                                            <div class="exercise">
+                                                <% if (exercise.series && exercise.series.length> 0) { %>
+                                                    <% exercise.series.forEach(function(serie) { %>
+                                                        <% if (workout.IsTemplate_workout) { %>
+                                                            <!-- Display for templates without series details -->
+                                                            <h3>
+                                                                <%= serie.nom_exo %>
+                                                            </h3>
+                                                            <div class="description-panel">
+                                                                <p class="description">
+                                                                    <%= serie.desc_exo %>
+                                                                </p>
+                                                            </div>
+                                                            <% } else { %>
+                                                                <!-- Display for normal workouts with series details -->
+                                                                <h3>
+                                                                    <%= serie.nom_exo %>
+                                                                </h3>
+                                                                <p>
+                                                                    <%= serie.reps %> repetitions, RPE: <%= serie.rpe %>
+                                                                </p>
+                                                                <div class="description-panel">
+                                                                    <p class="description">
+                                                                        <%= serie.desc_exo %>
+                                                                    </p>
+                                                                </div>
+                                                                <% } %>
+                                                                    <% }); %>
+                                                                        <% } else { %>
+                                                                            <p>No series found for this exercise.</p>
+                                                                            <% } %>
+                                            </div>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <p>No exercises found for this workout.</p>
+                                                    <% } %>
+                        </div>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <p>No workouts found.</p>
+                            <% } %>
         </div>
+    </div>
+    <div class="Historique-Calendrier hidden">
+
+
+        <style>
+            /* Styles for the calendar table */
+            #calendar {
+                position: absolute;
+                border-collapse: collapse;
+                width: 35vw;
+                /* 60% of viewport width */
+                height: 60vh;
+                /* 60% of viewport height */
+                max-width: 600px;
+                /* Maximum width */
+                max-height: 600px;
+                /* Maximum height */
+                background-color: rgb(32, 32, 28);
+                border-radius: 10px;
+                overflow: hidden;
+                left: 17%;
+                bottom: 30%;
+            }
+
+
+            #calendar th {
+                background-color: #D5C069;
+                /* Yellow */
+                color: black;
+                padding: 0;
+                /* Adjusted padding */
+                width: calc(100% / 7);
+                /* Equal width for each day */
+            }
+
+            #calendar th:first-child {
+                border-top-left-radius: 10px;
+            }
+
+            #calendar th:last-child {
+                border-top-right-radius: 10px;
+            }
+
+            #calendar th,
+            #calendar td {
+                border: 1px solid black;
+                padding: 5px;
+                text-align: center;
+                font-family: sans-serif;
+                color: white;
+                font-size: 14px;
+                /* Adjust font size as needed */
+            }
+
+            /* Styles for the current day */
+            .current-day {
+                background-color: #07c9ff;
+                /* Yellow */
+                color: black;
+            }
+
+            /* Styles for the workout days */
+            .workout-day {
+                background-color: #4CAF50;
+                /* Green */
+                color: white;
+            }
+
+            .nextMonth {
+                position: absolute;
+                margin-top: 2%;
+                left: 51.7%;
+                bottom: 60%;
+                width: 4vw;
+                height: 3vw;
+            }
+
+            .prevMonth {
+                position: absolute;
+                left: 12%;
+                bottom: 60%;
+                width: 4vw;
+                height: 3vw;
+
+            }
+
+            #calendar th:first-child {
+                border-top-left-radius: 10px;
+            }
+
+            #calendar th:last-child {
+                border-top-right-radius: 10px;
+            }
+
+            /* Nouvelles règles pour annuler la courbure du haut */
+            #calendar thead th:first-child {
+                border-top-left-radius: 0;
+                /* Annuler la courbure du coin supérieur gauche */
+            }
+
+            #calendar thead th:last-child {
+                border-top-right-radius: 0;
+                /* Annuler la courbure du coin supérieur droit */
+            }
+        </style>
+
+
+
+
+        <div class="month-navigation">
+            <button class="prevMonth">&lt;</button>
+            <button class="nextMonth">&gt;</button>
+        </div>
+
+        <table id="calendar">
+            <thead>
+                <tr>
+                    <th colspan="7" id="currentMonth"></th>
+                </tr>
+                <tr>
+                    <th>Dim</th>
+                    <th>Lun</th>
+                    <th>Mar</th>
+                    <th>Mer</th>
+                    <th>Jeu</th>
+                    <th>Ven</th>
+                    <th>Sam</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Le calendrier sera remplis automatiquement ici a l'aide du JS -->
+            </tbody>
+        </table>
+
+
+
+
+    </div>
+
+
+
+
+
+
 
 
 

@@ -169,7 +169,6 @@ app.get("/App", async function (req, res) {
   if (req.session.isLoggedIn) {
     user = req.session.user;
     let workouts = await GetWorkouts(true,user);
-    console.log("First workout found name: ",workouts[0].nom_workout);
     let mongoClient;
     try {
       mongoClient = await connectToMongo();
@@ -524,7 +523,7 @@ app.post('/createNewWorkout', async (req, res) => {
 async function RemplirWorkoutExoExecs(workoutId, listeSerie) {
   for (let serie of listeSerie) {
     try {
-      let serieExoId = await getExoIdByExoExecId(serie.exo_exec_id_exo_exec);
+      let serieExoId = await GetExoIdByExoExecId(serie.exo_exec_id_exo_exec);
       let idExoExec = await insertExoExec(workoutId, serieExoId);
       serie.exo_exec_id_exo_exec = idExoExec;
     } catch (error) {

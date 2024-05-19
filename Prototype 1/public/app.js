@@ -1,6 +1,7 @@
 const apiKey = '9k+sevfwAe2cmbuSjd9P6Q==YiRRhw4XpFLzq6TU';
 var profileIcon = document.getElementById("profileIcon");
 var plusIcon = document.getElementById("plusIcon");
+var calendarIcon = document.getElementById("calendarIcon");
 var profilePage = document.querySelector(".profile-page");
 var exerciceCard = document.querySelector(".exercice-card");
 var nouvelEntrainement = document.getElementById("NouvelEntrainement");
@@ -13,6 +14,9 @@ var searchButtonMuscle = document.getElementById('searchButtonMuscle'); // Add I
 var searchButtonName = document.getElementById('searchButtonName');
 var allCurrentExercises = document.getElementById("allExercicesInTemplate");
 var affichage = document.querySelector('.affichage');
+var historique = document.querySelector('.Historique-Calendrier');
+
+
 function hideAllExcept(element) {
     if (element === profileIcon) {
         profilePage.classList.add("show");
@@ -25,6 +29,8 @@ function hideAllExcept(element) {
         ChercherExercice.classList.add("hidden");
         affichage.classList.remove("show");
         affichage.classList.add("hidden");
+        historique.classList.remove("show");
+        historique.classList.add("hidden");
     } else if (element === plusIcon) {
         exerciceCard.classList.add("show");
         exerciceCard.classList.remove("hidden");
@@ -34,20 +40,43 @@ function hideAllExcept(element) {
         choisirEntrainement.classList.add("hidden");
         ChercherExercice.classList.remove("show");
         ChercherExercice.classList.add("hidden");
-    } else if (element === nouvelEntrainement) {
-        choisirEntrainement.classList.add("show");
-        choisirEntrainement.classList.remove("hidden");
-        exerciceCard.classList.remove("show");
-        exerciceCard.classList.add("hidden");
+        affichage.classList.remove("show");
+        affichage.classList.add("hidden");
+        historique.classList.remove("show");
+        historique.classList.add("hidden");
+    } else if (element === calendarIcon) {
+        historique.classList.add("show");
+        historique.classList.remove("hidden");
         profilePage.classList.remove("show");
         profilePage.classList.add("hidden");
+        exerciceCard.classList.remove("show");
+        exerciceCard.classList.add("hidden");
+        choisirEntrainement.classList.remove("show");
+        choisirEntrainement.classList.add("hidden");
         ChercherExercice.classList.remove("show");
         ChercherExercice.classList.add("hidden");
         affichage.classList.remove("show");
-        affichage.classList.add("hide");
+        affichage.classList.add("hidden");
     }
     document.body.style.overflow = "hidden";
 }
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    calendarIcon.addEventListener("click", function() {
+        if (!historique.classList.contains("show")) {
+            hideAllExcept(calendarIcon);
+            //historique.style.left = "-10px";
+        } else {
+            historique.classList.remove("show");
+            historique.classList.add("hidden");
+            document.body.style.overflow = "auto";
+            //historique.style.left = "-100%";
+        }
+    });
+});
+
+
 document.addEventListener("DOMContentLoaded", function() {
     profileIcon.addEventListener("click", function() {
         if (!profilePage.classList.contains("show")) {
@@ -322,6 +351,105 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+
+
+
+
+function Afficher_Dates_WorkoutsCompleted() {
+    // Fait une requête pour obtenir les dates d'entraînement
+    function fetchWorkoutDates() {     
+        return fetch('/workout-dates')
+            .then(response => response.json())
+            .then(data => data.workoutDates)
+            .catch(error => {
+                console.error('Error fetching workout dates:', error);
+                return [];
+            });
+    }
+
+    // Fonction pour générer le contenue du calendrier en fonction de la date
+    function generateCalendar(year, month, workoutDates) {
+        const calendarBody = document.querySelector('#calendar tbody');
+        calendarBody.innerHTML = '';
+
+        // Noms des mois en français
+        const moisEnFrancais = [
+            "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+            "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+        ];
+        
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDay = new Date(year, month, 1).getDay();
+
+        let date = 1;
+        for (let i = 0; i < 6; i++) {
+            const row = document.createElement('tr');
+            for (let j = 0; j < 7; j++) {
+                const cell = document.createElement('td');
+                if (i === 0 && j < firstDay) {
+                    cell.textContent = '';
+                } else if (date > daysInMonth) {
+                    break;
+                } else {
+                    cell.textContent = date;
+                    const currentDate = new Date(year, month, date).toISOString().split('T')[0];
+                    if (workoutDates.includes(currentDate)) {
+                        cell.classList.add('workout-day');
+                    }
+                    if (currentDate === new Date().toISOString().split('T')[0]) {
+                        cell.classList.add('current-day');
+                    }
+                    date++;
+                }
+                row.appendChild(cell);
+            }
+            calendarBody.appendChild(row);
+        }
+
+        //Force le nom du mois en francais
+        document.getElementById('currentMonth').textContent = moisEnFrancais[month] + ' ' + year;
+
+    }
+
+    // Initialise le calendrier avec les données actuelles
+    function initCalendar() {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+
+        fetchWorkoutDates().then(workoutDates => {
+            generateCalendar(year, month, workoutDates);
+        });
+
+        // Add event listeners to navigation buttons
+        document.querySelector('.prevMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            const newYear = currentDate.getFullYear();
+            const newMonth = currentDate.getMonth();
+            fetchWorkoutDates().then(workoutDates => {
+                generateCalendar(newYear, newMonth, workoutDates);
+            });
+        });
+
+        document.querySelector('.nextMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            const newYear = currentDate.getFullYear();
+            const newMonth = currentDate.getMonth();
+            fetchWorkoutDates().then(workoutDates => {
+                generateCalendar(newYear, newMonth, workoutDates);
+            });
+        });
+        
+    }
+
+    initCalendar();
+}
+
+
+document.addEventListener('DOMContentLoaded', Afficher_Dates_WorkoutsCompleted);
+
 
 
 

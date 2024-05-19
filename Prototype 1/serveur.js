@@ -253,11 +253,8 @@ const con = mysql.createConnection({
 });
 
 con.connect(function (err) {
-
   if (err) throw err;
-
   console.log("connected!");
-
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -1157,13 +1154,6 @@ app.post('/paypal-transaction-complete', async (req, res) => {
 
 
 
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-
-
 app.post('/process_payment', async (req, res) => {
   const { cardNumber, expirationDate, cvv, planId } = req.body;
   let mongoClient;
@@ -1252,9 +1242,11 @@ app.post('/submit-reset', async (req, res) => {
     const db = client.db("EnergymizeBD");
     const users = db.collection("clients");
 
-    const user = await users.findOne({ email });
-    if (!user) {
-      return res.status(404).send("Aucun utilisateur trouvé avec cet e-mail.");
+    
+    
+    let emailCheck = await FindStudentsByEmail(collection, courriel_client);
+    if (emailCheck.length<1){
+      return res.status(404).send("No users matching email: "+courriel_client);
     }
 
     const resetToken = crypto.randomBytes(20).toString('hex');
@@ -1288,39 +1280,38 @@ app.post('/submit-reset', async (req, res) => {
   }
 });
 
-app.get('/get-workout-dates', async function(req, res){
-  let user = null;
-  if (req.session.isLoggedIn) {
-      user = req.session.user;
+
+// Fonction pour exécuter une requête SQL en utilisant Promises
+function query(sql, params) {
+  return new Promise((resolve, reject) => {
+      con.query(sql, params, (error, results) => {
+          if (error) {
+              reject(error);
+              return;
+          }
+          resolve(results);
+      });
+  });
+}
+
+
+app.get('/get-workout-dates', async (req, res) => {
+  if (!req.session.isLoggedIn) {
+      return res.status(403).send('Not logged in');
   }
 
-  // Fetch workout dates with template status 0 for the user
-  con.query(
-      'SELECT DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = 0',
-      [user._id],
-      (error, workouts) => {
-          if (error) {
-              console.error('Error fetching workout dates:', error);
-              return res.status(500).json({ error: 'Server Error' });
-          }
+  try {
+      const user = req.session.user;
+      const sql = 'SELECT DATE_FORMAT(date_workout, "%Y-%m-%d") AS date_workout FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = 0';
+      const workouts = await query(sql, [user._id]);
 
-          // Extract the workout dates from the query result
-          const workoutDates = workouts.map(workout => workout.date_workout);
-
-          // Send the workout dates as JSON response
-          
-      }
-  );
-  res.render('Pages/historique')[
-    pageTitle : 
-    workoutDates: workoutDates;
-  ]
-
+      const workoutDates = workouts.map(workout => workout.date_workout);
+      res.render('Pages/historique', { workoutDates });
+  } catch (error) {
+      console.error('Error fetching workout dates:', error);
+      res.status(500).send('Server Error');
+  }
 });
 
 
 
-
-app.get('/historique', (req, res) => {
-  // Assuming historique.ejs is located in your views folder
-});

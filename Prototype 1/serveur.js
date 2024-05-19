@@ -163,6 +163,41 @@ app.get("/executeWorkout",async function (req,res){
   });
 });
 
+
+app.get('/workout-dates', async function(req, res) {
+  let user = null;
+  let userId = null;
+
+    // Vérifie si l'utilisateur est connecté
+  if (req.session.isLoggedIn) {
+      user = req.session.user;
+      userId = user._id;
+  }
+    //requete sql qui verifie si il y a une erreur et la gere et  et recupere les donnees
+  con.query('SELECT DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = 0', [userId], (error, workouts) => {
+      if (error) {
+          console.error('Error fetching workout dates:', error);
+          return res.status(500).json({ error: 'Server Error' });
+      }
+
+      //extrait et inserre les donnes dans une variable constante
+      const workoutDates = workouts.map(workout => workout.date_workout);
+
+      // Envoie les dates des entraînements en tant que réponse JSON
+      res.json({ workoutDates });
+  });
+});
+
+
+app.get('/historique', function(req, res) {
+  let user = req.session.user;
+  res.render("Pages/historique", {
+    items: [], 
+    user: user
+  });
+});
+
+
 app.get("/App", async function (req, res) {
   let user = null;
   let abonnement;
@@ -1000,37 +1035,8 @@ function GetWorkouts(isTemplate, user){
   });
 }
 
-// Route for fetching workout dates
-app.get('/workout-dates', async function(req, res) {
-  let user = null;
-  let userId = null;
-  if (req.session.isLoggedIn) {
-      user = req.session.user;
-      userId = user._id;
-  }
 
-  con.query('SELECT DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = 0', [userId], (error, workouts) => {
-      if (error) {
-          console.error('Error fetching workout dates:', error);
-          return res.status(500).json({ error: 'Server Error' });
-      }
 
-      // Extract the workout dates from the query result
-      const workoutDates = workouts.map(workout => workout.date_workout);
-
-      // Send the workout dates as JSON response
-      res.json({ workoutDates });
-  });
-});
-
-// Route for rendering the historique page
-app.get('/historique', function(req, res) {
-  let user = req.session.user;
-  res.render("Pages/historique", {
-    items: [], 
-    user: user
-  });
-});
 
 
 

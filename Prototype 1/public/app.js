@@ -10,7 +10,7 @@ var returnButton = document.getElementById('returnButton');
 var confirmWorkoutButton = document.getElementById('confirmWorkoutCreationButton');
 var AfficherSelectExo = document.getElementById('AfficherSelectExo');
 var ChercherExercice = document.querySelector(".Chercher-Exercice");
-var searchButtonMuscle = document.getElementById('searchButtonMuscle'); // Add ID to your button
+var searchButtonMuscle = document.getElementById('searchButtonMuscle'); 
 var searchButtonName = document.getElementById('searchButtonName');
 var allCurrentExercises = document.getElementById("allExercicesInTemplate");
 var affichage = document.querySelector('.affichage');
@@ -57,6 +57,17 @@ function hideAllExcept(element) {
         ChercherExercice.classList.add("hidden");
         affichage.classList.remove("show");
         affichage.classList.add("hidden");
+    } else if (element === nouvelEntrainement){
+        choisirEntrainement.classList.add("show");
+        choisirEntrainement.classList.remove("hidden");
+        ChercherExercice.classList.remove("show");
+        ChercherExercice.classList.add("hidden");
+        exerciceCard.classList.remove("show");
+        exerciceCard.classList.add("hidden");
+        affichage.classList.remove("show");
+        affichage.classList.add("hidden");
+        historique.classList.remove("show");
+        historique.classList.add("hidden");
     }
     document.body.style.overflow = "hidden";
 }

@@ -534,7 +534,7 @@ app.post('/createNewWorkout', async (req, res) => {
     await RemplirWorkoutExoExecs(workoutId,listeSerie);
     await RemplirWorkoutSeries(workoutId, listeSerie);
     console.log('All series inserted successfully');
-    res.status(200).send('Workout created and series inserted successfully');
+    res.redirect("/App");
   } catch (error) {
     console.error('Error inserting series', error);
     res.status(500).send('Error inserting series');

@@ -18,6 +18,7 @@ import dotenv from 'dotenv';
 import paypal from '@paypal/checkout-server-sdk';
 
 
+
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 
@@ -56,6 +57,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
+
 
 // MongoDB Trials
 
@@ -316,7 +318,10 @@ export async function InscrireUtilisateur(nom_client, prenom_client, courriel_cl
       courriel : courriel_client,
       mdp : mdp_hashee,
       gens : 3,
-      idAbonnement : 1
+      idAbonnement : 1, 
+      resetToken: null, 
+      resetTokenExpires: null, 
+
     };
     await collection.insertOne(clientDocument);
     return 1;
@@ -1334,31 +1339,65 @@ app.post('/paypal-transaction-complete', async (req, res) => {
 
 
 
+app.post('/process_payment', async (req, res) => {
+  const { cardNumber, expirationDate, cvv, planId } = req.body;
+  let mongoClient;
+  let generationsRestantes = 0;
+  
+  switch (parseInt(planId)) {
+    case 1: 
+      generationsRestantes = 3;
+      break;
+    case 2: 
+      generationsRestantes = 10;
+      break;
+    case 3: 
+      generationsRestantes = -1; 
+      break;
+    default:
+      generationsRestantes = 0;
+  }
+})
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
 
-
-
-
-app.get('/Reset', function(req, res) {
+app.get('/reset', function(req, res) {
   res.render('Pages/resetMdp', { 
-    siteTitle: 'Payment Success',
+    siteTitle: 'Réinitialisation du mot de passe',
     pageTitle: 'Reinitialisation',
     user: req.session.user 
   });
 });
 
+app.get('/reset-new-mdp/:token', function(req, res) {
+  const resetToken = req.params.token;
+  res.render('Pages/creationMdp',{
+    siteTitle: 'Création d\'un nouveau mot de passe',
+    pageTitle: 'Reinitialisation',
+    token: resetToken
+  });
+});
+
+export async function FindUserByResetToken(collection, token) {
+    return collection.find({ resetToken: token }).toArray();;
+}
+
+
+
+
+
+
+
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // Exemple avec Gmail, modifiez selon votre fournisseur
+  service: 'Gmail',
+  host: 'smtp.gmail.com', // Exemple avec Gmail, modifiez selon votre fournisseur
   auth: {
     user: 'energymize@gmail.com',  // Remplacez par votre email
-    pass: 'admin123)'        // Remplacez par votre mot de passe
+    pass: 'mcif cpjf sgpr bxcy'        // Remplacez par votre mot de passe
   }
 });
+//console.log('Transporter created', transporter);
+
 
 app.post('/submit-reset', async (req, res) => {
   const { email } = req.body;
@@ -1369,22 +1408,26 @@ app.post('/submit-reset', async (req, res) => {
     const db = client.db("EnergymizeBD");
     const users = db.collection("clients");
 
-    const user = await users.findOne({ email });
-    if (!user) {
-      return res.status(404).send("Aucun utilisateur trouvé avec cet e-mail.");
+    let emailCheck = await FindStudentsByEmail(users, email);;
+    if (emailCheck.length<1){
+      return res.status(404).send("No users matching email: "+emailCheck[0]._id);
+    }else{
+      console.log('---------------------------- Email found in the database: ', emailCheck[0]._id);
     }
 
     const resetToken = crypto.randomBytes(20).toString('hex');
-    const resetPasswordExpires = Date.now() + 3600000; // Le token expire après 1 heure
+    const resetTokenExpires = Date.now() + 3600000; // 1 heure
 
-    await users.updateOne({ email }, {
-      $set: {
-        resetPasswordToken: resetToken,
-        resetPasswordExpires
-      }
-    });
+    console.log('-----------------------------Reset token:', resetToken);
 
-    const resetUrl = `http://127.0.0.1/reset/${resetToken}`;
+  await UpdateClientById(users, emailCheck[0]._id,{
+    resetToken: resetToken,
+    resetTokenExpires : resetTokenExpires,
+  });
+
+
+
+    const resetUrl = `http://127.0.0.1:4000/reset-new-mdp/${resetToken}`;
 
     const mailOptions = {
       to: email,
@@ -1394,6 +1437,7 @@ app.post('/submit-reset', async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
+    console.log('----------------------------- mail options:', mailOptions);
     res.send('Un email de réinitialisation a été envoyé à ' + email + '.');
   } catch (error) {
     console.error('Erreur lors de l\'opération:', error);
@@ -1406,7 +1450,72 @@ app.post('/submit-reset', async (req, res) => {
 });
 
 
+app.post('/reset-new-mdp/:token', async function(req, res) {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+  const resetToken = req.params.token;
 
+  console.log('----------------------------- reset token:', resetToken);
+  console.log('----------------------------- current password:', currentPassword);
+  console.log('----------------------------- new password:', newPassword);
+  console.log('----------------------------- confirm password:', confirmPassword);
+
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).send('New password and confirm password do not match.');
+  }
+
+  let client;
+
+  try {
+    client = await connectToMongo();
+    const db = client.db("EnergymizeBD");
+    const users = db.collection("clients");
+
+    // Trouver l'utilisateur par le token de réinitialisation
+    const user = await FindUserByResetToken(users, resetToken);;
+
+    if (user.length<1){
+      return res.status(404).send("No users matching email: "+user[0]._id);
+    }else{
+      console.log('---------------------------- Token found in the database: ', user[0].resetToken);
+    }
+    // Vérifier le mot de passe actuel
+    const isMatch = await bcrypt.compare(currentPassword, user[0].mdp);
+    if (!isMatch) {
+      return res.status(404).send('Current password is incorrect.');
+    }
+
+    // Hash le nouveau mot de passe
+    const saltRounds =10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    // Mettre à jour le mot de passe de l'utilisateur dans la base de données
+    const updateResult = await users.updateOne(
+      { _id: user[0]._id },
+      {
+        $set: {
+          mdp: hashedPassword,
+          resetToken: null,
+          resetTokenExpires: null,
+        },
+      }
+    );
+
+    if (updateResult.matchedCount === 0) {
+      return res.status(500).send('Failed to reset password.');
+    }
+
+    res.send('Password has been reset successfully.');
+
+  } catch (error) {
+    console.error('Erreur lors de l\'opération:', error);
+    res.status(500).send('Server error.');
+  } finally {
+    if (client) {
+      await client.close();
+    }
+  }
+});
 
 
 async function sendSubscriptionEmail(userEmail, subscriptionName, price) {

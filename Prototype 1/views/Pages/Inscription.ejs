@@ -1,86 +1,86 @@
-    <%- include ("../partials/head.ejs") %>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="/inscriptionCSS.css">
-   
-        <div class="container py-2 h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                    <div class="card bg-dark text-white" style="border-radius: 1rem;">
-                        <div class="card-body p-4.5 text-center" style="padding-left: 2.5rem; padding-right: 2.5rem;" >
+<%- include ("../partials/head.ejs") %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="/inscriptionCSS.css">
 
-                            <form class="mb-md-5 mt-md-4 pb-5" action="/inscription/submit" method="post">
-
-                                <h2 class="fw-bold mb-2 text-uppercase">Inscription</h2>
-                                <p class="text-white-50 mb-5">Veuillez entrer vos informations!</p>
-
-                                <div class="form-outline form-white mb-4">
-                                    <input name="nom_client" type="nom" id="inputFormNom" class="form-control form-control-lg"
-                                        placeholder="Nom" />
-
-                                </div>
-
-                                <div class="form-outline form-white mb-4">
-                                    <input name="prenom_client" type="prenom" id="inputFormPrenom" class="form-control form-control-lg"
-                                        placeholder="Prénom" />
-
-                                </div>
-
-                                <div class="form-outline form-white mb-4">
-                                    <input name="courriel_client" type="email" id="inputFormCourriel" class="form-control form-control-lg"
-                                        placeholder="Courriel électronique" />
-
-                                </div>
-
-                                <div class="form-outline form-white mb-4">
-                                    <input name="mdp_client" type="mdp" id="inputFormMdp" class="form-control form-control-lg"
-                                        placeholder="Mot de passe" />
-
-                                </div>
-
-                                <div class="small mb-5 pb-lg-2">
-                                    <a href="/connexion" class="text-white-50">Déjà inscrit?</a>
-                                </div>
-                                
-
-                                <button type="submit" class="btn btn-outline-light btn-lg px-5 submit-button" >S'inscrire</button>
-
-
-                                <div class="error-message" style="color: red;"></div>
-
-
-                            </form>
-                            <a href="/" class="btn btn-outline-dark btn-lg px-2" style="position: absolute; bottom: 10px; left: 10px; color: rgb(255, 255, 255);">Retourner</a>
-
+<body>
+  <main>
+    <section class="h-100 gradient-form">
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-xl-10">
+              <div class="card rounded-3 text-black">
+                <div class="row g-0">
+                  <div class="col-lg-6">
+                    <div class="card-body p-md-5 mx-md-4">
+                      <form action="/inscription/submit" method="post">
+                        <h3 class="fw-bold mb-2 text-uppercase" style="text-align: center;">Inscription</h3>
+                        <p class="text-muted mb-5" style="text-align: center;">Veuillez entrer vos informations!</p>
+                        <div class="form-outline mb-4">
+                          <input name="nom_client" type="nom" id="inputFormNom" class="form-control form-control-lg" placeholder="Nom" />
                         </div>
+                        <div class="form-outline mb-4">
+                          <input name="prenom_client" type="prenom" id="inputFormPrenom" class="form-control form-control-lg" placeholder="Prénom" />
+                        </div>
+                        <div class="form-outline mb-4">
+                          <input name="courriel_client" type="email" id="inputFormCourriel" class="form-control form-control-lg" placeholder="Courriel électronique" />
+                        </div>
+                        <div class="form-outline mb-4">
+                          <input name="mdp_client" type="mdp" id="inputFormMdp" class="form-control form-control-lg" placeholder="Mot de passe" />
+                        </div>
+                        <div class="small mb-5 pb-lg-2">
+                          <a href="/connexion" class="text-muted">Déjà inscrit?</a>
+                        </div>
+                        <div class="text-center pt-1 mb-5 pb-1">
+                          <button type="submit" class="btn btn-outline-dark btn-lg px-5">S'inscrire</button>
+                        </div>
+                        <div class="error-message" style="color: red;"></div>
+                      </form>
                     </div>
+                  </div>
+                  <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+                    <div class="d-flex flex-column align-items-center">
+                      <div class="text-center mb-4">
+                        <a href="/">
+                          <img src="/imgs/whiteTransp.png" style="width: 185px" alt="Fitness logo">
+                        </a>
+                      </div>
+                      <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                        <h4 class="mb-4">Dépassez les limites avec Energymize</h4>
+                        <p class="medium mb-0">Entrez dans un univers dédié à la musculation sur mesure. Découvrez des programmes spécialisés pour vous aider à développer votre force et votre masse musculaire. Avec nos outils de suivi d'entraînement et de nutrition, atteignez vos objectifs de performance en musculation comme jamais auparavant.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-    </section>
-    <script>
+      </section>
+
+      <script>
         $('form').submit(function(event) {
-            event.preventDefault(); 
-            $('.error-message').text(''); 
-        
-            $.ajax({
-              url: '/inscription/submit',
-              type: 'POST',
-              data: $(this).serialize(),
-              success: function(data) {
-                window.location.href = "/Connexion"; 
-              },
-              error: function(response) {
-                const errors = response.responseJSON;
-                if(errors && errors.error) {
-                    // Display error message in an alert class
-                    $('.error-message').text(errors.error).addClass('alert alert-danger').show();
-                } else {
-                    console.log("Unexpected error response:", response);
-                }
+          event.preventDefault(); 
+          $('.error-message').text(''); 
+
+          $.ajax({
+            url: '/inscription/submit',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(data) {
+              window.location.href = "/Connexion"; 
+            },
+            error: function(response) {
+              const errors = response.responseJSON;
+              if(errors && errors.error) {
+                // Display error message in an alert class
+                $('.error-message').text(errors.error).addClass('alert alert-danger').show();
+              } else {
+                console.log("Unexpected error response:", response);
               }
-            });
+            }
+          });
         });
-    </script>
-    
-    
-    <%- include ("../partials/footer.ejs") %>
+      </script>
+
+      <%- include ("../partials/footer.ejs") %>
+</body>

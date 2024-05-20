@@ -216,6 +216,18 @@ app.get("/App", async function (req, res) {
   }
 });
 
+app.get("/faq", function (req, res) {
+  let user = null;
+  if (req.session.isLoggedIn) {
+    user = req.session.user;
+  }
+  res.render("Pages/faq", {
+    siteTitle: "Simple Application",
+    pageTitle: "FAQ",
+    items: [], 
+    user: user
+  });
+});
 
 app.get("/Abonnement", function (req, res) {
 

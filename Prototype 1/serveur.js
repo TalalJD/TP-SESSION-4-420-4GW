@@ -1250,13 +1250,13 @@ async function captureOrder(orderId) {
 function determineGenerationsRestantes(planId) {
   switch (parseInt(planId)) {
       case 1:
-          return 3;  // 3 générations pour le plan Gratuit
+          return 3;  
       case 2:
-          return 10; // 10 générations pour le plan Basic
+          return 10; 
       case 3:
-          return -1; // Illimité pour le plan Premium
+          return -1; 
       default:
-          return 0;  // Aucune génération par défaut
+          return 0;  
   }
 }
 

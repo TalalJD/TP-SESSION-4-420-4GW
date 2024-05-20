@@ -1,21 +1,105 @@
 <%- include ("../partials/header.ejs") %>
-<h1 style="text-align: center; font-size: 3rem; font-family:sans-serif; padding-top: 3rem; color:white; padding-bottom: 3rem;">Dominez chaque défi</h1>
-<div class="indexPresentation">
-    <a href="/indexSport?id_sport=1&name=hockey&image=hockeyIcon.png" class="indexSportImgContainer">
-        <img src="/imgs/hockeyIcon.png">
-    </a>
-    <a href="/indexSport?id_sport=2&name=musculation&image=dumbbellIcon.png" class="indexSportImgContainer">
-        <img src="/imgs/dumbbellIcon.png">
-    </a>
-    <a href="/indexSport?id_sport=3&name=football&image=soccerIcon.png" class="indexSportImgContainer">
-        <img src="/imgs/soccerIcon.png">
-    </a>
-    <a href="/indexSport?id_sport=4&name=basketball&image=basketIcon.png" class="indexSportImgContainer">
-        <img src="/imgs/basketIcon.png">
-    </a>
-    <a href="/indexSport?id_sport=5&name=americanFootball&image=amFootIcon.png" class="indexSportImgContainer">
-        <img src="/imgs/amFootIcon.png">
-    </a>
+
+<style>
+
+  .background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 115%;
+    height: 100%;
+    z-index: -1;
+    object-fit: cover;
+    filter: brightness(0.7); 
+  }
+  
+
+
+  .content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    padding-top: 120px; 
+    text-align: center; 
+  }
+
+
+  .top-bar,
+  .bottom-bar {
+    position: fixed;
+    width: 100%;
+    height: 60px; 
+    background-color: #D5C069; 
+    z-index: 2; 
+    overflow: hidden; 
+  }
+
+  .top-bar {
+    top: 0;
+    animation: slide 5s infinite;
+  }
+
+  .bottom-bar {
+    bottom: 0;
+    animation: slide 5s infinite reverse;
+  }
+  
+
+  @keyframes slide {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .top-bar, .bottom-bar {
+    background: linear-gradient(90deg, #D5C069, #666, #D5C069);
+    background-size: 200% 200%;
+  }
+
+
+  .description {
+    text-align: center;
+    font-size: 1.5rem;
+    font-family: sans-serif;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    margin: 2rem auto;
+    width: 80%;
+  }
+
+
+  .title {
+    display: inline-block; 
+    text-align: center;
+    font-size: 3rem;
+    font-family: sans-serif;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    color: white;
+    border-radius: 10px; 
+  }
+</style>
+
+
+<video autoplay muted loop class="background-video">
+  <source src="imgs/SONY FX3 CINEMATIC  SIGMA 24-70 F2.8 - Trim.mp4" type="video/mp4">
+  Votre navigateur ne supporte pas la balise vidéo.
+</video>
+
+
+<div class="bottom-bar"></div>
+
+<div class="content">
+  <h1 class="title">Dominez chaque défi</h1>
+  <div class="description">
+    <p>Bienvenue sur notre site de génération de workouts de musculation ! Transformez votre corps et atteignez vos objectifs avec des plans d'entraînement personnalisés, adaptés à tous les niveaux. Relevez chaque défi, dépassez vos limites et révélez le champion en vous. Commencez dès maintenant et laissez-nous vous guider vers le succès !</p>
+  </div>
+  <div class="indexPresentation"></div>
 </div>
 
 <%- include ("../partials/footer.ejs") %>

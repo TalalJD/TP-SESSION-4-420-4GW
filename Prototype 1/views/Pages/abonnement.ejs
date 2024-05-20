@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="abonnementCSS.css">
     <style>
         body {
-            overflow-x: hidden; /* Pour éviter le défilement horizontal */
+            overflow-x: hidden; 
         }
 
         .card-container {
@@ -67,6 +67,7 @@
             <div class="additional-info">
                 <p>Accès limité aux programmes</p>
                 <p>3 essais pour générer des programmes</p>
+                <p><strong>Prix: Gratuit</strong></p>
             </div>
             <% if (user) { %>
                 <button type="button" onclick="showPaymentForm('1')" id="but1" <% if (user.idAbonnement === 1) { %>disabled<% } %>>Confirmer</button>
@@ -81,6 +82,7 @@
             <div class="additional-info">
                 <p>Accès illimité aux programmes</p>
                 <p>10 essais par mois pour générer des programmes</p>
+                <p><strong>Prix: 6,99$</strong></p>
             </div>
             <% if (user) { %>
                 <button type="button" onclick="showPaymentForm('2')" id="but2" <% if (user.idAbonnement === 2) { %>disabled<% } %>>Confirmer</button>
@@ -96,6 +98,7 @@
                 <p>Accès au coach</p>
                 <p>Accès illimité pour générer des programmes</p>
                 <p>Accès aux plans de nutrition</p>
+                <p><strong>Prix: 9,99$</strong></p>
             </div>
             <% if (user) { %>
                 <button type="button" onclick="showPaymentForm('3')" id="but3" <% if (user.idAbonnement === 3) { %>disabled<% } %>>Confirmer</button>
@@ -107,7 +110,7 @@
 
     <script>
         function redirectToLogin() {
-            window.location.href = '/connexion'; // Remplacez '/login-page' par l'URL de votre page de connexion
+            window.location.href = '/connexion'; 
         }
 
         function showPaymentForm(planId) {
@@ -137,22 +140,22 @@
                     alert('Erreur de connexion au serveur: ' + error.message);
                 });
             } else {
-                // Animation des cartes
+                
                 cardContainer.style.animation = 'slideOutLeft 1s forwards';
 
-                // Affichage du bouton PayPal après l'animation
+
                 setTimeout(() => {
                     paypalButtonContainer.style.display = 'block';
                     paypalButtonContainer.style.animation = 'slideInRight 1s forwards';
                 }, 1000);
 
-                // Dynamically load and render the PayPal button
+
                 paypal.Buttons({
                     createOrder: function(data, actions) {
                         return actions.order.create({
                             purchase_units: [{
                                 amount: {
-                                    value: planId === '3' ? '9.99' : '6.99' // 9.99 for Premium, 6.99 for Basic
+                                    value: planId === '3' ? '9.99' : '6.99' 
                                 },
                                 description: 'Abonnement ' + (planId === '2' ? 'Basic' : 'Premium')
                             }]

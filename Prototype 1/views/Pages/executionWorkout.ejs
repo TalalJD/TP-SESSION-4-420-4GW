@@ -188,7 +188,7 @@ h1 {
     <div class="workoutExecHeader">
         <h1><%= workout.nom_workout %></h1>
         <div class="workoutHeader-right">
-            <span class="timer">00:00:00</span>
+            <span class="timer" id="timer">00:00:00</span>
             <span class="date-today"><%= new Date().toLocaleDateString() %></span>
         </div>
     </div>
@@ -370,12 +370,13 @@ h1 {
     MettreAJourListeSerie();
   }
   function FinaliserWorkout(){
+
     return fetch('createNewWorkout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ listeSerie })
+        body: JSON.stringify({ listeSerie, workout, elapsedTime })
     })
     .then(response => {
         if (response.redirected) {

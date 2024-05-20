@@ -1,38 +1,80 @@
-<%- include ("../partials/header.ejs") %>
+<%- include ("../partials/head.ejs") %>
 
+<style>
+    body{
+        background-color: white;
+    }
+    .container {
+        margin-top: 50px;
+        background-color: white;
+        
+    }
+    .form-group {
+        position: relative;
+    }
+    .pass_show {
+        position: relative;
+    }
+    .ptxt {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        z-index: 1;
+        cursor: pointer;
+        color: #D5C069;
+        user-select: none;
+    }
+    .form-control {
+        border: 1px solid #D5C069;
+        border-radius: 5px;
+    }
+    .btn-reset {
+        background-color: #D5C069;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+    .btn-reset:hover {
+        background-color: #D5C069;
+    }
+</style>
+
+ <center>
     <div class="container">
         <div class="row">
             <div class="col-sm-4">
-
-                <label>Current Password</label>
-                <div class="form-group pass_show">
-                    <input type="password" value="faisalkhan@123" class="form-control" placeholder="Current Password">
-                </div>
-                <label>New Password</label>
-                <div class="form-group pass_show">
-                    <input type="password" value="faisal.khan@123" class="form-control" placeholder="New Password">
-                </div>
-                <label>Confirm Password</label>
-                <div class="form-group pass_show">
-                    <input type="password" value="faisal.khan@123" class="form-control" placeholder="Confirm Password">
-                </div>
-
+                <form action="/reset-new-mdp/<%= token %>" method="POST">
+                    <div class="form-group pass_show">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" name="currentPassword" class="form-control" placeholder="Mot de passe actuel">
+                    </div>
+                    <div class="form-group pass_show">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" name="newPassword" class="form-control" placeholder="Nouveau mot de passe">
+                    </div>
+                    <div class="form-group pass_show">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" name="confirmPassword" class="form-control" placeholder="Re-nouveau mot de passe">
+                    </div>
+                    <br>
+                    <button type="submit" class="btn-reset">Réinitialiser le mot de passe</button>
+                </form>
             </div>
         </div>
     </div>
+ </center>
 
-    <script>
+<script>
+    $(document).ready(function () {
+        $('.pass_show').append('<span class="ptxt">Show</span>');
+    });
 
-        $(document).ready(function () {
-            $('.pass_show').append('<span class="ptxt">Show</span>');
+    $(document).on('click', '.pass_show .ptxt', function () {
+        $(this).text($(this).text() == "Show" ? "Hide" : "Show");
+        $(this).prev().attr('type', function (index, attr) {
+            return attr == 'password' ? 'text' : 'password';
         });
-
-
-        $(document).on('click', '.pass_show .ptxt', function () {
-
-            $(this).text($(this).text() == "Show" ? "Hide" : "Show");
-
-            $(this).prev().attr('type', function (index, attr) { return attr == 'password' ? 'text' : 'password'; });
-
-        });  
-    </script>
+    });  
+</script>

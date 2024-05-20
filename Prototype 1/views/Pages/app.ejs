@@ -589,6 +589,7 @@
         <div id="workout-list">
             <form id="workoutForm" action="/executeWorkout" method="POST" style="display: none;">
                 <input type="hidden" name="workout" id="workoutInput">
+                <input type="hidden" name="userHiddenValue" id="userHiddenValue" value="<%= JSON.stringify(user) %>">
             </form>
             <% if (workouts.length> 0) { %>
                 <% workouts.forEach(function(workout) { %>

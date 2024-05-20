@@ -15,7 +15,7 @@ var searchButtonName = document.getElementById('searchButtonName');
 var allCurrentExercises = document.getElementById("allExercicesInTemplate");
 var affichage = document.querySelector('.affichage');
 var historique = document.querySelector('.Historique-Calendrier');
-
+var parsedUser = JSON.parse(document.getElementById('userHiddenValue').value);
 
 function hideAllExcept(element) {
     if (element === profileIcon) {
@@ -135,17 +135,29 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    if (parsedUser.gens<1){
+        exerciceCard.classList.add("unclickable");
+    }
+
     exerciceCard.addEventListener("click", function() {
+
         if (!choisirEntrainement.classList.contains("show")) {
             createWorkoutInServer(null);
             hideAllExcept(nouvelEntrainement);
             console.log("ExerciceCard1");
+            parsedUser.gens--;
+            if (parsedUser.gens<1){
+                exerciceCard.classList.add("unclickable");
+            }
         } else {
             choisirEntrainement.classList.remove("show");
             choisirEntrainement.classList.add("hidden");
             document.body.style.overflow = "auto";
             console.log("ExerciceCard2");
         }
+        if (parsedUser.gens<1){
+        exerciceCard.classList.add("unclickable");
+    }
     });
     
     returnButton.addEventListener("click", function(){

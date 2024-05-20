@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<%- include ('../partials/head') %>
+<%- include ("../partials/head.ejs") %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="/connexionCSS.css">
 
 <body>
   <main>
-<!-- Template : https://mdbootstrap.com/docs/standard/extended/login/#login-basic-example-->
-<!-- https://dribbble.com/session/new-->
-    <section class="h-100 gradient-form" >
+    <section class="h-100 gradient-form">
         <div class="container py-5 h-100">
           <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-xl-10">
@@ -15,60 +13,45 @@
                   <div class="col-lg-6">
                     <div class="card-body p-md-5 mx-md-4">
                       <form action="/connexion/submit" method="post" id="loginForm">
-                        <h3>Connectez-vous à EnerGymize</h3>
+                        <h3 class="fw-bold mb-2 text-uppercase" style="text-align: center;">Connectez-vous à EnerGymize</h3>
                         <br><br>
                         <%- include ("../partials/google.ejs") %>
                         <br><br>
-      
                         <div class="form-outline mb-4">
                           <label class="form-label" for="form2Example11" style="font-weight:500;">Nom d'utilisateur</label>
-                          <input type="email" id="adresse_mail" name="adresse_mail" class="form-control black-hover"
-                            placeholder="Numéro de téléphone ou adresse e-mail" />
-                          
+                          <input type="email" id="adresse_mail" name="adresse_mail" class="form-control black-hover" placeholder="Numéro de téléphone ou adresse e-mail" />
                         </div>
-      
-                    <div class="form-outline mb-4">
-                        <label class="form-label" for="mdp" style="font-weight:500;">Mot de passe</label>
-                        <div class="input-group">
+                        <div class="form-outline mb-4">
+                          <label class="form-label" for="mdp" style="font-weight:500;">Mot de passe</label>
+                          <div class="input-group">
                             <input type="password" id="mdp" name="mdp" class="form-control black-hover">
                             <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility()">
-                                <i class="bi bi-eye-slash" id="eye-icon"></i>
+                              <i class="bi bi-eye-slash" id="eye-icon"></i>
                             </button>
+                          </div>
                         </div>
-                      </div>
-                      
-      
-                        
                         <div class="text-center pt-1 mb-5 pb-1 d-flex flex-column">
-                          <button class="btn btn-outline-dark " type="submit" style="margin-bottom :5px; ;">Se connecter</button>
-                          
+                          <button class="btn btn-outline-dark" type="submit" style="margin-bottom: 5px;">Se connecter</button>
                           <a class="text-muted" href="/Reset">Mot de passe oublié?</a>
-                      </div>
-                        
+                        </div>
                         <div class="align-items-center justify-content-center pb-4 d-flex flex-column">
                           <p class="mb-0 me-2" style="font-weight:500;">Vous n'avez pas un compte?</p>  
                           <a href="/Inscription" type="button" id="inscrire" class="button-style">S'inscrire!</a>
                         </div>
-                        
-                        
-      
-                      </form>   
-
-   <div id="alerteErreur" style="display: none;" class="alert alert-danger" role="alert"></div>
+                      </form>
+                      <div id="alerteErreur" style="display: none;" class="alert alert-danger" role="alert"></div>
                     </div>
                   </div>
                   <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
-                    <div class="d-flex flex-column align-items-center ">
+                    <div class="d-flex flex-column align-items-center">
                       <div class="text-center mb-4">
                         <a href="/">
                           <img src="/imgs/whiteTransp.png" style="width: 185px" alt="Fitness logo">
-                      </a>
+                        </a>
                       </div>
                       <div class="text-white px-3 py-4 p-md-5 mx-md-4">
                         <h4 class="mb-4">Dépassez les limites avec Energymize</h4>
-                        <p class="medium mb-0">Votre univers d'entraînement et de nutrition sur mesure. Découvrez des programmes spécialisés pour le gym, 
-                          le hockey, le football américain, le soccer et le basketball. Avec nos trackers d'entraînement et de nutrition, atteignez vos objectifs 
-                          de performance comme jamais auparavant.</p>
+                        <p class="medium mb-0">Plongez dans un univers entièrement dédié à la musculation. Nos programmes personnalisés sont conçus pour maximiser votre force et votre développement musculaire. Avec des outils de suivi avancés pour vos entraînements et votre nutrition, nous vous aidons à atteindre vos objectifs de musculation de manière plus rapide et plus efficace.</p>
                       </div>
                     </div>
                   </div>
@@ -82,7 +65,6 @@
       <script src="/connexion.js"></script>
       <script src="https://accounts.google.com/gsi/client" async></script>
 
-
       <%- include ("../partials/footer.ejs") %>
-
-      
+</body>
+</html>

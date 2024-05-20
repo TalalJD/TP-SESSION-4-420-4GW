@@ -1,12 +1,92 @@
+.submit-button {
+  margin-top: -40px; /* Adjust this value as needed to move the button higher */
+}
+
+.error-message {
+  margin-top: 20px; /* Adjust this value as needed to move the button higher */
+}
+
+.gradient-form {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #333333, #1a1a1a); /* Gradient from dark grey to darker grey */
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 .card {
-    background: linear-gradient(to right, #D5C069, #D5C069);
-  }
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: auto; /* Center the card horizontally */
+}
 
-  
-  .submit-button {
-      margin-top: -40px; /* Adjust this value as needed to move the button higher */
-  }
+.gradient-custom-2 {
+  background: linear-gradient(to right, #D5C069, #D5C069);
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
 
-  .error-message {
-    margin-top: 20px; /* Adjust this value as needed to move the button higher */
+.left-side {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.left-side form {
+  width: 100%;
+}
+
+.right-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #D5C069;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  padding: 2rem;
+}
+
+.right-side img {
+  width: 50%;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.right-side h2 {
+  margin-bottom: 1rem;
+  background: linear-gradient(to bottom, #333333, #1a1a1a); /* Gradient from dark grey to darker grey */
+}
+
+.right-side p {
+  background: linear-gradient(to bottom, #333333, #1a1a1a); /* Gradient from dark grey to darker grey */
+  text-align: center;
+}
+
+button[type="submit"] {
+  background-color: #D5C069; /* Button background color */
+  color: black; /* Text color */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Button padding */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 16px; /* Font size */
+}
+
+button[type="submit"]:hover {
+  background-color: #D5C069; /* Darker shade on hover */
+}
+
+button[type="submit"]:focus {
+  outline: none; /* Remove focus outline */
 }

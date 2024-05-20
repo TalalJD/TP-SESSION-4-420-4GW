@@ -277,5 +277,77 @@ body {
         background-color: #555; /* Une teinte plus foncée pour l'effet hover */
       }
 
-    
+      .gradient-form {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(to bottom, #333333, #1a1a1a); /* Gradient from dark grey to darker grey */
+      }
+      
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+      
+      .card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: auto; /* Center the card horizontally */
+      }
+      
+      .gradient-custom-2 {
+        background: linear-gradient(to right, #D5C069, #D5C069);
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+      }
+      
+      .black-hover:hover {
+        border: 1px solid black;
+      }
+      
+      .black-hover {
+        border-color: transparent;
+        transition: border-color 0.5s;
+      }
+      
+      button[type="submit"] {
+        background-color: #D5C069; /* Button background color */
+        color: black; /* Text color */
+        border: none; /* Remove border */
+        padding: 10px 20px; /* Button padding */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+        font-size: 16px; /* Font size */
+      }
+      
+      button[type="submit"]:hover {
+        background-color: #D5C069; /* Darker shade on hover */
+      }
+      
+      button[type="submit"]:focus {
+        outline: none; /* Remove focus outline */
+      }
+      
+      .button-style {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        background-color: #D5C069; /* Default button background color */
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      
+      .button-style:hover {
+        background-color: #A19252; /* Darker shade on hover */
+      }
+      
       

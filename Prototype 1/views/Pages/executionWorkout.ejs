@@ -1,4 +1,4 @@
-<%- include ("../partials/header.ejs") %>
+<%- include ("../partials/head.ejs") %>
 <style>
     body {
       height: 100%;
@@ -183,6 +183,17 @@ h1 {
   cursor: pointer;
   transition: 0.5s;
 }
+.annulerEntrainementButton {
+  align-self: center; /* Center the button horizontally */
+  margin-top: auto; /* Push the button to the bottom */
+  height: 5vh;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.5s;
+  
+}
   </style>
   <div class="workoutExecution">
     <div class="workoutExecHeader">
@@ -244,6 +255,10 @@ h1 {
 
         </div>
         <button id="terminerEntrainementButton" class="terminerEntrainementButton" style="height: 5vh; background-color: rgb(37, 102, 37);">Terminer Entrainement</button>
+       
+          <button id="annulerEntrainementButton" class="annulerEntrainementButton" style="height: 5vh; background-color: rgb(232, 16, 16);" onclick="window.location.href = '/App';">Annuler Entrainement</button>
+
+      
     </div>
   </div>
   <div id="workoutData" style="display: none;"><%= JSON.stringify(workout) %></div>

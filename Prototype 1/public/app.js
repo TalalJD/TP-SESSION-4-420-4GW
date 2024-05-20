@@ -100,13 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function AfficherNomWorkout(workout){
-    
-}
 
-function ExecuterWorkout(workout){
-
-}
 
 document.addEventListener("DOMContentLoaded", function() {
     profileIcon.addEventListener("click", function() {
@@ -398,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
+//AFFICHER LE CALENDRIER QUI CONTIEN L'HISTORIQUE DES WORKOUTS
 
 function Afficher_Dates_WorkoutsCompleted() {
     // Fait une requête pour obtenir les dates d'entraînement
@@ -490,7 +484,7 @@ function Afficher_Dates_WorkoutsCompleted() {
     initCalendar();
 }
 
-
+//LANCER LA FUNCTION
 document.addEventListener('DOMContentLoaded', Afficher_Dates_WorkoutsCompleted);
 
 

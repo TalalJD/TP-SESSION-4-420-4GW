@@ -82,7 +82,7 @@
             <div class="additional-info">
                 <p>Accès illimité aux programmes</p>
                 <p>10 essais par mois pour générer des programmes</p>
-                <p><strong>Prix: 6,99$</strong></p>
+                <p><strong>Prix: 6,99$/mois</strong></p>
             </div>
             <% if (user) { %>
                 <button type="button" onclick="showPaymentForm('2')" id="but2" <% if (user.idAbonnement === 2) { %>disabled<% } %>>Confirmer</button>
@@ -98,7 +98,7 @@
                 <p>Accès au coach</p>
                 <p>Accès illimité pour générer des programmes</p>
                 <p>Accès aux plans de nutrition</p>
-                <p><strong>Prix: 9,99$</strong></p>
+                <p><strong>Prix: 9,99$/mois</strong></p>
             </div>
             <% if (user) { %>
                 <button type="button" onclick="showPaymentForm('3')" id="but3" <% if (user.idAbonnement === 3) { %>disabled<% } %>>Confirmer</button>
@@ -107,6 +107,11 @@
             <% } %>
         </div>
     </div>
+
+    <video autoplay muted loop class="background-video">
+        <source src="imgs/SONY FX3 CINEMATIC  SIGMA 24-70 F2.8 - Trim.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la balise vidéo.
+      </video>
 
     <script>
         function redirectToLogin() {

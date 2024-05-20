@@ -587,9 +587,12 @@
 
         <div class="scrollable-workout-list" id="scrollableWorkoutList"></div>
         <div id="workout-list">
+            <form id="workoutForm" action="/executeWorkout" method="POST" style="display: none;">
+                <input type="hidden" name="workout" id="workoutInput">
+            </form>
             <% if (workouts.length> 0) { %>
                 <% workouts.forEach(function(workout) { %>
-                    <div class="carde">
+                    <div class="carde" data-workout='<%= JSON.stringify(workout) %>'>
                         <div class="card-content">
                             <h2 class="titre">
                                 <%= workout.nom_workout %>

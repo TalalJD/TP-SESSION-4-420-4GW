@@ -74,8 +74,28 @@ document.addEventListener("DOMContentLoaded", function() {
             //historique.style.left = "-100%";
         }
     });
+    var cards = document.querySelectorAll('.carde');
+    cards.forEach(function (card){
+        var workout = JSON.parse(card.getAttribute('data-workout'));
+        var workoutForm = document.getElementById('workoutForm');
+        var workoutInput = document.getElementById('workoutInput');
+        card.addEventListener('click',function(){
+            workoutInput.value = JSON.stringify(workout);
+            console.log("Nom workout: ",workout.nom_workout);
+            console.log("Nom workout, non input: ",workoutInput);
+            console.log("Parsed workout name from input: ", JSON.parse(workoutInput.value).nom_workout); 
+            workoutForm.submit();
+        });
+    });
 });
 
+function AfficherNomWorkout(workout){
+    
+}
+
+function ExecuterWorkout(workout){
+
+}
 
 document.addEventListener("DOMContentLoaded", function() {
     profileIcon.addEventListener("click", function() {

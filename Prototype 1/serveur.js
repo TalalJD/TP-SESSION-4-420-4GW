@@ -21,6 +21,8 @@ import paypal from '@paypal/checkout-server-sdk';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 
+
+
 function environment() {
   const clientId = "AS7gcs2OsninDvsU_PdPz9KM3eEe8scNrkpCj6CMja27alTMQtFpN7dlNWxFodo1SFzr2wjRJFIh3g5X";
   const clientSecret = "EBNe3MbmLTgNb3xAzkTh0JhgMpeYyGuZRFYzIMlcSOV9xBPdeeWBcV_qYPPU6fm1Gnn7GJUxoyhdfVtJ";
@@ -30,6 +32,9 @@ function environment() {
 function client() {
   return new paypal.core.PayPalHttpClient(environment());
 }
+
+
+
 
 config();
 const app = express();
@@ -52,7 +57,7 @@ app.set("view engine", "ejs");
 app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js"));
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
 
-// // MongoDB Trials
+// MongoDB Trials
 
 export async function connectToMongo() {
   let mongoClient;
@@ -158,40 +163,25 @@ app.get("/executeWorkout",async function (req,res){
   });
 });
 
-
-app.get('/workout-dates', async function(req, res) {
+app.post("/executeWorkout",async function (req,res){
   let user = null;
-  let userId = null;
-
-    // Vérifie si l'utilisateur est connecté
-  if (req.session.isLoggedIn) {
-      user = req.session.user;
-      userId = user._id;
+  let workouts;
+  console.log("Trying to parse");
+  if (req.session.isLoggedIn){
+    user = req.session.user;
+    //workouts = await GetWorkouts(true,user);
   }
-    //requete sql qui verifie si il y a une erreur et la gere et  et recupere les donnees
-  con.query('SELECT DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = 0', [userId], (error, workouts) => {
-      if (error) {
-          console.error('Error fetching workout dates:', error);
-          return res.status(500).json({ error: 'Server Error' });
-      }
+  res.render("Pages/executionWorkout", {
 
-      //extrait et inserre les donnes dans une variable constante
-      const workoutDates = workouts.map(workout => workout.date_workout);
+    siteTitle: "Simple Application",
 
-      // Envoie les dates des entraînements en tant que réponse JSON
-      res.json({ workoutDates });
-  });
-});
+    pageTitle: "Event List",
 
-
-app.get('/historique', function(req, res) {
-  let user = req.session.user;
-  res.render("Pages/historique", {
     items: [], 
-    user: user
+    user:user,
+    workout:JSON.parse(req.body.workout),
   });
 });
-
 
 app.get("/App", async function (req, res) {
   let user = null;
@@ -280,8 +270,11 @@ const con = mysql.createConnection({
 });
 
 con.connect(function (err) {
+
   if (err) throw err;
+
   console.log("connected!");
+
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -1027,14 +1020,43 @@ function GetWorkouts(isTemplate, user){
   });
 }
 
+// Route for fetching workout dates
+app.get('/workout-dates', async function(req, res) {
+  let user = null;
+  let userId = null;
+  if (req.session.isLoggedIn) {
+      user = req.session.user;
+      userId = user._id;
+  }
+
+  con.query('SELECT DATE_FORMAT(date_workout, \'%Y-%m-%d\') AS date_workout FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = 0', [userId], (error, workouts) => {
+      if (error) {
+          console.error('Error fetching workout dates:', error);
+          return res.status(500).json({ error: 'Server Error' });
+      }
+
+      // Extract the workout dates from the query result
+      const workoutDates = workouts.map(workout => workout.date_workout);
+
+      // Send the workout dates as JSON response
+      res.json({ workoutDates });
+  });
+});
+
+// Route for rendering the historique page
+app.get('/historique', function(req, res) {
+  let user = req.session.user;
+  res.render("Pages/historique", {
+    items: [], 
+    user: user
+  });
+});
 
 
 
 
 
-
-
-app.get('/affichage_workout', async function(req, res) {
+app.get('/affichage_workout', async function(req, res){
  
   let user = null;
  
@@ -1168,6 +1190,8 @@ app.post('/abonnement/choisir-gratuit', async (req, res) => {
 });
 
 
+
+
 app.get('/success-page', function(req, res) {
   res.render('Pages/success', { 
     siteTitle: 'Payment Success',
@@ -1278,25 +1302,13 @@ app.post('/paypal-transaction-complete', async (req, res) => {
 
 
 
-app.post('/process_payment', async (req, res) => {
-  const { cardNumber, expirationDate, cvv, planId } = req.body;
-  let mongoClient;
-  let generationsRestantes = 0;
-  
-  switch (parseInt(planId)) {
-    case 1: 
-      generationsRestantes = 3;
-      break;
-    case 2: 
-      generationsRestantes = 10;
-      break;
-    case 3: 
-      generationsRestantes = -1; 
-      break;
-    default:
-      generationsRestantes = 0;
-  }
-})
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+
 
 
 app.get('/Reset', function(req, res) {
@@ -1325,11 +1337,9 @@ app.post('/submit-reset', async (req, res) => {
     const db = client.db("EnergymizeBD");
     const users = db.collection("clients");
 
-    
-    
-    let emailCheck = await FindStudentsByEmail(collection, courriel_client);
-    if (emailCheck.length<1){
-      return res.status(404).send("No users matching email: "+courriel_client);
+    const user = await users.findOne({ email });
+    if (!user) {
+      return res.status(404).send("Aucun utilisateur trouvé avec cet e-mail.");
     }
 
     const resetToken = crypto.randomBytes(20).toString('hex');
@@ -1364,37 +1374,8 @@ app.post('/submit-reset', async (req, res) => {
 });
 
 
-// Fonction pour exécuter une requête SQL en utilisant Promises
-function query(sql, params) {
-  return new Promise((resolve, reject) => {
-      con.query(sql, params, (error, results) => {
-          if (error) {
-              reject(error);
-              return;
-          }
-          resolve(results);
-      });
-  });
-}
 
 
-app.get('/get-workout-dates', async (req, res) => {
-  if (!req.session.isLoggedIn) {
-      return res.status(403).send('Not logged in');
-  }
-
-  try {
-      const user = req.session.user;
-      const sql = 'SELECT DATE_FORMAT(date_workout, "%Y-%m-%d") AS date_workout FROM workout WHERE client_id_mongodb = ? AND IsTemplate_workout = 0';
-      const workouts = await query(sql, [user._id]);
-
-      const workoutDates = workouts.map(workout => workout.date_workout);
-      res.render('Pages/historique', { workoutDates });
-  } catch (error) {
-      console.error('Error fetching workout dates:', error);
-      res.status(500).send('Server Error');
-  }
-});
 
 async function sendSubscriptionEmail(userEmail, subscriptionName, price) {
   const mailOptions = {
@@ -1411,3 +1392,6 @@ async function sendSubscriptionEmail(userEmail, subscriptionName, price) {
     console.error('Erreur lors de l\'envoi de l\'email:', error);
   }
 }
+
+
+

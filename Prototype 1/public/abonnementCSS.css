@@ -188,3 +188,14 @@ body {
 #paymentForm input[type="submit"]:hover {
   background-color: #45a049;
 }
+
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 115%;
+  height: 100%;
+  z-index: -1;
+  object-fit: cover;
+  filter: brightness(0.7); 
+}

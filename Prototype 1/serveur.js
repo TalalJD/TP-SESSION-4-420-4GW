@@ -218,6 +218,18 @@ app.get("/App", async function (req, res) {
   }
 });
 
+app.get("/faq", function (req, res) {
+  let user = null;
+  if (req.session.isLoggedIn) {
+    user = req.session.user;
+  }
+  res.render("Pages/faq", {
+    siteTitle: "Simple Application",
+    pageTitle: "FAQ",
+    items: [], 
+    user: user
+  });
+});
 
 app.get("/Abonnement", function (req, res) {
 
@@ -511,7 +523,7 @@ app.post('/createEmptyWorkout', async(req,res)=>{
   let user = req.session.user;
   console.log("Gens remaining before creation: ",user.gens)
   try {
-    const workoutId = await createWorkout(user._id, true);
+    const workoutId = await createWorkout(user._id, true,null);
     user.gens--;
     req.session.user=user;
     console.log("Gens remaining: ",user.gens)
@@ -525,11 +537,11 @@ app.post('/createEmptyWorkout', async(req,res)=>{
 });
 app.post('/createNewWorkout', async (req, res) => {
   let user = req.session.user;
-  let { listeSerie } = req.body;
+  let { listeSerie, workout, elapsedTime } = req.body;
   let workoutId;
 
   try {
-    workoutId = await createWorkout(user._id, false);
+    workoutId = await createWorkout(user._id, false, workout);
   } catch (error) {
     console.error("Failed to create workout: ", error);
     return res.status(500).send('Error creating workout');
@@ -539,10 +551,17 @@ app.post('/createNewWorkout', async (req, res) => {
     await RemplirWorkoutExoExecs(workoutId,listeSerie);
     await RemplirWorkoutSeries(workoutId, listeSerie);
     console.log('All series inserted successfully');
-    res.status(200).send('Workout created and series inserted successfully');
   } catch (error) {
     console.error('Error inserting series', error);
     res.status(500).send('Error inserting series');
+  }
+  try {
+    await updateWorkoutDates(workoutId, workout.nom_workout,workout.desc_workout,elapsedTime);
+    console.log("All details updated correctly");
+    res.redirect("/App");
+  } catch (error) {
+    console.error('Error updating name/details', error);
+    res.status(500).send('Error setting details');
   }
 });
 async function RemplirWorkoutExoExecs(workoutId, listeSerie) {
@@ -636,6 +655,19 @@ function updateWorkout(id, newName, newDesc){
   const query = `UPDATE workout SET nom_workout = ?, desc_workout = ? WHERE id_workout = ?`;
   return new Promise((resolve,reject)=>{
     con.query(query, [newName,newDesc,id], (error,results,fields) => {
+      if (error){
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+function updateWorkoutDates(id, newName,newDesc, timeSecond){
+  timeSecond = timeSecond/1000;
+  const query = `UPDATE workout SET nom_workout = ?, desc_workout = ?, dureeSeconde_workout = ? WHERE id_workout = ?`;
+  return new Promise((resolve,reject)=>{
+    con.query(query, [newName,newDesc,timeSecond,id], (error,results,fields) => {
       if (error){
         reject(error);
       } else {
@@ -861,7 +893,7 @@ function selectExoByID(sha1Id){
   });
 }
 
-function createWorkout(clientIdMongoDB, isTemplate) {
+function createWorkout(clientIdMongoDB, isTemplate, workout) {
   return new Promise((resolve, reject) => {
     const query = `INSERT INTO workout (client_id_mongodb, IsTemplate_workout, nom_workout, desc_workout, dureeSeconde_workout, date_workout) VALUES (?, ?,'Nouveau Workout','', 0, NOW())`;
     con.query(query, [clientIdMongoDB, isTemplate], (error, results) => {

@@ -188,7 +188,7 @@ h1 {
     <div class="workoutExecHeader">
         <h1><%= workout.nom_workout %></h1>
         <div class="workoutHeader-right">
-            <span class="timer">00:00:00</span>
+            <span class="timer" id="timer">00:00:00</span>
             <span class="date-today"><%= new Date().toLocaleDateString() %></span>
         </div>
     </div>
@@ -370,28 +370,32 @@ h1 {
     MettreAJourListeSerie();
   }
   function FinaliserWorkout(){
+
     return fetch('createNewWorkout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({listeSerie})
+        body: JSON.stringify({ listeSerie, workout, elapsedTime })
     })
     .then(response => {
-        if (!response.ok) {
+        if (response.redirected) {
+            console.log('Redirected to:', response.url);
+            window.location.href = response.url;
+        } else if (!response.ok) {
             throw new Error('Network response was not ok: ' + response.statusText);
         }
-        return response.json();
+        return response.text();
     })
     .then(data => {
         console.log('Success:', data);
-        return data; 
     })
     .catch((error) => {
         console.error('Error:', error);
         throw error;
     });
-  }
+}
+
   document.addEventListener('DOMContentLoaded', function() {
     var startTime = Date.now();
     var timerElement = document.querySelector('.timer');

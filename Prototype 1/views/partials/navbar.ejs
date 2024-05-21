@@ -1,20 +1,30 @@
-
-    
-    <div class="indexHeader">
-        <div class="indexHeaderSection">
-            <a href="/Connexion" class="indexButton1" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">Se connecter</a>
-            <a href="/Inscription" class="indexButton1" style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">S'inscrire</a>
-        </div>
-    
-        <a href="/">
-            <img src="/imgs/whiteTransp.png" style="height: 14em; width: 14em;" alt="Fitness logo">
-        </a>
-    
-        <div class="indexHeaderSection">
-            <a href="/faq" class="indexButton1" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">F.A.Q</a>
-            <a href="/Abonnement" class="indexButton1" style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">Abonnements</a>
-        </div>
+<div class="indexHeader">
+    <div class="indexHeaderSection">
+        <a href="/Connexion" class="indexButton1 button-invisible" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">Se connecter</a>
+        <a href="/Inscription" class="indexButton1 button-invisible" style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">S'inscrire</a>
     </div>
-    
-    <main>
-    
+
+    <a href="/">
+        <img src="/imgs/whiteTransp.png" style="height: 14em; width: 14em;" alt="Fitness logo">
+    </a>
+
+    <div class="indexHeaderSection">
+        <a href="/faq" class="indexButton1 button-invisible" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">F.A.Q</a>
+        <a href="/Abonnement" class="indexButton1 button-invisible" style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">Abonnements</a>
+    </div>
+</div>
+
+<main>
+    <style>
+        .button-invisible {
+            opacity: 0.6;
+            color: rgba(255, 255, 255, 0.8); /* Couleur de texte semi-transparente */
+            background-color: rgba(0, 0, 0, 0.2); /* Couleur de fond semi-transparente */
+            transition: opacity 0.3s ease;
+        }
+        
+        .button-invisible:hover {
+            opacity: 1; /* Rend les boutons complètement visibles au survol */
+        }
+        </style>
+        

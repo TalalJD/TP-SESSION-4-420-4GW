@@ -7,7 +7,7 @@
     </div>
 
     <a href="/">
-        <img src="/imgs/whiteTransp.png" style="height: 14em; width: 14em;" alt="Fitness logo">
+        <img src="/imgs/whiteTransp.png" class="logo" style="height: 14em; width: 14em;" alt="Fitness logo">
     </a>
 
     <div class="indexHeaderSection">
@@ -33,4 +33,11 @@
             .button-invisible:hover {
                 opacity: 1; /* Rend les boutons complètement visibles au survol */
             }
+            .logo {
+            transition: opacity 0.3s ease;
+        }
+        
+        .logo:hover {
+            opacity: 0.5; /* Rend le logo transparent au survol */
+        }
             </style>

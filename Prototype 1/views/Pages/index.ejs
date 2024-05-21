@@ -11,7 +11,7 @@
     object-fit: cover;
     filter: brightness(0.7); 
   }
-  
+
   .content {
     position: relative;
     z-index: 1;
@@ -60,9 +60,31 @@
     margin: 2rem auto;
     width: 80%;
   }
+
+  .video-control-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #D5C069;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 2;
+  }
+  .button-invisible {
+            opacity: 0.6;
+            color: rgba(255, 255, 255, 0.8); /* Couleur de texte semi-transparente */
+            background-color: rgba(0, 0, 0, 0.2); /* Couleur de fond semi-transparente */
+            transition: opacity 0.3s ease;
+        }
+        
+        .button-invisible:hover {
+            opacity: 1; /* Rend les boutons complètement visibles au survol */
+        }
 </style>
 
-<video autoplay muted loop class="background-video">
+<video id="backgroundVideo" autoplay muted loop class="background-video">
   <source src="imgs/SONY FX3 CINEMATIC  SIGMA 24-70 F2.8 - Trim.mp4" type="video/mp4">
   Votre navigateur ne supporte pas la balise vidéo.
 </video>
@@ -78,5 +100,21 @@
   </div>
   <div class="indexPresentation"></div>
 </div>
+
+<button class="video-control-button button-invisible" onclick="toggleVideo()">Pause</button>
+
+<script>
+  function toggleVideo() {
+    const video = document.getElementById('backgroundVideo');
+    const button = document.querySelector('.video-control-button');
+    if (video.paused) {
+      video.play();
+      button.textContent = 'Pause';
+    } else {
+      video.pause();
+      button.textContent = 'Lecture';
+    }
+  }
+</script>
 
 <%- include ("../partials/footer.ejs") %>

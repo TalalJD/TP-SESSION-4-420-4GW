@@ -218,18 +218,6 @@ app.get("/App", async function (req, res) {
   }
 });
 
-app.get("/faq", function (req, res) {
-  let user = null;
-  if (req.session.isLoggedIn) {
-    user = req.session.user;
-  }
-  res.render("Pages/faq", {
-    siteTitle: "Simple Application",
-    pageTitle: "FAQ",
-    items: [], 
-    user: user
-  });
-});
 
 app.get("/Abonnement", function (req, res) {
 
@@ -551,11 +539,11 @@ app.post('/createEmptyWorkout', async(req, res) => {
 });
 app.post('/createNewWorkout', async (req, res) => {
   let user = req.session.user;
-  let { listeSerie, workout, elapsedTime } = req.body;
+  let { listeSerie } = req.body;
   let workoutId;
 
   try {
-    workoutId = await createWorkout(user._id, false, workout);
+    workoutId = await createWorkout(user._id, false);
   } catch (error) {
     console.error("Failed to create workout: ", error);
     return res.status(500).send('Error creating workout');
@@ -565,17 +553,10 @@ app.post('/createNewWorkout', async (req, res) => {
     await RemplirWorkoutExoExecs(workoutId,listeSerie);
     await RemplirWorkoutSeries(workoutId, listeSerie);
     console.log('All series inserted successfully');
+    res.status(200).send('Workout created and series inserted successfully');
   } catch (error) {
     console.error('Error inserting series', error);
     res.status(500).send('Error inserting series');
-  }
-  try {
-    await updateWorkoutDates(workoutId, workout.nom_workout,workout.desc_workout,elapsedTime);
-    console.log("All details updated correctly");
-    res.redirect("/App");
-  } catch (error) {
-    console.error('Error updating name/details', error);
-    res.status(500).send('Error setting details');
   }
 });
 async function RemplirWorkoutExoExecs(workoutId, listeSerie) {
@@ -669,19 +650,6 @@ function updateWorkout(id, newName, newDesc){
   const query = `UPDATE workout SET nom_workout = ?, desc_workout = ? WHERE id_workout = ?`;
   return new Promise((resolve,reject)=>{
     con.query(query, [newName,newDesc,id], (error,results,fields) => {
-      if (error){
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
-function updateWorkoutDates(id, newName,newDesc, timeSecond){
-  timeSecond = timeSecond/1000;
-  const query = `UPDATE workout SET nom_workout = ?, desc_workout = ?, dureeSeconde_workout = ? WHERE id_workout = ?`;
-  return new Promise((resolve,reject)=>{
-    con.query(query, [newName,newDesc,timeSecond,id], (error,results,fields) => {
       if (error){
         reject(error);
       } else {
@@ -928,7 +896,7 @@ function selectExoByID(sha1Id){
   });
 }
 
-function createWorkout(clientIdMongoDB, isTemplate, workout) {
+function createWorkout(clientIdMongoDB, isTemplate) {
   return new Promise((resolve, reject) => {
     const query = `INSERT INTO workout (client_id_mongodb, IsTemplate_workout, nom_workout, desc_workout, dureeSeconde_workout, date_workout) VALUES (?, ?,'Nouveau Workout','', 0, NOW())`;
     con.query(query, [clientIdMongoDB, isTemplate], (error, results) => {
@@ -1123,6 +1091,8 @@ app.get('/historique', function(req, res) {
     user: user
   });
 });
+
+
 
 
 
@@ -1498,7 +1468,8 @@ app.post('/submit-reset', async (req, res) => {
 
     await transporter.sendMail(mailOptions);
     console.log('----------------------------- mail options:', mailOptions);
-    res.send('Un email de réinitialisation a été envoyé à ' + email + '.');
+    //res.send('Un email de réinitialisation a été envoyé à ' + email + '.');
+    return res.redirect('/Connexion');
   } catch (error) {
     console.error('Erreur lors de l\'opération:', error);
     res.status(500).send('Erreur lors de l\'envoi de l\'email ou de la connexion à la base de données.');
@@ -1519,9 +1490,12 @@ app.post('/reset-new-mdp/:token', async function(req, res) {
   console.log('----------------------------- new password:', newPassword);
   console.log('----------------------------- confirm password:', confirmPassword);
 
+  if (newPassword === '' || confirmPassword === '' || currentPassword === '') {
+     return res.json({ success: false, message: 'Les champs doivent etre remplis' });
+  }
 
   if (newPassword !== confirmPassword) {
-    return res.status(400).send('New password and confirm password do not match.');
+    return res.json({ success: false, message: 'Le nouveau mot de passe et le mot de passe confirmé ne sont pas compatibles' });
   }
 
   let client;
@@ -1532,23 +1506,24 @@ app.post('/reset-new-mdp/:token', async function(req, res) {
     const users = db.collection("clients");
 
     // Trouver l'utilisateur par le token de réinitialisation
-    const user = await FindUserByResetToken(users, resetToken);;
+    const user = await FindUserByResetToken(users, resetToken);
+
+    console.log('---------------------------- User found by reset token:', user);
 
     if (user.length<1){
       return res.status(404).send("No users matching email: "+user[0]._id);
-    }else{
-      console.log('---------------------------- Token found in the database: ', user[0].resetToken);
     }
     // Vérifier le mot de passe actuel
     const isMatch = await bcrypt.compare(currentPassword, user[0].mdp);
     if (!isMatch) {
-      return res.status(404).send('Current password is incorrect.');
+      return res.json({ success: false, message: 'Mot de passe courant est incorrect' });
     }
 
     // Hash le nouveau mot de passe
     const saltRounds =10;
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
+    console.log('---------------------------- hashed pwd:', hashedPassword);
     // Mettre à jour le mot de passe de l'utilisateur dans la base de données
     const updateResult = await users.updateOne(
       { _id: user[0]._id },
@@ -1561,11 +1536,13 @@ app.post('/reset-new-mdp/:token', async function(req, res) {
       }
     );
 
-    if (updateResult.matchedCount === 0) {
-      return res.status(500).send('Failed to reset password.');
+     if (updateResult.matchedCount === 0) {
+      return res.json({ success: false, message: 'Failed to reset password.' });
     }
 
-    res.send('Password has been reset successfully.');
+    res.json({ success: true, message: 'Success' });
+    // res.redirect('/Connexion');
+
 
   } catch (error) {
     console.error('Erreur lors de l\'opération:', error);

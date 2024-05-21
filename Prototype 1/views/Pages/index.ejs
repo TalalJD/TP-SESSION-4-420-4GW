@@ -72,6 +72,16 @@
     cursor: pointer;
     z-index: 2;
   }
+  .button-invisible {
+            opacity: 0.6;
+            color: rgba(255, 255, 255, 0.8); /* Couleur de texte semi-transparente */
+            background-color: rgba(0, 0, 0, 0.2); /* Couleur de fond semi-transparente */
+            transition: opacity 0.3s ease;
+        }
+        
+        .button-invisible:hover {
+            opacity: 1; /* Rend les boutons complètement visibles au survol */
+        }
 </style>
 
 <video id="backgroundVideo" autoplay muted loop class="background-video">
@@ -91,7 +101,7 @@
   <div class="indexPresentation"></div>
 </div>
 
-<button class="video-control-button" onclick="toggleVideo()">Pause</button>
+<button class="video-control-button button-invisible" onclick="toggleVideo()">Pause</button>
 
 <script>
   function toggleVideo() {

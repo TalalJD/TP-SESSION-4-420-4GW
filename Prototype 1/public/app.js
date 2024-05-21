@@ -328,7 +328,7 @@ function updateExerciseList(exercises){
     exercises.forEach(exercise => {
         const exerciseDiv = document.createElement('div');
         exerciseDiv.className = 'exercise-entry';
-        exerciseDiv.textContent = `Exercice: ${exercise.nom_exo || 'Unknown'}, Description: ${exercise.desc_exo || 'Unknown'}`;
+        exerciseDiv.textContent = `Exercice: ${exercise.nom_exo || 'Unknown'}`;
         exerciseDiv.style="color:white;";
         allCurrentExercises.appendChild(exerciseDiv);
     });
@@ -373,6 +373,8 @@ async function hashSHA1(inputString){
 
     return hashHex; // This will be a 40-character hexadecimal string
 }
+
+//SCRIPT D'AFFICHAGE
 
 document.addEventListener('DOMContentLoaded', function() {
     var exercises = document.querySelectorAll('.exercise');

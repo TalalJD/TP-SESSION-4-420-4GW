@@ -1175,26 +1175,31 @@ app.post('/abonnement/choisir-gratuit', async (req, res) => {
   const userId = req.session.user._id;
   let mongoClient;
   try {
-      mongoClient = await connectToMongo();
-      const db = mongoClient.db("EnergymizeBD");
-      const collection = db.collection("clients");
-      
-      await UpdateClientById(collection, userId, {
-          idAbonnement: 1, 
-          gens: 3, 
-      });
+    mongoClient = await connectToMongo();
+    const db = mongoClient.db("EnergymizeBD");
+    const collection = db.collection("clients");
+    
+    await UpdateClientById(collection, userId, {
+      idAbonnement: 1, 
+      gens: 3, 
+    });
 
-      req.session.user.idAbonnement = 1;
-      req.session.user.gens = 3;
-      
-      res.json({ success: true, message: "Abonnement gratuit activé." });
+    req.session.user.idAbonnement = 1;
+    req.session.user.gens = 3;
+
+    const { name, imageUrl, message } = getSubscriptionDetails(1);
+
+    await sendSubscriptionEmail(req.session.user.courriel, name, '0.00', imageUrl, message);
+
+    res.json({ success: true, message: "Abonnement gratuit activé." });
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ success: false, message: "Internal Server Error" });
+    console.error('Error:', error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   } finally {
-      if (mongoClient) await mongoClient.close();
+    if (mongoClient) await mongoClient.close();
   }
 });
+
 
 
 
@@ -1272,39 +1277,59 @@ app.post('/paypal-transaction-complete', async (req, res) => {
   const paypalClient = client();
 
   try {
-      const orderDetails = new paypal.orders.OrdersGetRequest(orderID);
-      const orderResponse = await paypalClient.execute(orderDetails);
-      console.log('Transaction status:', orderResponse.result.status);
+    const orderDetails = new paypal.orders.OrdersGetRequest(orderID);
+    const orderResponse = await paypalClient.execute(orderDetails);
+    console.log('Transaction status:', orderResponse.result.status);
 
-      if (orderResponse.result.status === 'COMPLETED') {
-          let mongoClient = await MongoClient.connect(process.env.DB_URI);
-          let db = mongoClient.db("EnergymizeBD");
-          let clientsCollection = db.collection("clients");
+    if (orderResponse.result.status === 'COMPLETED') {
+      let mongoClient = await MongoClient.connect(process.env.DB_URI);
+      let db = mongoClient.db("EnergymizeBD");
+      let clientsCollection = db.collection("clients");
 
-          let generationsRestantes = determineGenerationsRestantes(planId);
+      let generationsRestantes = determineGenerationsRestantes(planId);
 
-          await clientsCollection.updateOne(
-              { _id: new ObjectId(req.session.user._id) },
-              {
-                  $set: {
-                      idAbonnement: parseInt(planId),
-                      gens: generationsRestantes
-                  }
-              }
-          );
+      await clientsCollection.updateOne(
+        { _id: new ObjectId(req.session.user._id) },
+        {
+          $set: {
+            idAbonnement: parseInt(planId),
+            gens: generationsRestantes
+          }
+        }
+      );
 
-          req.session.user.idAbonnement = parseInt(planId);
-          req.session.user.gens = generationsRestantes;
-          res.redirect('/success-page');
-      } else {
-          console.error('PayPal transaction not completed: ', orderResponse.result);
-          res.redirect('/failure-page');
-      }
+      req.session.user.idAbonnement = parseInt(planId);
+      req.session.user.gens = generationsRestantes;
+
+      const { name, imageUrl, message } = getSubscriptionDetails(parseInt(planId));
+
+      await sendSubscriptionEmail(req.session.user.courriel, name, orderResponse.result.purchase_units[0].amount.value, imageUrl, message);
+
+      res.redirect('/success-page');
+    } else {
+      console.error('PayPal transaction not completed: ', orderResponse.result);
+      res.redirect('/failure-page');
+    }
   } catch (error) {
-      console.error('Error during PayPal transaction verification:', error);
-      res.status(500).json({ success: false, message: "Internal server error during transaction verification." });
+    console.error('Error during PayPal transaction verification:', error);
+    res.status(500).json({ success: false, message: "Internal server error during transaction verification." });
   }
 });
+
+
+function getSubscriptionDetails(planId) {
+  switch (planId) {
+    case 1:
+      return { name: 'Abonnement Basique', message: 'Nous espérons que vous serez de retour bientôt!' };
+    case 2:
+      return { name: 'Abonnement Standard', message: '' };
+    case 3:
+      return { name: 'Abonnement Premium', message: '' };
+    default:
+      return { name: 'Abonnement Inconnu', message: '' };
+  }
+}
+
 
 
 
@@ -1495,12 +1520,18 @@ app.post('/reset-new-mdp/:token', async function(req, res) {
 });
 
 
-async function sendSubscriptionEmail(userEmail, subscriptionName, price) {
+async function sendSubscriptionEmail(userEmail, subscriptionName, price, imageUrl, message) {
   const mailOptions = {
     from: 'energymize@gmail.com',
     to: userEmail,
     subject: 'Confirmation d\'abonnement',
-    text: `Merci pour votre abonnement. \n\nNom de l'abonnement: ${subscriptionName}\nPrix payé: ${price}\n\nMerci pour votre abonnement !`
+    html: `
+      <p>Votre abonnement a été changé avec succés.</p>
+      <p><strong>Nom de l'abonnement:</strong> ${subscriptionName}</p>
+      <p><strong>Prix payé:</strong> ${price}</p>
+      <p>${message}</p>
+      <p>Merci pour votre abonnement !</p>
+    `
   };
 
   try {
@@ -1510,6 +1541,7 @@ async function sendSubscriptionEmail(userEmail, subscriptionName, price) {
     console.error('Erreur lors de l\'envoi de l\'email:', error);
   }
 }
+
 
 
 

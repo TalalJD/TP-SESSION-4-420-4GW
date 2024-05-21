@@ -2,17 +2,17 @@
 
 <div class="indexHeader">
     <div class="indexHeaderSection">
-        <a href="/profile" class="indexButton1" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">Mon Profile</a>
-        <a href="/logout"class="indexButton1" style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">Deconnexion</a>
+        <a href="/profile" class="indexButton1 button-invisible" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">Mon Profile</a>
+        <a href="/logout"class="indexButton1 button-invisible" style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">Deconnexion</a>
     </div>
 
     <a href="/">
-        <img src="/imgs/whiteTransp.png" style="height: 14em; width: 14em;" alt="Fitness logo">
+        <img src="/imgs/whiteTransp.png" class="logo" style="height: 14em; width: 14em;" alt="Fitness logo">
     </a>
 
     <div class="indexHeaderSection">
-        <a href="/App" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;" class="indexButton1">Ouvrir l'application</a>
-        <a href="/Abonnement" class="indexButton1" style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">Abonnements</a>
+        <a href="/App" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;" class="indexButton1 button-invisible">Ouvrir l'application</a>
+        <a href="/Abonnement" class="indexButton1 button-invisible" style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">Abonnements</a>
     </div>
 </div>
 
@@ -22,4 +22,22 @@
             <h1><%= user.prenom %> <%= user.nom %></h1>
         </div>
         <% } %>
-    
+        <style>
+            .button-invisible {
+                opacity: 0.6;
+                color: rgba(255, 255, 255, 0.8); /* Couleur de texte semi-transparente */
+                background-color: rgba(0, 0, 0, 0.2); /* Couleur de fond semi-transparente */
+                transition: opacity 0.3s ease;
+            }
+            
+            .button-invisible:hover {
+                opacity: 1; /* Rend les boutons complètement visibles au survol */
+            }
+            .logo {
+            transition: opacity 0.3s ease;
+        }
+        
+        .logo:hover {
+            opacity: 0.5; /* Rend le logo transparent au survol */
+        }
+            </style>

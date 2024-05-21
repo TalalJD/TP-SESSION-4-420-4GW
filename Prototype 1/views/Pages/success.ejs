@@ -24,6 +24,16 @@
             color: aliceblue;
             text-decoration: none; 
         }
+        .background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 115%;
+  height: 100%;
+  z-index: -1;
+  object-fit: cover;
+  filter: brightness(0.7); 
+}
     </style>
 </head>
 <body>
@@ -32,6 +42,10 @@
         <p>Votre transaction a été complétée avec succès!</p>
         <a href="/">Revenir à l'accueil</a>
     </div>
+    <video autoplay muted loop class="background-video">
+        <source src="imgs/SONY FX3 CINEMATIC  SIGMA 24-70 F2.8 - Trim.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la balise vidéo.
+    </video>
 </body>
 </html>
 <%- include("../partials/footer.ejs") %>

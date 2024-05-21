@@ -663,34 +663,31 @@
 
 
         <style>
-            /* Styles for the calendar table */
             #calendar {
                 position: absolute;
                 border-collapse: collapse;
                 width: 35vw;
-                /* 60% of viewport width */
                 height: 60vh;
-                /* 60% of viewport height */
                 max-width: 600px;
-                /* Maximum width */
                 max-height: 600px;
-                /* Maximum height */
+               
                 background-color: rgb(32, 32, 28);
                 border-radius: 10px;
                 overflow: hidden;
-                left: 17%;
-                bottom: 30%;
+                left:35%;
+                
+                bottom: 25%;
             }
 
 
             #calendar th {
                 background-color: #D5C069;
-                /* Yellow */
+              
                 color: black;
                 padding: 0;
-                /* Adjusted padding */
+               
                 width: calc(100% / 7);
-                /* Equal width for each day */
+                
             }
 
             #calendar th:first-child {
@@ -709,27 +706,27 @@
                 font-family: sans-serif;
                 color: white;
                 font-size: 14px;
-                /* Adjust font size as needed */
+                
             }
 
-            /* Styles for the current day */
+          
             .current-day {
                 background-color: #07c9ff;
-                /* Yellow */
+               
                 color: black;
             }
 
-            /* Styles for the workout days */
+           
             .workout-day {
                 background-color: #4CAF50;
-                /* Green */
+               
                 color: white;
             }
 
             .nextMonth {
                 position: absolute;
                 margin-top: 2%;
-                left: 51.7%;
+                left: 71.7%;
                 bottom: 60%;
                 width: 4vw;
                 height: 3vw;
@@ -737,7 +734,7 @@
 
             .prevMonth {
                 position: absolute;
-                left: 12%;
+                left: 28%;
                 bottom: 60%;
                 width: 4vw;
                 height: 3vw;
@@ -752,21 +749,21 @@
                 border-top-right-radius: 10px;
             }
 
-            /* Nouvelles règles pour annuler la courbure du haut */
+           
             #calendar thead th:first-child {
                 border-top-left-radius: 0;
-                /* Annuler la courbure du coin supérieur gauche */
+               
             }
 
             #calendar thead th:last-child {
                 border-top-right-radius: 0;
-                /* Annuler la courbure du coin supérieur droit */
+               
             }
             .titre-historique{
                 font-family: sans-serif;
                 color: white;
                 text-align: center;
-                margin-left:10%
+                margin-left:5%
             }
         </style>
 
@@ -802,6 +799,8 @@
 
 
     </div>
+
+
     
 
 

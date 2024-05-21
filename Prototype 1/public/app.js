@@ -374,6 +374,8 @@ async function hashSHA1(inputString){
     return hashHex; // This will be a 40-character hexadecimal string
 }
 
+//SCRIPT D'AFFICHAGE
+
 document.addEventListener('DOMContentLoaded', function() {
     var exercises = document.querySelectorAll('.exercise');
     exercises.forEach(function(exercise) {

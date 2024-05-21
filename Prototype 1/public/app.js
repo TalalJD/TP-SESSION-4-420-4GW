@@ -328,7 +328,7 @@ function updateExerciseList(exercises){
     exercises.forEach(exercise => {
         const exerciseDiv = document.createElement('div');
         exerciseDiv.className = 'exercise-entry';
-        exerciseDiv.textContent = `Exercice: ${exercise.nom_exo || 'Unknown'}, Description: ${exercise.desc_exo || 'Unknown'}`;
+        exerciseDiv.textContent = `Exercice: ${exercise.nom_exo || 'Unknown'}`;
         exerciseDiv.style="color:white;";
         allCurrentExercises.appendChild(exerciseDiv);
     });

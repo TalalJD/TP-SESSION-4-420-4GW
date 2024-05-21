@@ -519,20 +519,34 @@ app.get('/profile', async function(req, res) {
   }
 });
 
-app.post('/createEmptyWorkout', async(req,res)=>{
+app.post('/createEmptyWorkout', async(req, res) => {
   let user = req.session.user;
-  console.log("Gens remaining before creation: ",user.gens)
+  console.log("Gens remaining before creation: ", user.gens);
+
   try {
-    const workoutId = await createWorkout(user._id, true,null);
-    user.gens--;
-    req.session.user=user;
-    console.log("Gens remaining: ",user.gens)
-    console.log("Workout created and ID passed as : ",workoutId);
+    const workoutId = await createWorkout(user._id, true, null);
+    user.gens--;  // Decrement gens here
+    req.session.user = user;  // Update session user
+    console.log("Gens remaining: ", user.gens);
+    console.log("Workout created and ID passed as: ", workoutId);
     req.session.currentWorkoutTemplateCreation = workoutId;
-    res.send('Workout created successfully');
+
+    // Ensuring that we update the session before moving to database operations
+    await req.session.save();  // Make sure this is awaited
+
+    // Connecting to MongoDB and updating the database
+    const mongoClient = await connectToMongo();
+    const db = mongoClient.db("EnergymizeBD");
+    const collection = db.collection("clients");
+
+    // Update database with the new gens count
+    await UpdateClientById(collection, user._id, {
+      gens: user.gens
+    });
+    res.status(200).send('Workout created');
   } catch (error) {
-    console.error("Failed to create workout: ", error);
-    res.status(500).send('Error creating workout');
+    console.error("Failed to create workout or update gens: ", error);
+    res.status(500).send('Error creating workout or saving gens');
   }
 });
 app.post('/createNewWorkout', async (req, res) => {
@@ -677,34 +691,55 @@ function updateWorkoutDates(id, newName,newDesc, timeSecond){
   });
 }
 
-app.post('/deleteEmptyWorkout', async(req,res)=>{
-  if (req.session.currentWorkoutTemplateCreation==-1){
+app.post('/deleteEmptyWorkout', async(req, res) => {
+  if (req.session.currentWorkoutTemplateCreation === -1) {
     console.log("No current active workout creation open");
-  } else {
-    try {
-      const resultDeleteExo = await deleteAllAssociatedExercises(req.session.currentWorkoutTemplateCreation,true);
-      if (resultDeleteExo==1){
-        try {
-          const result = await deleteWorkoutTemplate(req.session.currentWorkoutTemplateCreation,true);
-          if (result==1){
-            req.session.user.gens++;
-            console.log("Workout ",req.session.currentWorkoutTemplateCreation," deleted successfully. Generations refunded. Remaining: ",req.session.user.gens);
-            res.send("Workout deleted successfully");
-          } else {
-            res.send("Workout deleted successfully");
-          }
-          req.session.currentWorkoutTemplateCreation=-1;
-        } catch (error){
-          console.error("Failed to delete workout: ",error);
-          res.status(500).send('Error deleting workout');
-        }
-      }
-    } catch (error){
-      console.error("Failed to delete workout associated exercises: ",error);
-      res.status(500).send('Error deleting workout');
+    return res.status(400).send('No active workout to delete');
+  }
+
+  const workoutId = req.session.currentWorkoutTemplateCreation;
+  try {
+    const resultDeleteExo = await deleteAllAssociatedExercises(workoutId, true);
+    if (resultDeleteExo !== 1) {
+      return res.status(500).send('Failed to delete associated exercises');
     }
+
+    const resultDeleteWorkout = await deleteWorkoutTemplate(workoutId, true);
+    if (resultDeleteWorkout !== 1) {
+      return res.status(500).send('Failed to delete workout');
+    }
+
+    req.session.user.gens++;
+    req.session.currentWorkoutTemplateCreation = -1; // Reset the workout template creation tracker
+    console.log("Workout", workoutId, "deleted successfully. Generations refunded. Remaining: ", req.session.user.gens);
+
+    // Update session and database asynchronously
+    req.session.save(async (err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).send('Session save error');
+      }
+
+      try {
+        const mongoClient = await connectToMongo();
+        const db = mongoClient.db("EnergymizeBD");
+        const collection = db.collection("clients");
+
+        await UpdateClientById(collection, req.session.user._id, {
+          gens: req.session.user.gens
+        });
+        res.status(200).send('Workout deleted and gens updated');
+      } catch (dbError) {
+        console.error("Error updating client in DB:", dbError);
+        res.status(500).send('Database update failed');
+      }
+    });
+  } catch (error) {
+    console.error("Error during workout deletion:", error);
+    res.status(500).send('Error deleting workout');
   }
 });
+
 
 app.post('/choisirExercise', async (req, res) => {
   const exercise = req.body;

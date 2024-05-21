@@ -155,6 +155,10 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     
     returnButton.addEventListener("click", function(){
+        parsedUser.gens++;
+        if (parsedUser.gens>0){
+            exerciceCard.classList.remove("unclickable");
+        }
         returnFromWorkoutCreation(null);
         choisirEntrainement.classList.remove('show');
         choisirEntrainement.classList.add('hidden');

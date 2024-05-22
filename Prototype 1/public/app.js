@@ -129,8 +129,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    if (parsedUser.gens<1){
+    if (parsedUser.gens==0){
         exerciceCard.classList.add("unclickable");
+    } else {
+        exerciceCard.classList.remove("unclickable");
     }
 
     exerciceCard.addEventListener("click", function() {
@@ -140,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function() {
             hideAllExcept(nouvelEntrainement);
             console.log("ExerciceCard1");
             parsedUser.gens--;
-            if (parsedUser.gens<1){
+            if (parsedUser.gens==0){
                 exerciceCard.classList.add("unclickable");
             }
         } else {
@@ -149,14 +151,18 @@ document.addEventListener("DOMContentLoaded", function() {
             document.body.style.overflow = "auto";
             console.log("ExerciceCard2");
         }
-        if (parsedUser.gens<1){
-        exerciceCard.classList.add("unclickable");
-    }
+        if (parsedUser.gens==0){
+            exerciceCard.classList.add("unclickable");
+        } else {
+            exerciceCard.classList.remove("unclickable");
+        }
     });
     
     returnButton.addEventListener("click", function(){
-        parsedUser.gens++;
-        if (parsedUser.gens>0){
+        if (parsedUser.gens!=-1){
+            parsedUser.gens++;
+        }
+        if (parsedUser.gens!=0){
             exerciceCard.classList.remove("unclickable");
         }
         returnFromWorkoutCreation(null);
